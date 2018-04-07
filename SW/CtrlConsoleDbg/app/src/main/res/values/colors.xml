@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#303030</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimaryEnd">#846fcf</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="red">#cc0022</color>
+    <color name="green">#60a120</color>
+    <color name="yellow">#ffc600</color>
+    <color name="light_blue">#77aadd</color>
+    <color name="dark_blue">#2266bb</color>
+    <color name="shadow_light_blue">#f3f7fc</color>
+    <color name="dark_grey">#333333</color>
+
+    <color name="item_dark_grey">#353535</color>
+    <color name="white">#f9f9f9</color>
+    <color name="black">#121212</color>
+    <color name="black_transparent">#90121212</color>
+    <color name="black_transparent_5">#0d121212</color>
+    <color name="black_transparent_10">#1a121212</color>
+    <color name="middle_gray">#666666</color>
+    <color name="white_transparent">#10f9f9f9</color>
+    <color name="white_transparent_10">#1affffff</color>
+    <color name="transparent">#00000000</color>
+    <color name="white_35">#35ffffff</color>
+    <color name="white_5">#0dffffff</color>
+    <color name="drag_row_color">#353535</color>
+    <color name="no_devices_added_color">#333a2bc3</color>
+    <color name="divider">#2c979797</color>
+    <color name="hintColor">#cbcbcb</color>
+    <color name="loginColor">#6673f5</color>
+    <color name="textColor">#353535</color>
+</resources>

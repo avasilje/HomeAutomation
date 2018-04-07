@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Button
+        android:id="@+id/hvac_user_apply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Apply"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+
+    <TextView
+        android:id="@+id/hvac_actual_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="20dp"
+        android:text="Actual"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <TextView
+        android:id="@+id/hvac_configured_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="228dp"
+        android:layout_marginTop="20dp"
+        android:text="Configured"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/hvac_motor_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:text="Motor"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hvac_actual_label"
+        />
+
+    <Switch
+        android:id="@+id/hvac_motor_user"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:checked="false"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:text="On  "
+        app:layout_constraintTop_toBottomOf="@id/hvac_motor_label"
+        app:layout_constraintLeft_toLeftOf="@id/hvac_motor_label"
+        />
+    <TextView
+        android:id="@+id/hvac_motor_actual"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:text="On  "
+        app:layout_constraintTop_toBottomOf="@id/hvac_motor_label"
+        app:layout_constraintLeft_toLeftOf="@id/hvac_actual_label"
+        />
+    <TextView
+        android:id="@+id/hvac_motor_configured"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:text="On  "
+        app:layout_constraintTop_toBottomOf="@id/hvac_motor_label"
+        app:layout_constraintLeft_toLeftOf="@id/hvac_configured_label"
+        />
+
+
+    <TextView
+        android:id="@+id/hvac_heater_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="84dp"
+        android:text="Heater"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hvac_actual_label"
+        />
+
+    <EditText
+        android:id="@+id/hvac_heater_user"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="sans-serif"
+        android:inputType="number"
+        android:text="10%"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/hvac_heater_label"
+        app:layout_constraintTop_toBottomOf="@id/hvac_heater_label" />
+    <TextView
+        android:id="@+id/hvac_heater_actual"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:checked="false"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:text="100%"
+        app:layout_constraintTop_toBottomOf="@id/hvac_heater_label"
+        app:layout_constraintLeft_toLeftOf="@id/hvac_actual_label"
+        />
+    <TextView
+        android:id="@+id/hvac_heater_configured"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:checked="false"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:text="100%"
+        app:layout_constraintTop_toBottomOf="@id/hvac_heater_label"
+        app:layout_constraintLeft_toLeftOf="@id/hvac_configured_label"
+        />
+
+    <SeekBar
+        android:id="@+id/hvac_heater_seekbar"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:checked="false"
+        android:fontFamily="sans-serif"
+        android:min="0"
+        android:max="100"
+        app:layout_constraintTop_toBottomOf="@id/hvac_heater_user"
+        app:layout_constraintLeft_toLeftOf="@id/hvac_heater_label"
+        />
+
+    <TextView
+        android:id="@+id/hvac_valve_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="200dp"
+        android:text="Valve"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hvac_actual_label"
+        />
+
+    <Switch
+        android:id="@+id/hvac_valve_user"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:checked="false"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:text="On  "
+        app:layout_constraintTop_toBottomOf="@id/hvac_valve_label"
+        app:layout_constraintLeft_toLeftOf="@id/hvac_valve_label"
+        />
+    <TextView
+        android:id="@+id/hvac_valve_actual"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:text="On  "
+        app:layout_constraintTop_toBottomOf="@id/hvac_valve_label"
+        app:layout_constraintLeft_toLeftOf="@id/hvac_actual_label"
+        />
+    <TextView
+        android:id="@+id/hvac_valve_configured"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:text="On  "
+        app:layout_constraintTop_toBottomOf="@id/hvac_valve_label"
+        app:layout_constraintLeft_toLeftOf="@id/hvac_configured_label"
+        />
+    <TextView
+        android:id="@+id/hvac_sensors_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="280dp"
+        android:text="Sensors"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hvac_actual_label"
+        />
+    <TextView
+        android:id="@+id/hvac_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Temp: 30 degC"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/hvac_sensors_label"
+        app:layout_constraintTop_toBottomOf="@+id/hvac_sensors_label"
+        />
+
+    <TextView
+        android:id="@+id/hvac_pressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Pressure: 1100 Bar"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@id/hvac_temp"
+        app:layout_constraintTop_toBottomOf="@+id/hvac_sensors_label"
+        />
+
+    <TextView
+        android:id="@+id/hvac_humidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Humidity: 1100 Bar"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@id/hvac_pressure"
+        app:layout_constraintTop_toBottomOf="@+id/hvac_sensors_label"
+        />
+
+</android.support.constraint.ConstraintLayout>
