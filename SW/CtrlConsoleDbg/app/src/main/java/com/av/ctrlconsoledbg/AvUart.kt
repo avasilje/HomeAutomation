@@ -33,14 +33,9 @@ class AvUart(val context: Context) {
 
     var rxSynced:Boolean = false
 
-    val hdr1 = ByteArray(1)
-    val hdr = ByteArray(1)
-
     var txBuff: ByteArray? = null
 
-
     var txMsgQueue = ConcurrentLinkedQueue<AvUartTxMsg>()
-
 
     internal enum class DeviceStatus {
         DEV_NOT_CONNECT,
@@ -67,7 +62,7 @@ class AvUart(val context: Context) {
         EventBus.getDefault().unregister(this)
     }
 
-    fun stopDiscovery() {
+    fun stopPollThread() {
 
         if (pollThread == null) {
             Log.e(TAG, "Stopping UART RX thread - already stopped")
@@ -128,7 +123,7 @@ class AvUart(val context: Context) {
                 ftDev = dev
                 EventBus.getDefault().post(CcdUartConnected())
             } else {
-                //Log.d(TAG, "Device not found")
+                // Log.d(TAG, "Device not found")
             }
         }
 
@@ -139,7 +134,7 @@ class AvUart(val context: Context) {
 
     private fun rxHdrReadSingle() : Boolean{
         val ba = ByteArray(1)
-        if (ba.size == ftDev?.read(ba, 1)) {
+        if (ba.size == ftDev?.read(ba, ba.size)) {
             // new byte read
             rxHdr[2] = rxHdr[1]
             rxHdr[1] = rxHdr[0]
@@ -173,7 +168,7 @@ class AvUart(val context: Context) {
         // Not synced. Try to sync
         if (!rxSynced) {
             while(dev.queueStatus > 0) {
-                rxSynced =  rxHdrReadSingle()
+                rxSynced = rxHdrReadSingle()
                 if (rxSynced) break
             }
         }
@@ -225,7 +220,7 @@ class AvUart(val context: Context) {
     }
 }
 
-class AvUartPoll(val avUart: AvUart) : Runnable {
+class AvUartPoll(private val avUart: AvUart) : Runnable {
 
     var running = false
     var quit = false
@@ -244,6 +239,7 @@ class AvUartPoll(val avUart: AvUart) : Runnable {
                     if(avUart.connect()) {
                         opened = true
                     } else {
+                        Thread.sleep(3000)
                         continue@rcv_loop
                     }
                 } catch (e: Exception) {
@@ -254,7 +250,7 @@ class AvUartPoll(val avUart: AvUart) : Runnable {
 
             try {
 
-                // Check is something to send
+                avUart.checkRx()
 
                 // Check is something to read
 

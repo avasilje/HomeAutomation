@@ -9,6 +9,7 @@ import android.util.Log
 import com.av.bleservice.AvBleService
 import com.av.bleservice.CcdBleDeviceDiscovered
 import com.av.ctrlconsoledbg.fragments.CtrlConsoleSelectorFragment
+import com.av.uart.AvUart
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -103,11 +104,15 @@ class CtrlConsoleDbgActivity : AppCompatActivity() {
     private var mAvBleService: AvBleService? = null
 
     var nodes: MutableMap<Int, CcdNode> = mutableMapOf()
+    var uart = AvUart(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ctrl_console_dbg)
         EventBus.getDefault().register(this)
+
+        uart.initialize()
+        uart.startPollThread()
 
         supportFragmentManager.beginTransaction()
                 .replace(R.id.ctrl_console_frame_selector, CtrlConsoleSelectorFragment(), CtrlConsoleSelectorFragment::class.java.name)
@@ -115,9 +120,12 @@ class CtrlConsoleDbgActivity : AppCompatActivity() {
 
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
+        uart.stopPollThread()
+        uart.deinitialize()
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)

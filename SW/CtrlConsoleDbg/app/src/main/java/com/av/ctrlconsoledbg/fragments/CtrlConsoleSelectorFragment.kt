@@ -45,8 +45,7 @@ class CtrlConsoleSelectorFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         EventBus.getDefault().register(this)
-        val view = inflater?.inflate(R.layout.ctrl_console_selector, container, false)
-        return view
+        return inflater?.inflate(R.layout.ctrl_console_selector, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -54,14 +53,14 @@ class CtrlConsoleSelectorFragment : Fragment() {
 
         var nodeHvac: CcdNodeHvac? = null
         val cc = mCtrlConsole!!
-        cc.nodes.forEach { k, v ->
+        cc.nodes.forEach { _, v ->
             if (v.type == CcdNodeType.HVAC) {
                 nodeHvac = v as CcdNodeHvac
             }
         }
 
         selector_butt_hvac.isEnabled = (nodeHvac != null)
-        selector_butt_hvac.setOnClickListener { v ->
+        selector_butt_hvac.setOnClickListener { _ ->
             mCtrlConsole!!.supportFragmentManager.beginTransaction()
                     .replace(R.id.ctrl_console_function, CtrlConsoleSelectorFragment(), CtrlConsoleSelectorFragment::class.java.name)
                     .commit()
