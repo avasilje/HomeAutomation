@@ -1,34 +1,41 @@
-#include <stdlib.h>
-#include <avr/interrupt.h>
-#include <avr/pgmspace.h>
+/*
+ * +1. Implement SWITCH node + 
+ * +2. Implement loopback for local nodes
+ * +3. Split NLINK, CTRLCON from main
+ * 4. Implement ctrlcon_on_peer_rx()
+ * +5. Debug local node discovery response
+ */
 
 /*
  * node-entrance.c
- *  contains node-switch and node-cc
  *
  * Created: 08/04/2018
  *  Author: Solit
  */ 
 
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <avr/pgmspace.h>
+#include <stdlib.h>
+#include <string.h>
+#include "ha-common.h"
+#include "ha-nlink.h"
+#include "ha-node-switch.h"
+#include "ha-node-ctrlcon.h"
 #include "ha-entrance.h"
 
-HW_INFO gt_hw_info = {0, 2, "AV HA Node"};
+HW_INFO gt_hw_info __attribute__ ((section (".act_const"))) = {0, 2, "AV HA Entrance"};
 PF_PVOID gpf_action_func;
 
 extern T_ACTION gta_action_table[];
 
 uint16_t gus_trap_line;
 
-#define INT_FATAL_TRAP(us_line_num)     \
-    do {                                \
-        gus_trap_line = us_line_num;    \
-        while(1);                       \
-    } while(1)
-
 void FATAL_TRAP (uint16_t us_line_num) { 
     gus_trap_line = us_line_num;
     while(1);
 }
+
 
 #define MSG_BUFF_SIZE 32
 volatile uint8_t guc_in_msg_idx;
@@ -38,43 +45,28 @@ volatile uint8_t guc_out_msg_wr_idx;
 volatile uint8_t guc_out_msg_rd_idx;
 uint8_t guca_out_msg_buff[MSG_BUFF_SIZE];
 
+// ---------------------------------
+// --- LEDS specific                                
+// ---------------------------------
+#define LED_PORT  PORTB
+#define LED_DIR   DDRB
+#define LED_PIN   PINB
 
-#define IN_SW_0_MASK (1 << PINB7)
-#define IN_SW_1_MASK (1 << PINB6)
-#define IN_SW_2_MASK (1 << PINB0)
-#define IN_SW_3_MASK (1 << PINB1)
+#define LED_PIN0   PINB0
+#define LED_PIN1   PINB1
+#define LED_PIN2   PINB2
+#define LED_PIN3   PINB3
 
-#define IN_SW_0 PINB7
-#define IN_SW_1 PINB6
-#define IN_SW_2 PINB0
-#define IN_SW_3 PINB1
-#define IN_SW_MASK \
-    ((1 << IN_SW_0)|\
-     (1 << IN_SW_1)|\
-     (1 << IN_SW_2)|\
-     (1 << IN_SW_3))
+#define LED_MASK_ALL ((1 << LED_PIN0) |\
+                      (1 << LED_PIN1) |\
+                      (1 << LED_PIN2) |\
+                      (1 << LED_PIN3))
 
-#define OUT_SW0_0 PINB4
-#define OUT_SW0_1 PINB3
-#define OUT_SW0_2 PINB2
+#define DISABLE_TIMER    TIMSK = 0            // Disable Overflow Interrupt
+#define ENABLE_TIMER     TIMSK = (1<<TOIE0)   // Enable Overflow Interrupt
+#define CNT_RELOAD       (0xFF - 125)         // 
 
-#define OUT_SW0_0_MASK (1 << OUT_SW0_0)
-#define OUT_SW0_1_MASK (1 << OUT_SW0_1)
-#define OUT_SW0_2_MASK (1 << OUT_SW0_2)
-
-#define OUT_SW0_MASK \
-    ((1 << OUT_SW0_0)|\
-     (1 << OUT_SW0_1)|\
-     (1 << OUT_SW0_2))
-
-#define OUT_SW1_3    PIND5
-#define OUT_SW1_3_MASK (1 << PIND5)
-#define OUT_SW1_MASK (OUT_SW1_3_MASK)
-
-#define ENABLE_PCINT  GIMSK |= (1 << PCIE)
-#define DISABLE_PCINT  GIMSK &= ~(1 << PCIE)
-
-#define TIMER_CNT_SCALER 0
+#define CNT_TCCRxB       2    // Prescaler value (2->1/8)
 
 #ifndef DBG_EN
 #define DBG_EN 0
@@ -86,19 +78,25 @@ uint16_t dbg_p[DBG_VAR_NUM];
 uint8_t dbg_idx = 0;
 #endif
 
+uint8_t guc_timer_cnt;
+
+void ctrlcon_init();
+void hvac_init();
+
+
 static void init_uart()
 {
     // Init UART to 0.5Mbps 8N1
 
     // Set baud rate. UBRR = Fosc/16/BAUD - 1
-    // Fosc = 20MHz, UBRR = 20*10^6/16/250000 - 1 = 4
+    // Fosc = 16MHz, UBRR = 16*10^6/16/250000 - 1 = 3
     UBRRH = 0;
-    UBRRL = 4;
+    UBRRL = 3;
 
     // Set frame format: 8data, 1stop bit, no parity */
     UCSRC = 
-        _BV(UCSZ0) |      // 8 data bits
-        _BV(UCSZ1);      // 8 data bits
+        _BV(UCSZ0) |    // 8 data bits
+        _BV(UCSZ1);     // 8 data bits
 
     // Enable receiver and transmitter
     UCSRB =
@@ -109,23 +107,10 @@ static void init_uart()
 }
 
 static void init_gpio(){
-    DDRB = 0;
 
-    // IN switches - pulled up inputs
-    DDRB &= ~IN_SW_MASK; 
-    PORTB |= IN_SW_MASK; 
-
-    // Out switches - output 0
-    DDRB |= OUT_SW0_MASK; 
-    PORTB &= ~OUT_SW0_MASK;
-
-    DDRD |= OUT_SW1_MASK; 
-    PORTD &= ~OUT_SW1_MASK;
-
-    PCMSK = IN_SW_MASK;
-    ENABLE_PCINT;
-
-    EIFR &= ~(1 << PCIF);
+    // Set led to pull down
+    LED_DIR  |= LED_MASK_ALL;
+    LED_PORT &= ~LED_MASK_ALL;
 }
 
 void send_out_msg(uint8_t uc_len)
@@ -191,10 +176,34 @@ static void command_lookup()
 
     return;
 }
+void init_timer() {
+    // timer - Timer0. Incrementing counting till UINT8_MAX
+    TCCR0 = CNT_TCCRxB;
+    TCNT0 = CNT_RELOAD;
+    ENABLE_TIMER;
+    guc_timer_cnt = 0;
+}
 
 int main(void)
 {
     init_gpio();
+    
+    init_timer();
+
+    // Wait a little just in case
+    for(uint8_t uc_i = 0; uc_i < 255U; uc_i++){
+
+        __asm__ __volatile__ ("    nop\n    nop\n    nop\n    nop\n"\
+                              "    nop\n    nop\n    nop\n    nop\n"\
+                              "    nop\n    nop\n    nop\n    nop\n"\
+                              "    nop\n    nop\n    nop\n    nop\n"
+                                ::);
+    }
+
+    ha_nlink_init();
+
+    ha_node_switch_init();
+    ha_node_ctrlcon_init(); // Ctrlcon node must be initialized last because collects info about all other nodes
     
     init_uart();
 
@@ -230,26 +239,33 @@ int main(void)
 
 }
 
-ISR(PCINT_vect) {
-
-}
-
-// Interrupt triggered every 256 timer clocks and count periods
 ISR(TIMER0_OVF_vect) {
 
+#define TIMER_CNT_PERIOD 160   // 100Hz    10ms. Precision 125usec
+    // --------------------------------------------------
+    // --- Reload Timer
+    // --------------------------------------------------
+    TCNT0 = CNT_RELOAD;
+
+    // Update global PWM counter
+    guc_timer_cnt ++;
+    if (guc_timer_cnt == TIMER_CNT_PERIOD)
+    {
+        guc_timer_cnt = 0;
+    }
+
+    // --------------------------------------------------
+    // --- Check switches
+    // --- results in globals: guc_sw_event_hold, guc_sw_event_push
+    // --------------------------------------------------
+    if (guc_timer_cnt == 1)
+    {   // Every 10ms
+        ha_node_switch_on_timer();
+    }
+
 }
 
-#if 0
-            // Check previous transaction is completed (TXC: USART Transmit Complete)
-            if (UCSR0A & (1 << TXC0))
-            { // TX FIFIO is empty. Write 16bit ADC sample to UART TX FIFO
-                UDR0 = uc_data_l;
-                UDR0 = uc_data_h;
-                UCSR0A  |= (1 << TXC0); // Clear transmit complete flag
-            }
-#endif
-
-ISR(USART_RX_vect) {
+ISR(USART_RXC_vect) {
 
     uint8_t uc_status;
     uint8_t uc_data;
@@ -271,7 +287,6 @@ ISR(USART_RX_vect) {
 
 void action_signature()
 {
-
     uint8_t uc_i;
 
     // Command format
@@ -312,9 +327,21 @@ void action_signature()
     return;
 }
 
+
+void node_get_info(uint8_t addr) {
+
+     // for all registered nodes
+     {
+        
+        // If node addr == addr || addr == BC
+            {
+                // mark node as info requested
+            }
+     }
+}
+
 void action_node_info() 
 {
-#define NODE_ADDR_BC -1
     // Command format
     // 0x41 0x86 0x21  0xLL    0xAA      
     // MARK      CMD   Length  Address   
@@ -329,7 +356,7 @@ void action_node_info()
     // Get node address
     uint8_t req_addr = guca_in_msg_buff[4];
 
-    node_get_info(addr);
+    node_get_info(req_addr);
 #if 0
 
     // If our own, then prepare response
@@ -353,108 +380,11 @@ void action_node_info()
 #endif
 }
 
-T_ACTION gta_action_table[4] = {
+T_ACTION gta_action_table[] __attribute__ ((section (".act_const"))) = {
     { "mark", 0x00, (void*)0xFEED        },    // Table signature
     { "sign", 0x11, action_signature     },    
     { "ninf", 0x21, action_node_info     },    
     { ""    , 0xFF, NULL                 }     // End of table
 };
 
-void node_get_info(uint8_t addr) {
-
-     // for all registered nodes
-     {
-        
-        // If node addr == addr || addr == BC
-            {
-                // mark node as info requested
-            }
-     }
-}
-
-typedef struct node_s {
-    uint8_t idx;
-    
-    // Registered values
-    uint8_t addr;       // Node address
-    uint8_t type;       // Node type
-    uint8_t rx_buf[8];  // ADDR_FROM LEN DATA
-    void (on_rx*)(uint8_t idx);    // 
-
-    uint8_t tx_buf[8];  // ADDR_TO LEN DATA
-} node_t;
-
-typedef struct nlink_s {
-    node_t nodes[8];
-} nlink_t;
-
-// HVAC DATA
-//     TYPE(HVAC) CMD(RD_REQ/RD_RESP/WR_REQ/WR_RESP) HEATER(%), VALVE(ON/OFF), MOTOR (I/II/OFF), TEMP, PRES, HUM.
-//     
-//     RD_REQ  - cc_node -> remote or BC (aka discovery).
-//     RD_RESP - remote -> peer. Always contains ADDR_TO == ADDR_FROM from RD_REQ
-//     INFO    - remote ->  BC (aka notification).  
-//     
-//     
-
-#define NLINK_CMD_RD_REQ
-typedef struct ctrlcon_s{
-    uint8_t peers[16];       // Array of discovered nodes' indices. Filled at register. Used while unload to UART toward UI
-    uint8_t peers_flags[16];       // RX flag NODE_FLAG_xxx
-    uint8_t peers_remote_addr[16]; 
-    uint8_t last_reg_addr;
-} ctrlcon_t;
-
-#define NODE_TYPE_HVAC 1
-#define NODE_TYPE_LEDLIGHT 2
-#define CTRLCON_ADDR 0x80
-ctrlcon_t cc;
-nlink_t nlink;
-
-uint8_t nlink_node_register(uint8_t addr, uint8_t type, uint8_t len, void (on_rx*)(uint8_t idx)) 
-{
-    // Find next free entry
-    // save addr type, len and on_rx() callback
-    // mark entry as valid
-    // return entry idx
-}
-
-#define PEER_FLAG_VALID 1      // for sanity purposes
-#define PEER_FLAG_RX    2      // Set on update from nlink, cleared upon processed by ctrlcon UART
-
-void ctrlcon_on_peer_rx(uint8_t idx)
-{
-    cc.peers_flags[idx] |= PEER_FLAG_RX;
-    // enable CC UART_TX_EMPTY interrupt. The interrupt will unload all peer nodes marked as RX
-}
-void ctrlcon_on_rx(uint8_t idx) 
-{
-    // Any read response expected here
-    // Sanity 
-    // Ignore if CMD != RD_RESP
-    // Find node in node_remote_addr[] by ADDR_FROM
-    // If node is new, then 
-    // 
-    
-    uint8_t *buf_in = &nlink.nodes[idx].rx_buf; // ADDR_FROM LEN DATA
-    
-    uint8_t peer_idx = nlink_register_node(cc.last_reg_addr++, buf_in[2] /*type*/, buf_in[1] /*len*/, ctrlcon_on_peer_rx);
-    cc.peers_flags[peer_idx] = PEER_FLAG_VALID;
-    cc.peers_remote_addr[peer_idx] = data[0];
-
-    uint8_t *peer_buf_in = &nlink.nodes[peer_idx].rx_buf;
-
-    // Copy data from received packet to newly created node and mark it as process it as just received
-    memcpy(peer_buf_in, buf_in, NODE_RX_BUFF_SIZE);
-    ctrlcon_on_peer_rx(peer_idx)
-}
-
-void ctrlcon_init() 
-{
-    cc.last_reg_addr = CTRLCON_ADDR;
-    nlink_node_register(cc.last_reg_addr++, CTRLCON_TYPE, NODE_MAX_LEN, ctrlcon_on_rx);
-
-    nlink_node_send()
-    // All remote peers should respond with CTRLCON_ADDR in destination
-}
 
