@@ -22,4 +22,6 @@ typedef struct action_tag {
     void    (*pf_func)(void);
 } T_ACTION;
 
+extern void ha_uart_enable_tx();
+
 

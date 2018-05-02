@@ -19,7 +19,7 @@
 #define SW_EVENT_ON_HOLD  3
 #define SW_EVENT_HOLD_OFF 4
 
-uint8_t switch_node_h;
+uint8_t guc_switch_node_h;
 uint8_t guc_sw_event_mask;
 
 typedef struct {
@@ -90,10 +90,10 @@ void ha_node_switch_init()
 // SWITCH DATA
 //      TYPE(SWITCH) EVENT(%)
 //  
-    switch_node_h = ha_nlink_node_register(SWITCH_ADDR, NODE_TYPE_SWITCH, NLINK_COMM_BUF_SIZE, switch_on_rx);
+    guc_switch_node_h = ha_nlink_node_register(SWITCH_ADDR, NODE_TYPE_SWITCH, NLINK_COMM_BUF_SIZE, switch_on_rx);
 
     // Clear TX buffer
-    node_t *node = &nlink.nodes[switch_node_h];
+    node_t *node = &nlink.nodes[guc_switch_node_h];
     node->tx_buf[NLINK_HDR_OFF_LEN] = 2;
     node->tx_buf[NLINK_HDR_OFF_DATA + 0] = NODE_TYPE_SWITCH;
     node->tx_buf[NLINK_HDR_OFF_DATA + 1] = SW_EVENT_NONE;
@@ -182,10 +182,24 @@ void ha_node_switch_on_timer()
                     gta_switches[uc_i].uc_hold_timer = SW_HOLD_TIMER;
                 }
             } 
-        } // End of sw holdon
+        } // End of switch held
 
         gta_switches[uc_i].uc_prev_sw = uc_sw_state;
 
     } // End of switch loop
-            
+
+    // Check events - if any occur then update LED node
+    for (uc_i = 0; uc_i < SWITCHES_NUM; uc_i++) {
+        if (gta_switches[uc_i].uc_event) {
+            node_t *node = &nlink.nodes[guc_switch_node_h];
+            // node->tx_buf[NLINK_HDR_OFF_LEN] = 2;
+            // node->tx_buf[NLINK_HDR_OFF_DATA + 0] = NODE_TYPE_SWITCH;
+            node->tx_buf[NLINK_HDR_OFF_DATA + 1] = gta_switches[uc_i].uc_event;
+
+            // TODO: LEDLIGHT ADDR might be configurable and stored in EEPROM
+            ha_nlink_node_send(guc_switch_node_h, LEDLIGHT_ADDR, NLINK_CMD_INFO);
+            gta_switches[uc_i].uc_event = 0;
+        }
+    }
+                
 }

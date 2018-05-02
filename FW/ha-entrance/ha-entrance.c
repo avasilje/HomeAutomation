@@ -1,9 +1,6 @@
 /*
- * +1. Implement SWITCH node + 
- * +2. Implement loopback for local nodes
- * +3. Split NLINK, CTRLCON from main
- * 4. Implement ctrlcon_on_peer_rx()
- * +5. Debug local node discovery response
+ * TODO:
+ * 1. get rid of node allocation on new ctrlcon peers
  */
 
 /*
@@ -43,7 +40,7 @@ uint8_t guca_in_msg_buff[MSG_BUFF_SIZE];
 
 volatile uint8_t guc_out_msg_wr_idx; 
 volatile uint8_t guc_out_msg_rd_idx;
-uint8_t guca_out_msg_buff[MSG_BUFF_SIZE];
+uint8_t guca_out_msg_buff[MSG_BUFF_SIZE];   // ??  not in use. see ha_uart
 
 // ---------------------------------
 // --- LEDS specific                                
@@ -80,31 +77,44 @@ uint8_t dbg_idx = 0;
 
 uint8_t guc_timer_cnt;
 
-void ctrlcon_init();
-void hvac_init();
+typedef struct ha_uart_s {
+    uint8_t tx_buf[NLINK_COMM_BUF_SIZE];
+    uint8_t tx_rd_idx;
+    uint8_t tx_len;
+} ha_uart_t;
 
+ha_uart_t ha_uart;
 
 static void init_uart()
 {
     // Init UART to 0.5Mbps 8N1
 
-    // Set baud rate. UBRR = Fosc/16/BAUD - 1
-    // Fosc = 16MHz, UBRR = 16*10^6/16/250000 - 1 = 3
+    // Set baud rate. UBRR = Fosc/8/BAUD - 1
+    // Fosc = 8MHz, UBRR = 8*10^6/16/250000 - 1 = 1
     UBRRH = 0;
-    UBRRL = 3;
+    UBRRL = 1;
 
     // Set frame format: 8data, 1stop bit, no parity */
     UCSRC = 
+        _BV(URSEL) |    // Enable access to UCSRC. Otherwise UBRRH will be overwritten
         _BV(UCSZ0) |    // 8 data bits
         _BV(UCSZ1);     // 8 data bits
 
     // Enable receiver and transmitter
     UCSRB =
-        // (0<<TXCIE0)|     // TX Interrupt disable
         _BV(RXCIE)|     // RX Interrupt enable
         _BV(RXEN) |     // Receiver enabled
         _BV(TXEN);      // Transmitter enabled
+
+    ha_uart.tx_rd_idx = 0;
+    ha_uart.tx_len = 0;
 }
+
+void ha_uart_enable_tx() {
+    UCSRB |= _BV(UDRIE);  // TX Interrupt enable
+        // cc.peers[idx].flags |= PEER_FLAG_RX;
+}
+ 
 
 static void init_gpio(){
 
@@ -112,17 +122,6 @@ static void init_gpio(){
     LED_DIR  |= LED_MASK_ALL;
     LED_PORT &= ~LED_MASK_ALL;
 }
-
-void send_out_msg(uint8_t uc_len)
-{
-    uint8_t uc_i;
-
-    for (uc_i = 0; uc_i < uc_len; uc_i++) {
-        loop_until_bit_is_clear(UCSRA, UDRE);
-        UDR = guca_out_msg_buff[uc_i];
-    }
-}
-
 
 static void command_lookup()
 {
@@ -176,6 +175,7 @@ static void command_lookup()
 
     return;
 }
+
 void init_timer() {
     // timer - Timer0. Incrementing counting till UINT8_MAX
     TCCR0 = CNT_TCCRxB;
@@ -200,13 +200,12 @@ int main(void)
                                 ::);
     }
 
+    init_uart();
     ha_nlink_init();
 
     ha_node_switch_init();
     ha_node_ctrlcon_init(); // Ctrlcon node must be initialized last because collects info about all other nodes
     
-    init_uart();
-
     sei();
 
     while(1) 
@@ -221,19 +220,6 @@ int main(void)
             // Find and execute command from the ACTIONS TABLE
             command_lookup();
         }
-
-        // Is something to send
-        if (guc_out_msg_wr_idx > guc_out_msg_rd_idx)
-        {
-            // check is current byte is send completely
-            if (UCSRA & (1 << UDRE))
-            { // TX FIFIO is empty. 
-
-                UDR = guca_out_msg_buff[guc_out_msg_rd_idx];
-                UCSRA  |= (1 << TXC); // Clear transmit complete flag
-                guc_out_msg_rd_idx ++;
-            }
-        }
     } 
     cli();
 
@@ -241,7 +227,7 @@ int main(void)
 
 ISR(TIMER0_OVF_vect) {
 
-#define TIMER_CNT_PERIOD 160   // 100Hz    10ms. Precision 125usec
+#define TIMER_CNT_PERIOD 80   // 100Hz    10ms. Precision 125usec
     // --------------------------------------------------
     // --- Reload Timer
     // --------------------------------------------------
@@ -262,7 +248,31 @@ ISR(TIMER0_OVF_vect) {
     {   // Every 10ms
         ha_node_switch_on_timer();
     }
+}
 
+
+ISR(USART_UDRE_vect) {
+
+    // Unload TX buffer if not empty
+    if (ha_uart.tx_rd_idx != ha_uart.tx_len) {
+        UDR = ha_uart.tx_buf[ha_uart.tx_rd_idx];
+        UCSRA |= (1 << TXC); // Clear transmit complete flag
+        ha_uart.tx_rd_idx ++;
+        return;
+    }
+
+    // Nothing to sent - check ctrlcon
+    ha_uart.tx_len = ha_node_ctrlcon_to_sent(ha_uart.tx_buf);
+    if (ha_uart.tx_len) {
+        // new data received - initialize TX buffer and sent 1st byte
+        UDR = ha_uart.tx_buf[0];
+        UCSRA |= (1 << TXC); // Clear transmit complete flag
+        ha_uart.tx_rd_idx = 1;
+        return;
+    }
+
+    // No more data - disable interrupt
+    UCSRB &= ~_BV(UDRIE);  // TX Interrupt enable
 }
 
 ISR(USART_RXC_vect) {

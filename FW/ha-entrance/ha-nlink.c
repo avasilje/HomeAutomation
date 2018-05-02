@@ -75,8 +75,14 @@ uint8_t nlink_node_on_rx(uint8_t addr_from, uint8_t addr_to, uint8_t cmd, uint8_
     node_t *node = &nlink.nodes[0];
     // TODO: check most efficient loop (while + pointer; for + index; etc)
     for (i = 0; i < NLINK_NODES_NUM; i++) {
-        if (node->addr == addr_to || addr_to == NODE_ADDR_BC) {
-            consumed = 1;
+
+        if (node->addr == 0) break;
+
+        if ( (node->addr < 0x92 && node->addr != addr_from) &&  // TODO: remove ugly 0x91
+             (node->addr == addr_to ||               // Direct message
+              node->type == NODE_TYPE_CTRLCON ||     // CTRLCON listens for all messages
+              addr_to == NODE_ADDR_BC)) {            // Broadcast message
+            
             // Address matched
             if (cmd == NLINK_CMD_RD_REQ) {
                 // Send reply - current TX buffer
@@ -93,11 +99,6 @@ uint8_t nlink_node_on_rx(uint8_t addr_from, uint8_t addr_to, uint8_t cmd, uint8_
         node++;
     }
 
-    // TODO: just curious - check compile efficiency
-    //return consumed & (addr_to != NODE_ADDR_BC);    // Can't consume BC packet
-    
-    if (addr_to == NODE_ADDR_BC) consumed = 0; // Can't consume BC packet
-    
     return consumed;
 }
 

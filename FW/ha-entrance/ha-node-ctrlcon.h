@@ -7,3 +7,4 @@
 #pragma once
 
 extern void ha_node_ctrlcon_init();
+extern uint8_t ha_node_ctrlcon_to_sent(uint8_t *buf);

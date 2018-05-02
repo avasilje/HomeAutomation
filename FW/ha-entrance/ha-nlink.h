@@ -55,7 +55,7 @@ typedef struct nlink_s {
 // CMD (RD_REQ/RD_RESP/WR_REQ/WR_RESP)
 //     RD_REQ  - cc_node -> remote or BC (aka discovery).
 //     RD_RESP - remote -> peer. Always contains ADDR_TO == ADDR_FROM from RD_REQ
-//     INFO    - remote ->  BC (aka notification).  
+//     INFO    - remote -> any (aka notification).  
 //     
 
 #define NLINK_CMD_RD_REQ  1
