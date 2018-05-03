@@ -1,6 +1,5 @@
 /*
  * TODO:
- * 1. get rid of node allocation on new ctrlcon peers
  */
 
 /*

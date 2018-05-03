@@ -74,18 +74,20 @@ uint8_t nlink_node_on_rx(uint8_t addr_from, uint8_t addr_to, uint8_t cmd, uint8_
     uint8_t i, consumed = 0;
     node_t *node = &nlink.nodes[0];
     // TODO: check most efficient loop (while + pointer; for + index; etc)
-    for (i = 0; i < NLINK_NODES_NUM; i++) {
+    for (i = 0; i < NLINK_NODES_NUM; i++, node++) {
 
         if (node->addr == 0) break;
+        if (node->addr == addr_from) continue;
 
-        if ( (node->addr < 0x92 && node->addr != addr_from) &&  // TODO: remove ugly 0x91
-             (node->addr == addr_to ||               // Direct message
+        if (  node->addr == addr_to ||               // Direct message
               node->type == NODE_TYPE_CTRLCON ||     // CTRLCON listens for all messages
-              addr_to == NODE_ADDR_BC)) {            // Broadcast message
-            
+              addr_to == NODE_ADDR_BC) {             // Broadcast message
             // Address matched
+
+            consumed |= (node->addr == addr_to);
+
             if (cmd == NLINK_CMD_RD_REQ) {
-                // Send reply - current TX buffer
+                // RD REQ doesn't require node involving just send node's TX buffer
                 ha_nlink_node_send(node->idx, addr_from, NLINK_CMD_RD_RESP);
             } else {
                 node->rx_buf[NLINK_HDR_OFF_FROM] = addr_from;
@@ -96,7 +98,6 @@ uint8_t nlink_node_on_rx(uint8_t addr_from, uint8_t addr_to, uint8_t cmd, uint8_
                 node->on_rx_cb(node->idx, node->rx_buf);
             }
         }
-        node++;
     }
 
     return consumed;
