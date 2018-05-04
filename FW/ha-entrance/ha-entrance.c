@@ -48,18 +48,14 @@ uint8_t guca_out_msg_buff[MSG_BUFF_SIZE];   // ??  not in use. see ha_uart
 #define LED_DIR   DDRB
 #define LED_PIN   PINB
 
-#define LED_PIN0   PINB0
-#define LED_PIN1   PINB1
 #define LED_PIN2   PINB2
 #define LED_PIN3   PINB3
 
-#define LED_MASK_ALL ((1 << LED_PIN0) |\
-                      (1 << LED_PIN1) |\
-                      (1 << LED_PIN2) |\
+#define LED_MASK_ALL ((1 << LED_PIN2) |\
                       (1 << LED_PIN3))
 
-#define DISABLE_TIMER    TIMSK = 0            // Disable Overflow Interrupt
-#define ENABLE_TIMER     TIMSK = (1<<TOIE0)   // Enable Overflow Interrupt
+#define DISABLE_TIMER0    TIMSK &= ~(1<<TOIE0)            // Disable Overflow Interrupt
+#define ENABLE_TIMER0     TIMSK |= (1<<TOIE0)   // Enable Overflow Interrupt
 #define CNT_RELOAD       (0xFF - 125)         // 
 
 #define CNT_TCCRxB       2    // Prescaler value (2->1/8)
@@ -111,12 +107,9 @@ static void init_uart()
 
 void ha_uart_enable_tx() {
     UCSRB |= _BV(UDRIE);  // TX Interrupt enable
-        // cc.peers[idx].flags |= PEER_FLAG_RX;
 }
  
-
 static void init_gpio(){
-
     // Set led to pull down
     LED_DIR  |= LED_MASK_ALL;
     LED_PORT &= ~LED_MASK_ALL;
@@ -179,8 +172,25 @@ void init_timer() {
     // timer - Timer0. Incrementing counting till UINT8_MAX
     TCCR0 = CNT_TCCRxB;
     TCNT0 = CNT_RELOAD;
-    ENABLE_TIMER;
+    ENABLE_TIMER0;
     guc_timer_cnt = 0;
+}
+static void check_ctrlcon_tx()
+{
+    // Check CTRLCON TX if UART TX is disabled
+    if (0 == (UCSRB & _BV(UDRIE))) {
+        // Nothing to sent - check ctrlcon
+        ha_uart.tx_len = ha_node_ctrlcon_to_sent(ha_uart.tx_buf);
+        if (ha_uart.tx_len) {
+            ha_uart.tx_rd_idx = 0;
+            UCSRB |= _BV(UDRIE);
+        }
+    }
+}
+
+static void check_ctrlcon_rx()
+{
+    // Check nodes flags
 }
 
 int main(void)
@@ -219,7 +229,12 @@ int main(void)
             // Find and execute command from the ACTIONS TABLE
             command_lookup();
         }
-    } 
+
+        check_ctrlcon_tx();
+        check_ctrlcon_rx();
+        ha_nlink_check_rx();
+        ha_nlink_check_tx();
+    }
     cli();
 
 }
@@ -257,21 +272,12 @@ ISR(USART_UDRE_vect) {
         UDR = ha_uart.tx_buf[ha_uart.tx_rd_idx];
         UCSRA |= (1 << TXC); // Clear transmit complete flag
         ha_uart.tx_rd_idx ++;
+        if (ha_uart.tx_rd_idx == ha_uart.tx_len) {
+            // No more data - disable interrupt
+            UCSRB &= ~_BV(UDRIE);
+        }
         return;
     }
-
-    // Nothing to sent - check ctrlcon
-    ha_uart.tx_len = ha_node_ctrlcon_to_sent(ha_uart.tx_buf);
-    if (ha_uart.tx_len) {
-        // new data received - initialize TX buffer and sent 1st byte
-        UDR = ha_uart.tx_buf[0];
-        UCSRA |= (1 << TXC); // Clear transmit complete flag
-        ha_uart.tx_rd_idx = 1;
-        return;
-    }
-
-    // No more data - disable interrupt
-    UCSRB &= ~_BV(UDRIE);  // TX Interrupt enable
 }
 
 ISR(USART_RXC_vect) {
@@ -339,6 +345,7 @@ void action_signature()
 
 void node_get_info(uint8_t addr) {
 
+    addr = addr;
      // for all registered nodes
      {
         

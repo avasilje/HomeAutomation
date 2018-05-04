@@ -11,15 +11,13 @@
 #include "ha-common.h"
 #include "ha-nlink.h"
 
-#define SWITCHES_NUM        6
-
 #define SW_EVENT_NONE     0
 #define SW_EVENT_ON_OFF   1
 #define SW_EVENT_OFF_ON   2
 #define SW_EVENT_ON_HOLD  3
 #define SW_EVENT_HOLD_OFF 4
 
-uint8_t guc_switch_node_h;
+node_t *g_switch_nlink_node = (void*)0;
 uint8_t guc_sw_event_mask;
 
 typedef struct {
@@ -28,25 +26,21 @@ typedef struct {
     uint8_t uc_prev_sw;       // pressed/released debounced
     uint8_t uc_hold_timer;
     uint8_t uc_debounce_timer;
-    uint8_t uc_pin_num;
+    uint8_t uc_pin_mask;
     uint8_t uc_switch_type;   // button/movement detector
 }SWITCH_INFO;
-
-SWITCH_INFO gta_switches[SWITCHES_NUM];
 
 #define SW_PORT  PORTA
 #define SW_DIR   DDRA
 #define SW_PIN   PINA
 
 #define SW_PIN0   PINA0
-#define SW_PIN1   PINA1
 #define SW_PIN2   PINA2
 #define SW_PIN3   PINA3
 #define SW_PIN4   PINA4
 #define SW_PIN5   PINA5
 
 #define SW_MASK_ALL ((1 << SW_PIN0) |\
-                     (1 << SW_PIN1) |\
                      (1 << SW_PIN2) |\
                      (1 << SW_PIN3) |\
                      (1 << SW_PIN4) |\
@@ -60,8 +54,22 @@ SWITCH_INFO gta_switches[SWITCHES_NUM];
 
 #define SW_TYPE_BUTT   2
 
+#define SWITCHES_NUM        5
+
+uint8_t gta_switches_pin_masks[SWITCHES_NUM] = {
+    _BV(SW_PIN0), 
+    _BV(SW_PIN2), 
+    _BV(SW_PIN3), 
+    _BV(SW_PIN4), 
+    _BV(SW_PIN5), 
+};
+
+SWITCH_INFO gta_switches[SWITCHES_NUM];
+
 void switch_on_rx(uint8_t idx, const uint8_t *buf_in) 
 {
+    UNREFERENCED_PARAM(idx);
+    UNREFERENCED_PARAM(buf_in);
     // Nothing to do here. Switch is neither 
     // controllable nor configurable
 }
@@ -83,17 +91,17 @@ void ha_node_switch_init()
         gta_switches[uc_i].uc_prev_sw = SW_PIN_RELEASED;
         gta_switches[uc_i].uc_hold_timer = 0;
         gta_switches[uc_i].uc_debounce_timer = 0;
-        gta_switches[uc_i].uc_pin_num = uc_i;
+        gta_switches[uc_i].uc_pin_mask = gta_switches_pin_masks[uc_i];
         gta_switches[uc_i].uc_switch_type = SW_TYPE_BUTT;       // mark all switches as a button
     }
 
 // SWITCH DATA
 //      TYPE(SWITCH) EVENT(%)
 //  
-    guc_switch_node_h = ha_nlink_node_register(SWITCH_ADDR, NODE_TYPE_SWITCH, NLINK_COMM_BUF_SIZE, switch_on_rx);
+    g_switch_nlink_node = ha_nlink_node_register(SWITCH_ADDR, NODE_TYPE_SWITCH, switch_on_rx);
 
     // Clear TX buffer
-    node_t *node = &nlink.nodes[guc_switch_node_h];
+    node_t *node = g_switch_nlink_node;
     node->tx_buf[NLINK_HDR_OFF_LEN] = 2;
     node->tx_buf[NLINK_HDR_OFF_DATA + 0] = NODE_TYPE_SWITCH;
     node->tx_buf[NLINK_HDR_OFF_DATA + 1] = SW_EVENT_NONE;
@@ -115,7 +123,7 @@ void ha_node_switch_on_timer()
     { // Loop over all switches 
 
         uc_sw_state = gta_switches[uc_i].uc_prev_sw;
-        uc_curr_pin = (uc_sw_pins >> gta_switches[uc_i].uc_pin_num) & 1;
+        uc_curr_pin = !!(uc_sw_pins & gta_switches[uc_i].uc_pin_mask);
 
         // ------------------------------------
         // --- debouncing
@@ -191,13 +199,13 @@ void ha_node_switch_on_timer()
     // Check events - if any occur then update LED node
     for (uc_i = 0; uc_i < SWITCHES_NUM; uc_i++) {
         if (gta_switches[uc_i].uc_event) {
-            node_t *node = &nlink.nodes[guc_switch_node_h];
+            node_t *node = g_switch_nlink_node;
             // node->tx_buf[NLINK_HDR_OFF_LEN] = 2;
             // node->tx_buf[NLINK_HDR_OFF_DATA + 0] = NODE_TYPE_SWITCH;
             node->tx_buf[NLINK_HDR_OFF_DATA + 1] = gta_switches[uc_i].uc_event;
 
             // TODO: LEDLIGHT ADDR might be configurable and stored in EEPROM
-            ha_nlink_node_send(guc_switch_node_h, LEDLIGHT_ADDR, NLINK_CMD_INFO);
+            ha_nlink_node_send(node, LEDLIGHT_ADDR, NLINK_CMD_INFO);
             gta_switches[uc_i].uc_event = 0;
         }
     }

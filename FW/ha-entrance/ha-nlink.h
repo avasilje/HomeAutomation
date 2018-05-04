@@ -6,6 +6,19 @@
  */ 
 
 #pragma once
+
+#define NLINK_IO_RECOVER_TIMER 64 // in nlink clocks
+
+#define NLINK_IO_RX_PORT  PORTD
+#define NLINK_IO_RX_DIR   DDRD
+#define NLINK_IO_RX_PIN   PIND
+#define NLINK_IO_RX_PIN_MASK   _BV(PIND2)   // INT0
+
+#define NLINK_IO_TX_PORT  PORTB
+#define NLINK_IO_TX_DIR   DDRB
+//#define NLINK_IO_TX_PIN   PINB    // Not in use 
+#define NLINK_IO_TX_PIN_MASK   _BV(PINB1)
+
 #define NLINK_COMM_BUF_SIZE 16
 
 typedef void (*node_rx_cb_t)(uint8_t idx, const uint8_t *buf_in);
@@ -20,6 +33,7 @@ typedef struct node_s {
     node_rx_cb_t on_rx_cb;
 
     uint8_t tx_buf[NLINK_COMM_BUF_SIZE];
+    uint8_t tx_flag;
 } node_t;
 
 #define NLINK_HDR_OFF_FROM 0
@@ -28,17 +42,34 @@ typedef struct node_s {
 #define NLINK_HDR_OFF_LEN  3
 #define NLINK_HDR_OFF_DATA 4
 
-#define NLINK_NODES_NUM 6       // Sum of all external and 2xlocal nodes - ctrlcon node
-                                // (ctrlcon registers a node for each discovered external and local nodes)
-                                // Ext nodes: switch + hvac + blinds = 3
-                                // Loc nodes: ctrlcon + switch = 2
-                                // Tot  = 3 + (2 * 2) - 1 = 6
+#define NLINK_NODES_NUM 3       // CTRLCON + SWITCH + ???
+
+enum nlink_io_state_e {
+    NLINK_IO_STATE_RECOVERING,
+    NLINK_IO_STATE_IDLE,
+    NLINK_IO_STATE_ACTIVE
+};
+
+typedef struct ha_nlink_io_s {
+    enum nlink_io_state_e state;
+    uint8_t is_rx_timer; 
+    uint8_t tx_buf[NLINK_COMM_BUF_SIZE];
+    uint8_t tx_rd;
+    uint8_t tx_len;
+    uint8_t tx_shift_reg;
+    
+    uint8_t rx_buf[NLINK_COMM_BUF_SIZE];
+    uint8_t rx_wr;
+    uint8_t rx_shift_reg;
+    uint8_t bit_cnt;
+    uint8_t recover_timer;
+    uint8_t idle_timer;
+} ha_nlink_io_t;
 
 typedef struct nlink_s {
     uint8_t nodes_to_send_mask;
     node_t nodes[NLINK_NODES_NUM];
-    uint8_t comm_tx[NLINK_COMM_BUF_SIZE];
-    uint8_t comm_tx_rd;
+    ha_nlink_io_t io;
 } nlink_t;
 
 #define NODE_TYPE_HVAC      0x10
@@ -63,7 +94,9 @@ typedef struct nlink_s {
 #define NLINK_CMD_INFO    3
 
 extern void ha_nlink_init();
-extern void ha_nlink_node_send(uint8_t node_h, uint8_t addr_to, uint8_t cmd);
-extern int8_t ha_nlink_node_register(uint8_t addr, uint8_t type, uint8_t len, node_rx_cb_t on_rx_cb);
+extern void ha_nlink_node_send(node_t *node, uint8_t addr_to, uint8_t cmd);
+extern node_t* ha_nlink_node_register(uint8_t addr, uint8_t type, node_rx_cb_t on_rx_cb);
+extern void ha_nlink_check_rx();
+extern void ha_nlink_check_tx();
 
 extern nlink_t nlink;

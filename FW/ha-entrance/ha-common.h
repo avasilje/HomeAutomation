@@ -16,3 +16,5 @@ extern void FATAL_TRAP (uint16_t us_line_num);
     } while(1)
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+
+#define UNREFERENCED_PARAM(x) x=x
