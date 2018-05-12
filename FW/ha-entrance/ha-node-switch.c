@@ -10,12 +10,7 @@
 #include <stdint.h>
 #include "ha-common.h"
 #include "ha-nlink.h"
-
-#define SW_EVENT_NONE     0
-#define SW_EVENT_ON_OFF   1
-#define SW_EVENT_OFF_ON   2
-#define SW_EVENT_ON_HOLD  3
-#define SW_EVENT_HOLD_OFF 4
+#include "ha-node-switch.h"
 
 node_t *g_switch_nlink_node = (void*)0;
 uint8_t guc_sw_event_mask;
@@ -54,7 +49,7 @@ typedef struct {
 
 #define SW_TYPE_BUTT   2
 
-#define SWITCHES_NUM        5
+#define SWITCHES_NUM   5
 
 uint8_t gta_switches_pin_masks[SWITCHES_NUM] = {
     _BV(SW_PIN0), 
@@ -102,16 +97,13 @@ void ha_node_switch_init()
 
     // Clear TX buffer
     node_t *node = g_switch_nlink_node;
-    node->tx_buf[NLINK_HDR_OFF_LEN] = 2;
-    node->tx_buf[NLINK_HDR_OFF_DATA + 0] = NODE_TYPE_SWITCH;
-    node->tx_buf[NLINK_HDR_OFF_DATA + 1] = SW_EVENT_NONE;
-
+    node->tx_buf[NLINK_HDR_OFF_LEN] = 0;
+    node->tx_buf[NLINK_HDR_OFF_TYPE] = NODE_TYPE_SWITCH;
 }
 
 
 void ha_node_switch_on_timer() 
 {
-
     uint8_t  uc_i;
     uint8_t  uc_sw_state;
     uint8_t  uc_sw_pins;
@@ -197,17 +189,18 @@ void ha_node_switch_on_timer()
     } // End of switch loop
 
     // Check events - if any occur then update LED node
+    node_t *node = g_switch_nlink_node;
+    uint8_t len = 0;
     for (uc_i = 0; uc_i < SWITCHES_NUM; uc_i++) {
         if (gta_switches[uc_i].uc_event) {
-            node_t *node = g_switch_nlink_node;
-            // node->tx_buf[NLINK_HDR_OFF_LEN] = 2;
-            // node->tx_buf[NLINK_HDR_OFF_DATA + 0] = NODE_TYPE_SWITCH;
-            node->tx_buf[NLINK_HDR_OFF_DATA + 1] = gta_switches[uc_i].uc_event;
-
-            // TODO: LEDLIGHT ADDR might be configurable and stored in EEPROM
-            ha_nlink_node_send(node, LEDLIGHT_ADDR, NLINK_CMD_INFO);
+            node->tx_buf[NLINK_HDR_OFF_DATA + len] = (uc_i << 4) | gta_switches[uc_i].uc_event;
             gta_switches[uc_i].uc_event = 0;
+            len ++;
         }
     }
-                
+    // TODO: LEDLIGHT ADDR might be configurable and stored in EEPROM
+    if (len) {
+        node->tx_buf[NLINK_HDR_OFF_LEN] = len;
+        ha_nlink_node_send(node, LEDLIGHT_ADDR, NLINK_CMD_INFO);
+    }                
 }

@@ -3,7 +3,7 @@
  *
  * Created: 5/1/2018 11:19:38 PM
  *  Author: Solit
- */ 
+ */
 
 #pragma once
 
@@ -16,7 +16,7 @@
 
 #define NLINK_IO_TX_PORT  PORTB
 #define NLINK_IO_TX_DIR   DDRB
-//#define NLINK_IO_TX_PIN   PINB    // Not in use 
+//#define NLINK_IO_TX_PIN   PINB    // Not in use
 #define NLINK_IO_TX_PIN_MASK   _BV(PINB1)
 
 #define NLINK_COMM_BUF_SIZE 16
@@ -25,7 +25,7 @@ typedef void (*node_rx_cb_t)(uint8_t idx, const uint8_t *buf_in);
 
 typedef struct node_s {
     uint8_t idx;
-    
+
     // Registered values
     uint8_t addr;       // Node address
     uint8_t type;       // Node type
@@ -39,8 +39,9 @@ typedef struct node_s {
 #define NLINK_HDR_OFF_FROM 0
 #define NLINK_HDR_OFF_TO   1
 #define NLINK_HDR_OFF_CMD  2
-#define NLINK_HDR_OFF_LEN  3
-#define NLINK_HDR_OFF_DATA 4
+#define NLINK_HDR_OFF_TYPE 3
+#define NLINK_HDR_OFF_LEN  4
+#define NLINK_HDR_OFF_DATA 5
 
 #define NLINK_NODES_NUM 3       // CTRLCON + SWITCH + ???
 
@@ -52,12 +53,12 @@ enum nlink_io_state_e {
 
 typedef struct ha_nlink_io_s {
     enum nlink_io_state_e state;
-    uint8_t is_rx_timer; 
+    uint8_t is_rx_timer;
     uint8_t tx_buf[NLINK_COMM_BUF_SIZE];
     uint8_t tx_rd;
     uint8_t tx_len;
     uint8_t tx_shift_reg;
-    
+
     uint8_t rx_buf[NLINK_COMM_BUF_SIZE];
     uint8_t rx_wr;
     uint8_t rx_shift_reg;
@@ -86,8 +87,8 @@ typedef struct nlink_s {
 // CMD (RD_REQ/RD_RESP/WR_REQ/WR_RESP)
 //     RD_REQ  - cc_node -> remote or BC (aka discovery).
 //     RD_RESP - remote -> peer. Always contains ADDR_TO == ADDR_FROM from RD_REQ
-//     INFO    - remote -> any (aka notification).  
-//     
+//     INFO    - remote -> any (aka notification).
+//
 
 #define NLINK_CMD_RD_REQ  1
 #define NLINK_CMD_RD_RESP 2

@@ -1,0 +1,2058 @@
+FILE_TYPE=LIBRARY_PARTS;
+{ Using PSTWRITER 16.6.0 d001Oct-17-2014 at 11:30:20}
+primitive 'INV_F_ANTENNA_1_TRACE_INV_F_ANTENNA';
+  pin
+    'FEED':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    'GND':
+      PIN_NUMBER='(2)';
+      PINUSE='POWER';
+  end_pin;
+  body
+    PART_NAME='INV_F_ANTENNA_1';
+    JEDEC_TYPE='trace';
+    VALUE='INV_F_ANTENNA';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1608_IS0603Q_DISCRETE_0.9000 MM_4.7UF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1608_IS0603Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.9000 mm';
+    VALUE='4.7uF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1005_IS0402Q_DISCRETE_0.5500 MM_0.01UF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.5500 mm';
+    VALUE='0.01uF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1005_IS0402Q_DISCRETE_0.5500 MM_10PF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.5500 mm';
+    VALUE='10pF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1005_IS0402Q_DISCRETE_0.5500 MM_1.8PF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.5500 mm';
+    VALUE='1.8pF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1005_IS0402Q_DISCRETE_0.5500 MM_1.8PF (DNI)';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.5500 mm';
+    VALUE='1.8pF (DNI)';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1005_IS0402Q_DISCRETE_0.6100 MM_15PF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.6100 mm';
+    VALUE='15pF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1005_IS0402Q_DISCRETE_0.6350 MM_0.1UF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.6350 mm';
+    VALUE='0.1uF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1005_IS0402Q_DISCRETE_0.5500 MM_12PF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.5500 mm';
+    VALUE='12pF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1005_IS0402Q_DISCRETE_0.5500 MM_150PF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.5500 mm';
+    VALUE='150pF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1608_IS0603Q_DISCRETE_1.0000 MM_10UF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1608_IS0603Q';
+    CLASS='DISCRETE';
+    HEIGHT='1.0000 mm';
+    VALUE='10uF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1005_IS0402Q_DISCRETE_0.7000 MM_10UF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.7000 mm';
+    VALUE='10uF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1005_IS0402Q_DISCRETE_0.5500 MM_0.1UF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.5500 mm';
+    VALUE='0.1uF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1608_IS0603Q_DISCRETE_0.9500 MM_4.7UF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1608_IS0603Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.9500 mm';
+    VALUE='4.7uF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1608_IS0603Q_DISCRETE_0.9500 MM_10UF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1608_IS0603Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.9500 mm';
+    VALUE='10uF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1005_IS0402Q_DISCRETE_0.6500 MM_4.7UF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.6500 mm';
+    VALUE='4.7uF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC2012_IS0805Q_DISCRETE_1.4500 MM_33UF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC2012_IS0805Q';
+    CLASS='DISCRETE';
+    HEIGHT='1.4500 mm';
+    VALUE='33uF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1005_IS0402Q_DISCRETE_0.5500 MM_2.2UF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.5500 mm';
+    VALUE='2.2uF';
+  end_body;
+end_primitive;
+primitive 'CAP_CAPC1005_IS0402Q_DISCRETE_0.5500 MM_1UF';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP';
+    JEDEC_TYPE='CAPC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.5500 mm';
+    VALUE='1uF';
+  end_body;
+end_primitive;
+primitive 'DIO-LED_LEDC1608Q_0.9000 MM_LTST-C190CKT';
+  pin
+    'CATHODE':
+      PIN_NUMBER='(C)';
+      PINUSE='UNSPEC';
+    'ANODE':
+      PIN_NUMBER='(A)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='DIO-LED';
+    JEDEC_TYPE='LEDC1608Q';
+    HEIGHT='0.9000 mm';
+    VALUE='LTST-C190CKT';
+  end_body;
+end_primitive;
+primitive 'LED-DUAL-RED1-GRN2_LEDS4_KING_APTB1615Q_DISCRETE_0.9000 MM_APTB1615SURKCGKC-F01';
+  pin
+    'RED_ANODE':
+      PIN_NUMBER='(A1)';
+      PINUSE='UNSPEC';
+    'GREEN_ANODE':
+      PIN_NUMBER='(A2)';
+      PINUSE='UNSPEC';
+    'GREEN_CATHODE':
+      PIN_NUMBER='(C2)';
+      PINUSE='UNSPEC';
+    'RED_CATHODE':
+      PIN_NUMBER='(C1)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='LED-DUAL-RED1-GRN2';
+    JEDEC_TYPE='LEDS4_KING_APTB1615Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.9000 mm';
+    VALUE='APTB1615SURKCGKC-F01';
+  end_body;
+end_primitive;
+primitive 'DIO-TVS-BIPOLAR-2_FUSC1005_IS0402Q_DISCRETE_0.6000 MM_10V';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='DIO-TVS-BIPOLAR-2';
+    JEDEC_TYPE='FUSC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.6000 mm';
+    VALUE='10V';
+  end_body;
+end_primitive;
+primitive 'FB_INDC1005_IS0402Q_DISCRETE_0.6000 MM_120OHMS';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='FB';
+    JEDEC_TYPE='INDC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.6000 mm';
+    VALUE='120Ohms';
+  end_body;
+end_primitive;
+primitive 'FB_INDC1005_IS0402Q_DISCRETE_0.6000 MM_600OHMS';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='FB';
+    JEDEC_TYPE='INDC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.6000 mm';
+    VALUE='600Ohms';
+  end_body;
+end_primitive;
+primitive 'RF-2GND-J_IPX_20279-001E-01_IO_1.2450 MM_20279-001E-04';
+  pin
+    'RF_IN':
+      PIN_NUMBER='(S)';
+      PINUSE='UNSPEC';
+    'GND#G1':
+      PIN_NUMBER='(G1)';
+      PINUSE='POWER';
+    'GND#G2':
+      PIN_NUMBER='(G2)';
+      PINUSE='POWER';
+  end_pin;
+  body
+    PART_NAME='RF-2GND-J';
+    JEDEC_TYPE='IPX_20279-001E-01';
+    CLASS='IO';
+    HEIGHT='1.2450 mm';
+    VALUE='20279-001E-04';
+  end_body;
+end_primitive;
+primitive 'PLG-18-ODD-EVEN-J_CTST254PDS18_IO_8.8900 MM_S-M-.100-2X9';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '3':
+      PIN_NUMBER='(3)';
+      PINUSE='UNSPEC';
+    '5':
+      PIN_NUMBER='(5)';
+      PINUSE='UNSPEC';
+    '7':
+      PIN_NUMBER='(7)';
+      PINUSE='UNSPEC';
+    '9':
+      PIN_NUMBER='(9)';
+      PINUSE='UNSPEC';
+    '11':
+      PIN_NUMBER='(11)';
+      PINUSE='UNSPEC';
+    '13':
+      PIN_NUMBER='(13)';
+      PINUSE='UNSPEC';
+    '15':
+      PIN_NUMBER='(15)';
+      PINUSE='UNSPEC';
+    '17':
+      PIN_NUMBER='(17)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+    '4':
+      PIN_NUMBER='(4)';
+      PINUSE='UNSPEC';
+    '6':
+      PIN_NUMBER='(6)';
+      PINUSE='UNSPEC';
+    '8':
+      PIN_NUMBER='(8)';
+      PINUSE='UNSPEC';
+    '10':
+      PIN_NUMBER='(10)';
+      PINUSE='UNSPEC';
+    '12':
+      PIN_NUMBER='(12)';
+      PINUSE='UNSPEC';
+    '14':
+      PIN_NUMBER='(14)';
+      PINUSE='UNSPEC';
+    '16':
+      PIN_NUMBER='(16)';
+      PINUSE='UNSPEC';
+    '18':
+      PIN_NUMBER='(18)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='PLG-18-ODD-EVEN-J';
+    JEDEC_TYPE='CTST254PDS18';
+    CLASS='IO';
+    HEIGHT='8.8900 mm';
+    VALUE='S-M-.100-2X9';
+  end_body;
+end_primitive;
+primitive 'PLG-18-ODD-EVEN-J_CTST254PDS18_IO_8.8900 MM_S-M-.100-2X9 (DNI)';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '3':
+      PIN_NUMBER='(3)';
+      PINUSE='UNSPEC';
+    '5':
+      PIN_NUMBER='(5)';
+      PINUSE='UNSPEC';
+    '7':
+      PIN_NUMBER='(7)';
+      PINUSE='UNSPEC';
+    '9':
+      PIN_NUMBER='(9)';
+      PINUSE='UNSPEC';
+    '11':
+      PIN_NUMBER='(11)';
+      PINUSE='UNSPEC';
+    '13':
+      PIN_NUMBER='(13)';
+      PINUSE='UNSPEC';
+    '15':
+      PIN_NUMBER='(15)';
+      PINUSE='UNSPEC';
+    '17':
+      PIN_NUMBER='(17)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+    '4':
+      PIN_NUMBER='(4)';
+      PINUSE='UNSPEC';
+    '6':
+      PIN_NUMBER='(6)';
+      PINUSE='UNSPEC';
+    '8':
+      PIN_NUMBER='(8)';
+      PINUSE='UNSPEC';
+    '10':
+      PIN_NUMBER='(10)';
+      PINUSE='UNSPEC';
+    '12':
+      PIN_NUMBER='(12)';
+      PINUSE='UNSPEC';
+    '14':
+      PIN_NUMBER='(14)';
+      PINUSE='UNSPEC';
+    '16':
+      PIN_NUMBER='(16)';
+      PINUSE='UNSPEC';
+    '18':
+      PIN_NUMBER='(18)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='PLG-18-ODD-EVEN-J';
+    JEDEC_TYPE='CTST254PDS18';
+    CLASS='IO';
+    HEIGHT='8.8900 mm';
+    VALUE='S-M-.100-2X9 (DNI)';
+  end_body;
+end_primitive;
+primitive 'HDR1X2-J_CTST200PSS2_IO_6.3500 MM_NRPN021PAEN-RC';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='HDR1X2-J';
+    JEDEC_TYPE='CTST200PSS2';
+    CLASS='IO';
+    HEIGHT='6.3500 mm';
+    VALUE='NRPN021PAEN-RC';
+  end_body;
+end_primitive;
+primitive 'PLG-4-J_CTST254PSS4_IO_8.8900 MM_PBC04SAAN';
+  pin
+    'N1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    'N2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+    'N3':
+      PIN_NUMBER='(3)';
+      PINUSE='UNSPEC';
+    'N4':
+      PIN_NUMBER='(4)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='PLG-4-J';
+    JEDEC_TYPE='CTST254PSS4';
+    CLASS='IO';
+    HEIGHT='8.8900 mm';
+    VALUE='PBC04SAAN';
+  end_body;
+end_primitive;
+primitive 'USB-5P-6SH-J_TYCO_1981568-1_IO_2.5100 MM_1981568-1';
+  pin
+    'VBUS':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    'DM':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+    'DP':
+      PIN_NUMBER='(3)';
+      PINUSE='UNSPEC';
+    'GND':
+      PIN_NUMBER='(5)';
+      PINUSE='POWER';
+    'SHIELD#SH1':
+      PIN_NUMBER='(SH1)';
+      PINUSE='POWER';
+    'SHIELD#SH2':
+      PIN_NUMBER='(SH2)';
+      PINUSE='POWER';
+    'SHIELD#SH3':
+      PIN_NUMBER='(SH3)';
+      PINUSE='POWER';
+    'SHIELD#SH4':
+      PIN_NUMBER='(SH4)';
+      PINUSE='POWER';
+    'ID':
+      PIN_NUMBER='(4)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'SHIELD#SH5':
+      PIN_NUMBER='(SH5)';
+      PINUSE='POWER';
+    'SHIELD#SH6':
+      PIN_NUMBER='(SH6)';
+      PINUSE='POWER';
+  end_pin;
+  body
+    PART_NAME='USB-5P-6SH-J';
+    JEDEC_TYPE='TYCO_1981568-1';
+    CLASS='IO';
+    HEIGHT='2.5100 mm';
+    VALUE='1981568-1';
+  end_body;
+end_primitive;
+primitive 'IND-SHIELDED-NO-DOT_INDS2_TDK_VLS201610CXQ_DISCRETE_1.0000 MM_10UH';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='IND-SHIELDED-NO-DOT';
+    JEDEC_TYPE='INDS2_TDK_VLS201610CXQ';
+    CLASS='DISCRETE';
+    HEIGHT='1.0000 mm';
+    VALUE='10uH';
+  end_body;
+end_primitive;
+primitive 'IND_INDS2_MUR_LQM21NQ_DISCRETE_1.4500 MM_4.7UH';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='IND';
+    JEDEC_TYPE='INDS2_MUR_LQM21NQ';
+    CLASS='DISCRETE';
+    HEIGHT='1.4500 mm';
+    VALUE='4.7uH';
+  end_body;
+end_primitive;
+primitive 'SPEAKER_SPKRS2_MUR_PKLCS1212Q_IO_3.0000 MM_PKLCS1212E4001-R1';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='SPEAKER';
+    JEDEC_TYPE='SPKRS2_MUR_PKLCS1212Q';
+    CLASS='IO';
+    HEIGHT='3.0000 mm';
+    VALUE='PKLCS1212E4001-R1';
+  end_body;
+end_primitive;
+primitive 'NPN_SOT23_B_E_C_DISCRETE_1.5600 MM_2SC2712-Y,LF';
+  pin
+    'B':
+      PIN_NUMBER='(B)';
+      PINUSE='UNSPEC';
+    'E':
+      PIN_NUMBER='(E)';
+      PINUSE='UNSPEC';
+    'C':
+      PIN_NUMBER='(C)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='NPN';
+    JEDEC_TYPE='SOT23_B_E_C';
+    CLASS='DISCRETE';
+    HEIGHT='1.5600 mm';
+    VALUE='2SC2712-Y,LF';
+  end_body;
+end_primitive;
+primitive 'FET-MOS-N-GSD_SOT883_SC-101_DISCRETE_0.4000 MM_PMZB290UN';
+  pin
+    'D':
+      PIN_NUMBER='(3)';
+      PINUSE='UNSPEC';
+    'G':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    'S':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='FET-MOS-N-GSD';
+    JEDEC_TYPE='SOT883_SC-101';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='PMZB290UN';
+  end_body;
+end_primitive;
+primitive 'RES_RESC1005_IS0402Q_DISCRETE_0.4000 MM_10K';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES';
+    JEDEC_TYPE='RESC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='10K';
+  end_body;
+end_primitive;
+primitive 'RES_RESC1005_IS0402Q_DISCRETE_0.4000 MM_100K';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES';
+    JEDEC_TYPE='RESC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='100K';
+  end_body;
+end_primitive;
+primitive 'RES_RESC1005_IS0402Q_DISCRETE_0.4000 MM_470';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES';
+    JEDEC_TYPE='RESC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='470';
+  end_body;
+end_primitive;
+primitive 'RES_RESC1005_IS0402Q_DISCRETE_0.4000 MM_10K (DNI)';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES';
+    JEDEC_TYPE='RESC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='10K (DNI)';
+  end_body;
+end_primitive;
+primitive 'RES_RESC1005_IS0402Q_DISCRETE_0.4000 MM_0';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES';
+    JEDEC_TYPE='RESC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='0';
+  end_body;
+end_primitive;
+primitive 'RES_RESC1005_IS0402Q_DISCRETE_0.4000 MM_5.6K';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES';
+    JEDEC_TYPE='RESC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='5.6K';
+  end_body;
+end_primitive;
+primitive 'RES_RESC1005_IS0402Q_DISCRETE_0.4000 MM_4.7K';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES';
+    JEDEC_TYPE='RESC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='4.7K';
+  end_body;
+end_primitive;
+primitive 'RES_RESC1005_IS0402Q_DISCRETE_0.4000 MM_200';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES';
+    JEDEC_TYPE='RESC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='200';
+  end_body;
+end_primitive;
+primitive 'IND-DOT-1_INDC1005_IS0402Q_DISCRETE_0.3500 MM_2.7NH';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='IND-DOT-1';
+    JEDEC_TYPE='INDC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.3500 mm';
+    VALUE='2.7nH';
+  end_body;
+end_primitive;
+primitive 'RES_RESC1005_IS0402Q_DISCRETE_0.4000 MM_0 (DNI)';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES';
+    JEDEC_TYPE='RESC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='0 (DNI)';
+  end_body;
+end_primitive;
+primitive 'RES_RESC1005_IS0402Q_DISCRETE_0.4000 MM_10M';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES';
+    JEDEC_TYPE='RESC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='10M';
+  end_body;
+end_primitive;
+primitive 'RES_RESC1608_IS0603Q_DISCRETE_0.6000 MM_0';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES';
+    JEDEC_TYPE='RESC1608_IS0603Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.6000 mm';
+    VALUE='0';
+  end_body;
+end_primitive;
+primitive 'RES_RESC1005_IS0402Q_DISCRETE_0.4000 MM_1K';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES';
+    JEDEC_TYPE='RESC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='1K';
+  end_body;
+end_primitive;
+primitive 'RES-OPT-B-A_RESC1005_IS0402Q_OPT_AB_DISCRETE_0.4000 MM_0';
+  pin
+    'A':
+      PIN_NUMBER='(A)';
+      PINUSE='UNSPEC';
+    'B':
+      PIN_NUMBER='(B)';
+      PINUSE='UNSPEC';
+    'C':
+      PIN_NUMBER='(C)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES-OPT-B-A';
+    JEDEC_TYPE='RESC1005_IS0402Q_OPT_AB';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='0';
+  end_body;
+end_primitive;
+primitive 'RES-OPT-A-B_RESC1005_IS0402Q_OPT_AB_DISCRETE_0.4000 MM_0';
+  pin
+    'A':
+      PIN_NUMBER='(A)';
+      PINUSE='UNSPEC';
+    'B':
+      PIN_NUMBER='(B)';
+      PINUSE='UNSPEC';
+    'C':
+      PIN_NUMBER='(C)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES-OPT-A-B';
+    JEDEC_TYPE='RESC1005_IS0402Q_OPT_AB';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='0';
+  end_body;
+end_primitive;
+primitive 'RES_RESC1005_IS0402Q_DISCRETE_0.4000 MM_300K';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES';
+    JEDEC_TYPE='RESC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='300K';
+  end_body;
+end_primitive;
+primitive 'RES_RESC1005_IS0402Q_DISCRETE_0.4000 MM_240K';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='RES';
+    JEDEC_TYPE='RESC1005_IS0402Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.4000 mm';
+    VALUE='240K';
+  end_body;
+end_primitive;
+primitive 'SWITCH-PB-13-24_SWPBS4_CK_KMR2XXG_DISCRETE_2.1000 MM_KMR221GLFS';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '3':
+      PIN_NUMBER='(3)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+    '4':
+      PIN_NUMBER='(4)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='SWITCH-PB-13-24';
+    JEDEC_TYPE='SWPBS4_CK_KMR2XXG';
+    CLASS='DISCRETE';
+    HEIGHT='2.1000 mm';
+    VALUE='KMR221GLFS';
+  end_body;
+end_primitive;
+primitive 'SWITCH-SPDT-CP2NC3NO1-4SHLD_SWSLS3_ALPS_SSSS811101_DISCRETE_1.4000 MM_SSSS811101';
+  pin
+    'MTG2':
+      PIN_NUMBER='(SH2)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'MTG1':
+      PIN_NUMBER='(SH1)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'COM':
+      PIN_NUMBER='(2)';
+      INPUT_LOAD='(*)';
+    'MTG4':
+      PIN_NUMBER='(SH4)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'MTG3':
+      PIN_NUMBER='(SH3)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'NC':
+      PIN_NUMBER='(3)';
+      INPUT_LOAD='(*)';
+    'NO':
+      PIN_NUMBER='(1)';
+      INPUT_LOAD='(*)';
+  end_pin;
+  body
+    PART_NAME='SWITCH-SPDT-CP2NC3NO1-4SHLD';
+    JEDEC_TYPE='SWSLS3_ALPS_SSSS811101';
+    CLASS='DISCRETE';
+    HEIGHT='1.4000 mm';
+    VALUE='SSSS811101';
+  end_body;
+end_primitive;
+primitive 'SW-DIP-4_SWDPS8_OMRON_A6H-4102_DISCRETE_1.9500 MM_A6H-4101';
+  pin
+    'A1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    'A2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+    'A3':
+      PIN_NUMBER='(3)';
+      PINUSE='UNSPEC';
+    'B3':
+      PIN_NUMBER='(6)';
+      PINUSE='UNSPEC';
+    'B4':
+      PIN_NUMBER='(5)';
+      PINUSE='UNSPEC';
+    'A4':
+      PIN_NUMBER='(4)';
+      PINUSE='UNSPEC';
+    'B2':
+      PIN_NUMBER='(7)';
+      PINUSE='UNSPEC';
+    'B1':
+      PIN_NUMBER='(8)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='SW-DIP-4';
+    JEDEC_TYPE='SWDPS8_OMRON_A6H-4102';
+    CLASS='DISCRETE';
+    HEIGHT='1.9500 mm';
+    VALUE='A6H-4101';
+  end_body;
+end_primitive;
+primitive 'SW-DIP-8_SWDPS16_ITT_TDA08H0SK1_DISCRETE_2.3000 MM_TDA08H0SB1';
+  pin
+    'A1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    'A2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+    'A3':
+      PIN_NUMBER='(3)';
+      PINUSE='UNSPEC';
+    'A6':
+      PIN_NUMBER='(6)';
+      PINUSE='UNSPEC';
+    'A5':
+      PIN_NUMBER='(5)';
+      PINUSE='UNSPEC';
+    'A4':
+      PIN_NUMBER='(4)';
+      PINUSE='UNSPEC';
+    'A7':
+      PIN_NUMBER='(7)';
+      PINUSE='UNSPEC';
+    'A8':
+      PIN_NUMBER='(8)';
+      PINUSE='UNSPEC';
+    'B8':
+      PIN_NUMBER='(9)';
+      PINUSE='UNSPEC';
+    'B7':
+      PIN_NUMBER='(10)';
+      PINUSE='UNSPEC';
+    'B6':
+      PIN_NUMBER='(11)';
+      PINUSE='UNSPEC';
+    'B5':
+      PIN_NUMBER='(12)';
+      PINUSE='UNSPEC';
+    'B4':
+      PIN_NUMBER='(13)';
+      PINUSE='UNSPEC';
+    'B3':
+      PIN_NUMBER='(14)';
+      PINUSE='UNSPEC';
+    'B2':
+      PIN_NUMBER='(15)';
+      PINUSE='UNSPEC';
+    'B1':
+      PIN_NUMBER='(16)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='SW-DIP-8';
+    JEDEC_TYPE='SWDPS16_ITT_TDA08H0SK1';
+    CLASS='DISCRETE';
+    HEIGHT='2.3000 mm';
+    VALUE='TDA08H0SB1';
+  end_body;
+end_primitive;
+primitive 'TP_TP_SMD_030RD_IO__TP-SMT-030-RND';
+  pin
+    'TP':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='TP';
+    JEDEC_TYPE='TP_SMD_030RD';
+    CLASS='IO';
+    VALUE='TP-SMT-030-RND';
+  end_body;
+end_primitive;
+primitive '24XX512-DIL8_TSOP65P640_8_D300N_IC_1.2000 MM_24FC512-I/ST';
+  pin
+    'A0':
+      PIN_NUMBER='(1)';
+      INPUT_LOAD='(*)';
+    'SDA':
+      PIN_NUMBER='(5)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'GND':
+      PIN_NUMBER='(4)';
+      PINUSE='POWER';
+    'A1':
+      PIN_NUMBER='(2)';
+      INPUT_LOAD='(*)';
+    'SCL':
+      PIN_NUMBER='(6)';
+      INPUT_LOAD='(*)';
+    'WP':
+      PIN_NUMBER='(7)';
+      INPUT_LOAD='(*)';
+    'VCC':
+      PIN_NUMBER='(8)';
+      PINUSE='POWER';
+    'A2':
+      PIN_NUMBER='(3)';
+      INPUT_LOAD='(*)';
+  end_pin;
+  body
+    PART_NAME='24XX512-DIL8';
+    JEDEC_TYPE='TSOP65P640_8_D300N';
+    CLASS='IC';
+    HEIGHT='1.2000 mm';
+    VALUE='24FC512-I/ST';
+  end_body;
+end_primitive;
+primitive 'UVIS25-QFN10_QFN60P250X250_10_ST-LGA-10LN_IC_0.8000 MM_UVIS25';
+  pin
+    'SDO':
+      PIN_NUMBER='(5)';
+      OUTPUT_LOAD='(*)';
+    'RSVD_GND':
+      PIN_NUMBER='(3)';
+      PINUSE='UNSPEC';
+    'CS':
+      PIN_NUMBER='(6)';
+      INPUT_LOAD='(*)';
+    'VDD_IO':
+      PIN_NUMBER='(1)';
+      PINUSE='POWER';
+    'VDD':
+      PIN_NUMBER='(10)';
+      PINUSE='POWER';
+    'GND1':
+      PIN_NUMBER='(8)';
+      PINUSE='POWER';
+    'GND2':
+      PIN_NUMBER='(9)';
+      PINUSE='POWER';
+    'SDA/SDI/SDO':
+      PIN_NUMBER='(4)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'SCL/SPC':
+      PIN_NUMBER='(2)';
+      INPUT_LOAD='(*)';
+    'INT_DRDY':
+      PIN_NUMBER='(7)';
+      OUTPUT_LOAD='(*)';
+  end_pin;
+  body
+    PART_NAME='UVIS25-QFN10';
+    JEDEC_TYPE='QFN60P250X250_10_ST-LGA-10LN';
+    CLASS='IC';
+    HEIGHT='0.8000 mm';
+    VALUE='UVIS25';
+  end_body;
+end_primitive;
+primitive 'LIS3DSH-LGA16_LGA50P300X300_16_ST-LGA16N_IC_1.0000 MM_LIS3DSH';
+  pin
+    'VDD':
+      PIN_NUMBER='(14)';
+      PINUSE='POWER';
+    'RSVD_GND':
+      PIN_NUMBER='(10)';
+      PINUSE='POWER';
+    'INT2':
+      PIN_NUMBER='(9)';
+      OUTPUT_LOAD='(*)';
+    'VDD_IO':
+      PIN_NUMBER='(1)';
+      PINUSE='POWER';
+    'NC2':
+      PIN_NUMBER='(3)';
+      PINUSE='UNSPEC';
+    'SCL/SPC':
+      PIN_NUMBER='(4)';
+      INPUT_LOAD='(*)';
+    'CS':
+      PIN_NUMBER='(8)';
+      INPUT_LOAD='(*)';
+    'SDA/SDI/SDO':
+      PIN_NUMBER='(6)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'SEL/SDO':
+      PIN_NUMBER='(7)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'INT1/DRDY':
+      PIN_NUMBER='(11)';
+      OUTPUT_LOAD='(*)';
+    'GND2':
+      PIN_NUMBER='(12)';
+      PINUSE='POWER';
+    'RSVD_VDD':
+      PIN_NUMBER='(15)';
+      PINUSE='POWER';
+    'GND1':
+      PIN_NUMBER='(5)';
+      PINUSE='POWER';
+    'GND4':
+      PIN_NUMBER='(16)';
+      PINUSE='POWER';
+    'GND3':
+      PIN_NUMBER='(13)';
+      PINUSE='POWER';
+    'NC1':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='LIS3DSH-LGA16';
+    JEDEC_TYPE='LGA50P300X300_16_ST-LGA16N';
+    CLASS='IC';
+    HEIGHT='1.0000 mm';
+    VALUE='LIS3DSH';
+  end_body;
+end_primitive;
+primitive 'LPS331AP-LGA16_LGA50P300X300_16_ST-LGA16N_IC_1.1500 MM_LPS331APTR';
+  pin
+    'VDD':
+      PIN_NUMBER='(14)';
+      PINUSE='POWER';
+    'RSVD_GND':
+      PIN_NUMBER='(10)';
+      PINUSE='POWER';
+    'INT2':
+      PIN_NUMBER='(9)';
+      OUTPUT_LOAD='(*)';
+    'VDD_IO':
+      PIN_NUMBER='(1)';
+      PINUSE='POWER';
+    'NC2':
+      PIN_NUMBER='(3)';
+      PINUSE='UNSPEC';
+    'SCL/SPC':
+      PIN_NUMBER='(4)';
+      INPUT_LOAD='(*)';
+    'CS':
+      PIN_NUMBER='(8)';
+      INPUT_LOAD='(*)';
+    'SDA/SDI/SDO':
+      PIN_NUMBER='(6)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'SDO/SA0':
+      PIN_NUMBER='(7)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'INT1':
+      PIN_NUMBER='(11)';
+      OUTPUT_LOAD='(*)';
+    'GND2':
+      PIN_NUMBER='(12)';
+      PINUSE='POWER';
+    'VCCA':
+      PIN_NUMBER='(15)';
+      PINUSE='POWER';
+    'GND1':
+      PIN_NUMBER='(5)';
+      PINUSE='POWER';
+    'GND4':
+      PIN_NUMBER='(16)';
+      PINUSE='POWER';
+    'GND3':
+      PIN_NUMBER='(13)';
+      PINUSE='POWER';
+    'NC1':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='LPS331AP-LGA16';
+    JEDEC_TYPE='LGA50P300X300_16_ST-LGA16N';
+    CLASS='IC';
+    HEIGHT='1.1500 mm';
+    VALUE='LPS331APTR';
+  end_body;
+end_primitive;
+primitive 'BH1780-DFN4_SNSRS4_ROHM_WLGA041W02Q_IC_0.8000 MM_BH1780GLI-E2';
+  pin
+    'SCL':
+      PIN_NUMBER='(4)';
+      INPUT_LOAD='(*)';
+    'SDA':
+      PIN_NUMBER='(3)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'GND':
+      PIN_NUMBER='(2)';
+      PINUSE='POWER';
+    'VCC':
+      PIN_NUMBER='(1)';
+      PINUSE='POWER';
+  end_pin;
+  body
+    PART_NAME='BH1780-DFN4';
+    JEDEC_TYPE='SNSRS4_ROHM_WLGA041W02Q';
+    CLASS='IC';
+    HEIGHT='0.8000 mm';
+    VALUE='BH1780GLI-E2';
+  end_body;
+end_primitive;
+primitive 'LTC4313-DIL8_0_SON50P250X250_8_HS120X020_PRELIM_IC__DEEP_CHIP (DNI)';
+  pin
+    'VCC':
+      PIN_NUMBER='(8)';
+      PINUSE='POWER';
+    'GND_1':
+      PIN_NUMBER='(1)';
+      PINUSE='POWER';
+    'SCL':
+      PIN_NUMBER='(6)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'SDA':
+      PIN_NUMBER='(2)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'NC_5':
+      PIN_NUMBER='(5)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'NC_4':
+      PIN_NUMBER='(4)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'NC_3':
+      PIN_NUMBER='(3)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'RST':
+      PIN_NUMBER='(7)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'GND_H':
+      PIN_NUMBER='(H)';
+      PINUSE='POWER';
+  end_pin;
+  body
+    PART_NAME='LTC4313-DIL8_0';
+    JEDEC_TYPE='SON50P250X250_8_HS120X020_PRELIM';
+    CLASS='IC';
+    VALUE='DEEP_CHIP (DNI)';
+  end_body;
+end_primitive;
+primitive 'BCM20736A1KML2G-W1000-27301_QFN50P500X500_32_HS370_BCM_IC_1.0000 MM_BCM20737A1KML2G';
+  pin
+    'VDDO':
+      PIN_NUMBER='(28,0)';
+      PINUSE='POWER';
+    'VDDC':
+      PIN_NUMBER='(11,0)';
+      PINUSE='POWER';
+    'XTALO32K/P12/P26':
+      PIN_NUMBER='(32,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'XTALI32K/P11/P27':
+      PIN_NUMBER='(1,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'P14/P38':
+      PIN_NUMBER='(30,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'P15':
+      PIN_NUMBER='(31,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'P24':
+      PIN_NUMBER='(27,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'P25':
+      PIN_NUMBER='(26,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'P32':
+      PIN_NUMBER='(25,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'P8/P33':
+      PIN_NUMBER='(24,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'P0':
+      PIN_NUMBER='(19,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'P1':
+      PIN_NUMBER='(20,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'P2':
+      PIN_NUMBER='(22,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'P3':
+      PIN_NUMBER='(21,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'P4':
+      PIN_NUMBER='(23,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'SCL':
+      PIN_NUMBER='(16,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'SDA':
+      PIN_NUMBER='(15,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'TMC':
+      PIN_NUMBER='(17,0)';
+      INPUT_LOAD='(*)';
+    'RESET_L':
+      PIN_NUMBER='(18,0)';
+      INPUT_LOAD='(*)';
+    'UART_RXD':
+      PIN_NUMBER='(12,0)';
+      INPUT_LOAD='(*)';
+    'UART_TXD':
+      PIN_NUMBER='(13,0)';
+      OUTPUT_LOAD='(*)';
+    'VSS':
+      PIN_NUMBER='(H,0)';
+      PINUSE='POWER';
+    'VDDM':
+      PIN_NUMBER='(14,0)';
+      PINUSE='POWER';
+    'P13/P28':
+      PIN_NUMBER='(29,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'VDDFE':
+      PIN_NUMBER='(0,5)';
+      PINUSE='POWER';
+    'VDDVCO':
+      PIN_NUMBER='(0,7)';
+      PINUSE='POWER';
+    'RF':
+      PIN_NUMBER='(0,6)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'XTALI':
+      PIN_NUMBER='(0,9)';
+      INPUT_LOAD='(*)';
+    'XTALO':
+      PIN_NUMBER='(0,10)';
+      OUTPUT_LOAD='(*)';
+    'LDOOUT':
+      PIN_NUMBER='(0,3)';
+      OUTPUT_LOAD='(*)';
+    'LDOIN':
+      PIN_NUMBER='(0,2)';
+      INPUT_LOAD='(*)';
+    'VDDIF':
+      PIN_NUMBER='(0,4)';
+      PINUSE='POWER';
+    'VDDPLL':
+      PIN_NUMBER='(0,8)';
+      PINUSE='POWER';
+  end_pin;
+  body
+    PART_NAME='BCM20736A1KML2G-W1000-27301';
+    JEDEC_TYPE='QFN50P500X500_32_HS370_BCM';
+    CLASS='IC';
+    HEIGHT='1.0000 mm';
+    VALUE='BCM20737A1KML2G';
+  end_body;
+end_primitive;
+primitive 'MX25LXXX-DIL8_SOIC127P780_8_D530N_IC_1.7500 MM_MX25L8006EM2I-12G';
+  pin
+    'CS_L':
+      PIN_NUMBER='(1)';
+      INPUT_LOAD='(*)';
+    'SO':
+      PIN_NUMBER='(2)';
+      OUTPUT_LOAD='(*)';
+    'WP_L/ACC':
+      PIN_NUMBER='(3)';
+      INPUT_LOAD='(*)';
+    'GND':
+      PIN_NUMBER='(4)';
+      PINUSE='POWER';
+    'SI':
+      PIN_NUMBER='(5)';
+      INPUT_LOAD='(*)';
+    'SCK':
+      PIN_NUMBER='(6)';
+      INPUT_LOAD='(*)';
+    'HOLD_L':
+      PIN_NUMBER='(7)';
+      INPUT_LOAD='(*)';
+    'VCC':
+      PIN_NUMBER='(8)';
+      PINUSE='POWER';
+  end_pin;
+  body
+    PART_NAME='MX25LXXX-DIL8';
+    JEDEC_TYPE='SOIC127P780_8_D530N';
+    CLASS='IC';
+    HEIGHT='1.7500 mm';
+    VALUE='MX25L8006EM2I-12G';
+  end_body;
+end_primitive;
+primitive 'XC9265-DFN6H_SON55P200X180_6_USP-6ELQ_IC_0.4000 MM_XC9265B1214R-G';
+  pin
+    'VIN':
+      PIN_NUMBER='(6)';
+      PINUSE='POWER';
+    'LX':
+      PIN_NUMBER='(1)';
+      PINUSE='POWER';
+    'VOUT':
+      PIN_NUMBER='(3)';
+      PINUSE='POWER';
+    'NC':
+      PIN_NUMBER='(5)';
+      PINUSE='UNSPEC';
+    'CE':
+      PIN_NUMBER='(4)';
+      INPUT_LOAD='(*)';
+    'HS-GND':
+      PIN_NUMBER='(H)';
+      PINUSE='POWER';
+    'GND':
+      PIN_NUMBER='(2)';
+      PINUSE='POWER';
+  end_pin;
+  body
+    PART_NAME='XC9265-DFN6H';
+    JEDEC_TYPE='SON55P200X180_6_USP-6ELQ';
+    CLASS='IC';
+    HEIGHT='0.4000 mm';
+    VALUE='XC9265B1214R-G';
+  end_body;
+end_primitive;
+primitive 'XC9236-ADJ-DFN6H_SON50P200X180_6_USP-6CQ_IC_0.6100 MM_XC9236_ADJ';
+  pin
+    'VIN':
+      PIN_NUMBER='(6)';
+      PINUSE='POWER';
+    'LX':
+      PIN_NUMBER='(1)';
+      PINUSE='POWER';
+    'FB':
+      PIN_NUMBER='(3)';
+      INPUT_LOAD='(*)';
+    'VSS#5':
+      PIN_NUMBER='(5)';
+      PINUSE='POWER';
+    'CE/MODE':
+      PIN_NUMBER='(4)';
+      INPUT_LOAD='(*)';
+    'HS-VSS':
+      PIN_NUMBER='(H)';
+      PINUSE='POWER';
+    'VSS#2':
+      PIN_NUMBER='(2)';
+      PINUSE='POWER';
+  end_pin;
+  body
+    PART_NAME='XC9236-ADJ-DFN6H';
+    JEDEC_TYPE='SON50P200X180_6_USP-6CQ';
+    CLASS='IC';
+    HEIGHT='0.6100 mm';
+    VALUE='XC9236_ADJ';
+  end_body;
+end_primitive;
+primitive 'USB-CP2105-QFN24H_QFN50P400X400_24_HS280N_IC_0.8000 MM_CP2105-F01-GM';
+  pin
+    'SUSPEND_L/RI_SCI':
+      PIN_NUMBER='(1)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'GND':
+      PIN_NUMBER='(2)';
+      PINUSE='POWER';
+    'D_P':
+      PIN_NUMBER='(3)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'D_N':
+      PIN_NUMBER='(4)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'VIO':
+      PIN_NUMBER='(5)';
+      PINUSE='POWER';
+    'VDD':
+      PIN_NUMBER='(6)';
+      PINUSE='POWER';
+    'REGIN':
+      PIN_NUMBER='(7)';
+      PINUSE='POWER';
+    'VBUS':
+      PIN_NUMBER='(8)';
+      INPUT_LOAD='(*)';
+    'RST_L':
+      PIN_NUMBER='(9)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'CTS_ECI_L':
+      PIN_NUMBER='(10)';
+      INPUT_LOAD='(*)';
+    'RTS_ECI_L':
+      PIN_NUMBER='(11)';
+      OUTPUT_LOAD='(*)';
+    'RXD_ECI':
+      PIN_NUMBER='(12)';
+      INPUT_LOAD='(*)';
+    'TXD_ECI':
+      PIN_NUMBER='(13)';
+      OUTPUT_LOAD='(*)';
+    'GPIO1_ECI_L/DSR_ECI':
+      PIN_NUMBER='(14)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'GPIO0_ECI_L/DTR_ECI':
+      PIN_NUMBER='(15)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'NC/DCD_ECI_L/VPP':
+      PIN_NUMBER='(16)';
+      INPUT_LOAD='(*)';
+    'SUSPEND_L/RI_ECI':
+      PIN_NUMBER='(17)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'CTS_SCI_L':
+      PIN_NUMBER='(18)';
+      INPUT_LOAD='(*)';
+    'RTS_SCI':
+      PIN_NUMBER='(19)';
+      OUTPUT_LOAD='(*)';
+    'RXD_SCI':
+      PIN_NUMBER='(20)';
+      INPUT_LOAD='(*)';
+    'TXD_SCI':
+      PIN_NUMBER='(21)';
+      OUTPUT_LOAD='(*)';
+    'GPIO2_SCI/DSR_SCI_L':
+      PIN_NUMBER='(22)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'GPIO1_SCI/DTR_SCI_L':
+      PIN_NUMBER='(23)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'GPIO0_SCI/DCD_SCI_L':
+      PIN_NUMBER='(24)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'HS-GND':
+      PIN_NUMBER='(H)';
+      PINUSE='POWER';
+  end_pin;
+  body
+    PART_NAME='USB-CP2105-QFN24H';
+    JEDEC_TYPE='QFN50P400X400_24_HS280N';
+    CLASS='IC';
+    HEIGHT='0.8000 mm';
+    VALUE='CP2105-F01-GM';
+  end_body;
+end_primitive;
+primitive 'LSM9DS1-LGA24_LGA43P350X300_24_ST-LGA24N_IC_1.0270 MM_LSM9DS1';
+  pin
+    'VDD_IO1':
+      PIN_NUMBER='(1)';
+      PINUSE='POWER';
+    'SCL/SPC':
+      PIN_NUMBER='(2)';
+      INPUT_LOAD='(*)';
+    'SDA/SDI/SDO':
+      PIN_NUMBER='(4)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'DRDY_M':
+      PIN_NUMBER='(9)';
+      OUTPUT_LOAD='(*)';
+    'CS_M':
+      PIN_NUMBER='(8)';
+      INPUT_LOAD='(*)';
+    'RSVD1_GND':
+      PIN_NUMBER='(14)';
+      PINUSE='UNSPEC';
+    'INT1_A/G':
+      PIN_NUMBER='(11)';
+      OUTPUT_LOAD='(*)';
+    'RSVD2_GND':
+      PIN_NUMBER='(15)';
+      PINUSE='UNSPEC';
+    'RSVD3_GND':
+      PIN_NUMBER='(16)';
+      PINUSE='UNSPEC';
+    'RSVD4_GND':
+      PIN_NUMBER='(17)';
+      PINUSE='UNSPEC';
+    'RSVD5_GND':
+      PIN_NUMBER='(18)';
+      PINUSE='UNSPEC';
+    'GND1':
+      PIN_NUMBER='(19)';
+      PINUSE='POWER';
+    'GND2':
+      PIN_NUMBER='(20)';
+      PINUSE='POWER';
+    'CAP':
+      PIN_NUMBER='(21)';
+      INPUT_LOAD='(*)';
+    'VDD1':
+      PIN_NUMBER='(22)';
+      PINUSE='POWER';
+    'CS_A/G':
+      PIN_NUMBER='(7)';
+      INPUT_LOAD='(*)';
+    'VDD_IO2':
+      PIN_NUMBER='(3)';
+      PINUSE='POWER';
+    'INT2_A/G':
+      PIN_NUMBER='(12)';
+      OUTPUT_LOAD='(*)';
+    'VDD2':
+      PIN_NUMBER='(23)';
+      PINUSE='POWER';
+    'SDO_A/G':
+      PIN_NUMBER='(5)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'SDO_M':
+      PIN_NUMBER='(6)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'C1':
+      PIN_NUMBER='(24)';
+      INPUT_LOAD='(*)';
+    'INT_M':
+      PIN_NUMBER='(10)';
+      OUTPUT_LOAD='(*)';
+    'DEN_A/G':
+      PIN_NUMBER='(13)';
+      INPUT_LOAD='(*)';
+  end_pin;
+  body
+    PART_NAME='LSM9DS1-LGA24';
+    JEDEC_TYPE='LGA43P350X300_24_ST-LGA24N';
+    CLASS='IC';
+    HEIGHT='1.0270 mm';
+    VALUE='LSM9DS1';
+  end_body;
+end_primitive;
+primitive 'HTS221-LGA6_MODS6_ST_HLGA-6LN_IC_1.0000 MM_HTS221';
+  pin
+    'SCL':
+      PIN_NUMBER='(2)';
+      INPUT_LOAD='(*)';
+    'SDA':
+      PIN_NUMBER='(4)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'GND':
+      PIN_NUMBER='(5)';
+      PINUSE='POWER';
+    'RSVD2':
+      PIN_NUMBER='(6)';
+      PINUSE='UNSPEC';
+    'RSVD1':
+      PIN_NUMBER='(3)';
+      PINUSE='UNSPEC';
+    'VDD':
+      PIN_NUMBER='(1)';
+      PINUSE='POWER';
+  end_pin;
+  body
+    PART_NAME='HTS221-LGA6';
+    JEDEC_TYPE='MODS6_ST_HLGA-6LN';
+    CLASS='IC';
+    HEIGHT='1.0000 mm';
+    VALUE='HTS221';
+  end_body;
+end_primitive;
+primitive 'LTC4313-DIL8_TSOP65P490_8_D300N_IC_1.1000 MM_LTC4313IMS8-1_PBF';
+  pin
+    'VCC':
+      PIN_NUMBER='(8)';
+      PINUSE='POWER';
+    'GND':
+      PIN_NUMBER='(4)';
+      PINUSE='POWER';
+    'SDAIN':
+      PIN_NUMBER='(6)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'SCLOUT':
+      PIN_NUMBER='(2)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'READY':
+      PIN_NUMBER='(5)';
+      OUTPUT_LOAD='(*)';
+    'EN':
+      PIN_NUMBER='(1)';
+      INPUT_LOAD='(*)';
+    'SCLIN':
+      PIN_NUMBER='(3)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'SDAOUT':
+      PIN_NUMBER='(7)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+  end_pin;
+  body
+    PART_NAME='LTC4313-DIL8';
+    JEDEC_TYPE='TSOP65P490_8_D300N';
+    CLASS='IC';
+    HEIGHT='1.1000 mm';
+    VALUE='LTC4313IMS8-1_PBF';
+  end_body;
+end_primitive;
+primitive 'XTAL-1G3G_XTALS4_3M2X2M5_DISCRETE_0.9000 MM_24.000MHZ';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '3':
+      PIN_NUMBER='(3)';
+      PINUSE='UNSPEC';
+    'GND#2':
+      PIN_NUMBER='(2)';
+      PINUSE='POWER';
+    'GND#4':
+      PIN_NUMBER='(4)';
+      PINUSE='POWER';
+  end_pin;
+  body
+    PART_NAME='XTAL-1G3G';
+    JEDEC_TYPE='XTALS4_3M2X2M5';
+    CLASS='DISCRETE';
+    HEIGHT='0.9000 mm';
+    VALUE='24.000MHz';
+  end_body;
+end_primitive;
+primitive 'XTAL_XTALS2_ABR_ABS07Q_DISCRETE_0.9000 MM_0.03277MHZ';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='XTAL';
+    JEDEC_TYPE='XTALS2_ABR_ABS07Q';
+    CLASS='DISCRETE';
+    HEIGHT='0.9000 mm';
+    VALUE='0.03277MHz';
+  end_body;
+end_primitive;
+primitive 'BATTERY-HOLDER-P2N1_BATHS3_KEY_3002Q_DISCRETE_4.2100 MM_3002TR';
+  pin
+    'P2':
+      PIN_NUMBER='(P2)';
+      PINUSE='UNSPEC';
+    'N':
+      PIN_NUMBER='(N)';
+      PINUSE='UNSPEC';
+    'P1':
+      PIN_NUMBER='(P1)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='BATTERY-HOLDER-P2N1';
+    JEDEC_TYPE='BATHS3_KEY_3002Q';
+    CLASS='DISCRETE';
+    HEIGHT='4.2100 mm';
+    VALUE='3002TR';
+  end_body;
+end_primitive;
+END.

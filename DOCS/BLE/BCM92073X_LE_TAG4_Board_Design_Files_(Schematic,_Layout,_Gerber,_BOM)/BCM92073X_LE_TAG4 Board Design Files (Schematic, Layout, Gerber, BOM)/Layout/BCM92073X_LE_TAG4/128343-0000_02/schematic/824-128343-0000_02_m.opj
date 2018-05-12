@@ -1,0 +1,48 @@
+(ExpressProject ""
+  (ProjectVersion "19981106")
+  (ProjectType "PCB")
+  (Folder "Design Resources"
+    (Folder "Library")
+    (File ".\824-128343-0000_02_m.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x")
+    (Netlist_TAB "0")
+    (NoModify))
+  (Folder "Outputs"
+    (File ".\allegro\pstxnet.dat"
+      (Type "Report")
+      (DisplayName "pstxnet.dat"))
+    (File ".\allegro\pstxprt.dat"
+      (Type "Report")
+      (DisplayName "pstxprt.dat"))
+    (File ".\allegro\pstchip.dat"
+      (Type "Report")
+      (DisplayName "pstchip.dat")))
+  (Folder "Referenced Projects")
+  (ISPCBBASICLICENSE "false")
+  (PartMRUSelector)
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources" ".\824-128343-0000_02_m.dsn")
+      (Path "Design Resources" ".\824-128343-0000_02_m.dsn" "SCHEMATIC1")
+      (Path "Outputs")
+      (Select "Design Resources" ".\824-128343-0000_02_m.dsn"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -9 -36 0 430 0 582"))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 2 3 -1 -1 -9 -36 60 1724 60 448")
+        (Scroll "-144 0")
+        (Zoom "100")
+        (Occurrence "/"))
+      (Path "J:\128\128343-0000_02\SCHEMATIC\824-128343-0000_02_M.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "5-SENSORS")))
+  (MPSSessionName "eveilleu"))

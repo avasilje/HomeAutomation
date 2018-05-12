@@ -1,0 +1,572 @@
+Archive member included because of file (symbol)
+
+c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_exit.o)
+                              c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/crttn4313.o (exit)
+c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_copy_data.o)
+                              ha-ledlight.o (__do_copy_data)
+c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_clear_bss.o)
+                              ha-ledlight.o (__do_clear_bss)
+c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25\libc.a(memcpy.o)
+                              ha-nlink.o (memcpy)
+
+Allocating common symbols
+Common symbol       size              file
+
+gta_leds            0xc               ha-ledlight.o
+guc_eeprom_save_flags
+                    0x1               ha-ledlight.o
+gus_trap_line       0x2               ha-ledlight.o
+guc_on_intensity_idx
+                    0x1               ha-ledlight.o
+nlink               0x51              ha-nlink.o
+guc_leds_disabled_idx
+                    0x1               ha-ledlight.o
+guc_curr_led_mode   0x1               ha-ledlight.o
+guc_leds_steady     0x1               ha-ledlight.o
+guc_sw_event_mask   0x1               ha-ledlight.o
+
+Discarded input sections
+
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/crttn4313.o
+ .text          0x00000000        0x0 ha-ledlight.o
+ .config_param  0x00000000        0xb ha-ledlight.o
+ .text          0x00000000        0x0 ha-nlink.o
+ .bss           0x00000000        0x0 ha-nlink.o
+ .text          0x00000000        0x0 ha_ledlight_const.o
+ .bss           0x00000000        0x0 ha_ledlight_const.o
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_exit.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_exit.o)
+ .text.libgcc.mul
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_exit.o)
+ .text.libgcc.div
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_exit.o)
+ .text.libgcc   0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_exit.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_exit.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_exit.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_exit.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_exit.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_copy_data.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_copy_data.o)
+ .text.libgcc.mul
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_copy_data.o)
+ .text.libgcc.div
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_copy_data.o)
+ .text.libgcc   0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_copy_data.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_copy_data.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_copy_data.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_copy_data.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_copy_data.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_clear_bss.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_clear_bss.o)
+ .text.libgcc.mul
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_clear_bss.o)
+ .text.libgcc.div
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_clear_bss.o)
+ .text.libgcc   0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_clear_bss.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_clear_bss.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_clear_bss.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_clear_bss.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_clear_bss.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25\libc.a(memcpy.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25\libc.a(memcpy.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x00000000         0x00002000         xr
+data             0x00800060         0x0000ffa0         rw !x
+eeprom           0x00810000         0x00010000         rw !x
+fuse             0x00820000         0x00000400         rw !x
+lock             0x00830000         0x00000400         rw !x
+signature        0x00840000         0x00000400         rw !x
+user_signatures  0x00850000         0x00000400         rw !x
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/crttn4313.o
+LOAD ha-ledlight.o
+LOAD ha-nlink.o
+LOAD ha_ledlight_const.o
+START GROUP
+LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25\libm.a
+END GROUP
+Address of section .config_param set to 0x810010
+START GROUP
+LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a
+LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25\libm.a
+LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25\libc.a
+END GROUP
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x00000000      0x952
+ *(.vectors)
+ .vectors       0x00000000       0x2a c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/crttn4313.o
+                0x00000000                __vector_default
+                0x00000000                __vectors
+ *(.vectors)
+ *(.progmem.gcc*)
+                0x0000002a                . = ALIGN (0x2)
+                0x0000002a                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x0000002a        0x0 linker stubs
+ *(.trampolines*)
+                0x0000002a                __trampolines_end = .
+ *(.progmem*)
+                0x0000002a                . = ALIGN (0x2)
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x0000002a                __ctors_start = .
+ *(.ctors)
+                0x0000002a                __ctors_end = .
+                0x0000002a                __dtors_start = .
+ *(.dtors)
+                0x0000002a                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ .init0         0x0000002a        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/crttn4313.o
+                0x0000002a                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x0000002a        0xc c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/crttn4313.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x00000036       0x16 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_copy_data.o)
+                0x00000036                __do_copy_data
+ .init4         0x0000004c       0x10 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_clear_bss.o)
+                0x0000004c                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x0000005c        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/crttn4313.o
+ *(.init9)
+ *(.text)
+ .text          0x00000060        0x2 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/crttn4313.o
+                0x00000060                __vector_1
+                0x00000060                __vector_12
+                0x00000060                __bad_interrupt
+                0x00000060                __vector_3
+                0x00000060                __vector_13
+                0x00000060                __vector_17
+                0x00000060                __vector_19
+                0x00000060                __vector_7
+                0x00000060                __vector_5
+                0x00000060                __vector_4
+                0x00000060                __vector_9
+                0x00000060                __vector_2
+                0x00000060                __vector_15
+                0x00000060                __vector_8
+                0x00000060                __vector_14
+                0x00000060                __vector_10
+                0x00000060                __vector_16
+                0x00000060                __vector_18
+                0x00000060                __vector_20
+                0x00000062                . = ALIGN (0x2)
+ *(.text.*)
+ .text.FATAL_TRAP
+                0x00000062        0xa ha-ledlight.o
+                0x00000062                FATAL_TRAP
+ .text.set_steady_state
+                0x0000006c       0x8a ha-ledlight.o
+                0x0000006c                set_steady_state
+ .text.set_pwm  0x000000f6       0x6a ha-ledlight.o
+                0x000000f6                set_pwm
+ .text.set_intensity
+                0x00000160       0x48 ha-ledlight.o
+                0x00000160                set_intensity
+ .text.light_on
+                0x000001a8       0x4c ha-ledlight.o
+                0x000001a8                light_on
+ .text.light_off
+                0x000001f4       0x36 ha-ledlight.o
+                0x000001f4                light_off
+ .text.dimm_on  0x0000022a       0x22 ha-ledlight.o
+                0x0000022a                dimm_on
+ .text.led_disable_roll
+                0x0000024c       0x2c ha-ledlight.o
+                0x0000024c                led_disable_roll
+ .text.sw_behavior_control
+                0x00000278       0xe0 ha-ledlight.o
+                0x00000278                sw_behavior_control
+ .text.ledlight_on_rx
+                0x00000358       0x44 ha-ledlight.o
+                0x00000358                ledlight_on_rx
+ .text.ha_ledlight_init
+                0x0000039c       0x3a ha-ledlight.o
+                0x0000039c                ha_ledlight_init
+ .text.leds_intensity_control
+                0x000003d6       0xa2 ha-ledlight.o
+                0x000003d6                leds_intensity_control
+ .text.startup.main
+                0x00000478       0x84 ha-ledlight.o
+                0x00000478                main
+ .text.__vector_11
+                0x000004fc       0x48 ha-ledlight.o
+                0x000004fc                __vector_11
+ .text.__vector_6
+                0x00000544       0x88 ha-ledlight.o
+                0x00000544                __vector_6
+ .text.ha_nlink_io_recover
+                0x000005cc       0x22 ha-nlink.o
+ .text.ha_nlink_init
+                0x000005ee       0x22 ha-nlink.o
+                0x000005ee                ha_nlink_init
+ .text.ha_nlink_node_register
+                0x00000610       0x24 ha-nlink.o
+                0x00000610                ha_nlink_node_register
+ .text.nlink_node_on_rx
+                0x00000634       0x7a ha-nlink.o
+                0x00000634                nlink_node_on_rx
+ .text.ha_nlink_node_send
+                0x000006ae       0x22 ha-nlink.o
+                0x000006ae                ha_nlink_node_send
+ .text.ha_nlink_check_rx
+                0x000006d0       0x6c ha-nlink.o
+                0x000006d0                ha_nlink_check_rx
+ .text.ha_nlink_check_tx
+                0x0000073c       0x52 ha-nlink.o
+                0x0000073c                ha_nlink_check_tx
+ .text.isr_nlink_io_on_timer
+                0x0000078e      0x182 ha-nlink.o
+                0x0000078e                isr_nlink_io_on_timer
+ .text.isr_nlink_io_on_start_edge
+                0x00000910       0x2c ha-nlink.o
+                0x00000910                isr_nlink_io_on_start_edge
+ .text.avr-libc
+                0x0000093c       0x12 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25\libc.a(memcpy.o)
+                0x0000093c                memcpy
+                0x0000094e                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x0000094e        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_exit.o)
+                0x0000094e                _exit
+                0x0000094e                exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x0000094e        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_exit.o)
+ *(.fini0)
+                0x00000952                _etext = .
+
+.data           0x00800060       0x30 load address 0x00000952
+                0x00800060                PROVIDE (__data_start, .)
+ *(.data)
+ .data          0x00800060        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/crttn4313.o
+ .data          0x00800060        0x1 ha-ledlight.o
+                0x00800060                g_ha_nlink_timer_cnt
+ .data          0x00800061        0x0 ha-nlink.o
+ .data          0x00800061        0x0 ha_ledlight_const.o
+ .data          0x00800061        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_exit.o)
+ .data          0x00800061        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_copy_data.o)
+ .data          0x00800061        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr25\libgcc.a(_clear_bss.o)
+ .data          0x00800061        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr25\libc.a(memcpy.o)
+ *(.data*)
+ *(.rodata)
+ .rodata        0x00800061       0x2e ha_ledlight_const.o
+                0x00800061                guca_disable_roll_table
+                0x00800071                guca_dimm_on_intensity_table
+                0x0080007c                guca_pwm_intensity_table
+ *(.rodata*)
+ *(.gnu.linkonce.d*)
+                0x00800090                . = ALIGN (0x2)
+ *fill*         0x0080008f        0x1 
+                0x00800090                _edata = .
+                0x00800090                PROVIDE (__data_end, .)
+
+.bss            0x00800090       0x6a
+                0x00800090                PROVIDE (__bss_start, .)
+ *(.bss)
+ .bss           0x00800090        0x5 ha-ledlight.o
+                0x00800090                g_ll_node
+                0x00800092                guc_led_intenisity_timer
+                0x00800093                g_led_intensity_cnt
+ *(.bss*)
+ *(COMMON)
+ COMMON         0x00800095       0x14 ha-ledlight.o
+                0x00800095                gta_leds
+                0x008000a1                guc_eeprom_save_flags
+                0x008000a2                gus_trap_line
+                0x008000a4                guc_on_intensity_idx
+                0x008000a5                guc_leds_disabled_idx
+                0x008000a6                guc_curr_led_mode
+                0x008000a7                guc_leds_steady
+                0x008000a8                guc_sw_event_mask
+ COMMON         0x008000a9       0x51 ha-nlink.o
+                0x008000a9                nlink
+                0x008000fa                PROVIDE (__bss_end, .)
+                0x00000952                __data_load_start = LOADADDR (.data)
+                0x00000982                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x008000fa        0x0
+                0x008000fa                PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                0x008000fa                PROVIDE (__noinit_end, .)
+                0x008000fa                _end = .
+                0x008000fa                PROVIDE (__heap_start, .)
+
+.eeprom         0x00810000        0x0
+ *(.eeprom*)
+                0x00810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.user_signatures
+ *(.user_signatures*)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x00000000       0x30
+ *(.comment)
+ .comment       0x00000000       0x30 ha-ledlight.o
+                                 0x31 (size before relaxing)
+ .comment       0x00000000       0x31 ha-nlink.o
+ .comment       0x00000000       0x31 ha_ledlight_const.o
+
+.note.gnu.build-id
+ *(.note.gnu.build-id)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x00000000      0x108
+ *(.debug_aranges)
+ .debug_aranges
+                0x00000000       0x90 ha-ledlight.o
+ .debug_aranges
+                0x00000090       0x60 ha-nlink.o
+ .debug_aranges
+                0x000000f0       0x18 ha_ledlight_const.o
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x00000000     0x109b
+ *(.debug_info .gnu.linkonce.wi.*)
+ .debug_info    0x00000000      0x8a5 ha-ledlight.o
+ .debug_info    0x000008a5      0x719 ha-nlink.o
+ .debug_info    0x00000fbe       0xdd ha_ledlight_const.o
+
+.debug_abbrev   0x00000000      0x678
+ *(.debug_abbrev)
+ .debug_abbrev  0x00000000      0x2c3 ha-ledlight.o
+ .debug_abbrev  0x000002c3      0x358 ha-nlink.o
+ .debug_abbrev  0x0000061b       0x5d ha_ledlight_const.o
+
+.debug_line     0x00000000      0x635
+ *(.debug_line .debug_line.* .debug_line_end)
+ .debug_line    0x00000000      0x377 ha-ledlight.o
+ .debug_line    0x00000377      0x217 ha-nlink.o
+ .debug_line    0x0000058e       0xa7 ha_ledlight_const.o
+
+.debug_frame    0x00000000      0x2a8
+ *(.debug_frame)
+ .debug_frame   0x00000000      0x1d8 ha-ledlight.o
+ .debug_frame   0x000001d8       0xd0 ha-nlink.o
+
+.debug_str      0x00000000      0x6e3
+ *(.debug_str)
+ .debug_str     0x00000000      0x4d9 ha-ledlight.o
+                                0x535 (size before relaxing)
+ .debug_str     0x000004d9      0x1d4 ha-nlink.o
+                                0x40c (size before relaxing)
+ .debug_str     0x000006ad       0x36 ha_ledlight_const.o
+                                0x193 (size before relaxing)
+
+.debug_loc      0x00000000      0xc4e
+ *(.debug_loc)
+ .debug_loc     0x00000000      0x8ee ha-ledlight.o
+ .debug_loc     0x000008ee      0x360 ha-nlink.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.debug_pubtypes
+ *(.debug_pubtypes)
+
+.debug_ranges   0x00000000      0x200
+ *(.debug_ranges)
+ .debug_ranges  0x00000000       0xf0 ha-ledlight.o
+ .debug_ranges  0x000000f0      0x110 ha-nlink.o
+
+.debug_macro
+ *(.debug_macro)
+OUTPUT(ha-ledlight.elf elf32-avr)
+LOAD linker stubs
+
+.config_param   0x00810010        0x0

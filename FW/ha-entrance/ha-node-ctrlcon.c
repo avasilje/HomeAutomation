@@ -52,8 +52,8 @@ void ctrlcon_on_rx(uint8_t idx, const uint8_t *buf_in)
     for (peer_idx = 0; peer_idx < ARRAY_SIZE(cc.peers); peer_idx++, peer++) {
 	    if (peer->remote_addr == 0) {
 		    // Peer not found - create new
-		    ctrlcon_new_peer(peer_idx, remote_peer_addr, buf_in[NLINK_HDR_OFF_DATA + 0]);
-		    break;
+            ctrlcon_new_peer(peer_idx, remote_peer_addr, buf_in[NLINK_HDR_OFF_TYPE]);
+  		    break;
 	    }
 	    if (peer->remote_addr == remote_peer_addr) {
 		    break;

@@ -17,14 +17,12 @@ nlink_t nlink;
 #define NODE_FLAG_VALID 1      // for sanity purposes
 #define NODE_FLAG_RX    2      // 
 
-#define NLINK_RX_INT_ENABLE do { GICR |= _BV(INT0); GIFR |= INTF0; } while(0)
+#define NLINK_RX_INT_ENABLE do { GIFR |= INTF0; GICR |= _BV(INT0);} while(0)
 #define NLINK_RX_INT_DISABLE GICR &= ~_BV(INT0)
 
 #define NLINK_IO_IDLE_TIMEOUT 16    // timeout when TX can start to transmit. 
 // TODO: ^^^ Must be unique for a particular device
 
-#define NLINK_IO_TIMER_ENABLE  TIMSK |= _BV(TOIE2)
-#define NLINK_IO_TIMER_DISABLE TIMSK &= ~_BV(TOIE2)
 #define NLINK_IO_TIMER_RELOAD  (0xFF - 255)        // 0 - free running
 
 static void ha_nlink_io_set_idle()
@@ -44,12 +42,14 @@ static void ha_nlink_io_recover()
 
 static void ha_nlink_io_init_timer()
 {   // Timer is always running
-    TCNT2 = NLINK_IO_TIMER_RELOAD;
-    TIFR |= _BV(TOV2);
-    TIMSK |= _BV(TOIE2);
+    cli();
+        TCCR2 &= ~(_BV(CS20) | _BV(CS21) | _BV(CS22));
+        TCCR2 |= (2 << CS20);    // prescaler 2 => 1/8
 
-    TCCR2 &= ~(_BV(CS20) | _BV(CS21) | _BV(CS22));
-    TCCR2 |= (2 << CS20);    // prescaler 2 => 1/8
+        TIMSK |= _BV(TOIE2);
+        TCNT2 = NLINK_IO_TIMER_RELOAD;
+        TIFR |= _BV(TOV2);
+    sei();
 }
 
 void ha_nlink_init()
@@ -98,6 +98,7 @@ uint8_t nlink_node_on_rx(uint8_t *rx_buf)
 {
     uint8_t consumed = 0;
     uint8_t addr_to = rx_buf[NLINK_HDR_OFF_TO];
+    uint8_t addr_from = rx_buf[NLINK_HDR_OFF_FROM];
 
     // TODO: check most efficient loop (while + pointer; for + index; etc)
     //       node++ in loop - worst case
@@ -105,7 +106,9 @@ uint8_t nlink_node_on_rx(uint8_t *rx_buf)
     for (uint8_t i = 0; i < NLINK_NODES_NUM; i++) {
         node_t *node = &nlink.nodes[i];
         if (node->addr == 0) break;
-        if (node->addr == rx_buf[NLINK_HDR_OFF_FROM]) continue;
+
+        // don't receive own messages 
+        if (node->addr == addr_from) continue;
 
         if ( node->addr == addr_to ||               // Direct message
              node->type == NODE_TYPE_CTRLCON ||     // CTRLCON listens for all messages
@@ -115,7 +118,7 @@ uint8_t nlink_node_on_rx(uint8_t *rx_buf)
 
             if (rx_buf[NLINK_HDR_OFF_CMD] == NLINK_CMD_RD_REQ) {
                 // RD_REQ doesn't require node involving just send node's TX buffer
-                ha_nlink_node_send(node, rx_buf[NLINK_HDR_OFF_FROM], NLINK_CMD_RD_RESP);
+                ha_nlink_node_send(node, addr_from, NLINK_CMD_RD_RESP);
             } else {
                 node->on_rx_cb(node->idx, rx_buf);
             }
@@ -127,7 +130,6 @@ uint8_t nlink_node_on_rx(uint8_t *rx_buf)
 
 void ha_nlink_node_send(node_t *node, uint8_t addr_to, uint8_t cmd) 
 {
-    // node_t *node = &nlink.nodes[node_h];
     node->tx_buf[NLINK_HDR_OFF_FROM] = node->addr;
     node->tx_buf[NLINK_HDR_OFF_TO  ] = addr_to;
     node->tx_buf[NLINK_HDR_OFF_CMD ] = cmd;
@@ -199,6 +201,8 @@ static void isr_nlink_io_rx_on_idle()
 {
     if (nlink.io.idle_timer < NLINK_IO_IDLE_TIMEOUT) {
         nlink.io.idle_timer++;
+    } else {
+        // Disable timer
     }
 }
 static void isr_nlink_io_rx_on_receiving() {
