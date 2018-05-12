@@ -4,8 +4,6 @@
  * Created: 5/1/2018 11:18:00 PM
  *  Author: Solit
  */
-
-#include <avr/interrupt.h>
 #include <stdint.h>
 #include <string.h>
 #include <avr/sfr_defs.h>
@@ -17,43 +15,12 @@ nlink_t nlink;
 #define NODE_FLAG_VALID 1      // for sanity purposes
 #define NODE_FLAG_RX    2      //
 
-#if 0
-// HA-entrance
-#define NLINK_RX_INT_ENABLE do { GIFR |= INTF0; GICR |= _BV(INT0);} while(0)
-#define NLINK_RX_INT_DISABLE GICR &= ~_BV(INT0)
-
-#define NLINK_RX_RESTART_TIMER do { \
-    TIFR |= _BV(TOV2);                   /*Clear previous timer interrupt */ \
-    TCNT2 = NLINK_IO_TIMER_RELOAD + 1;   /* Enable timer */ }
-
-#define NLINK_IO_TIMER_ENABLE  TIMSK |= _BV(TOIE2)
-#define NLINK_IO_TIMER_DISABLE TIMSK &= ~_BV(TOIE2)
-#define NLINK_IO_TIMER_RELOAD  (0xFF - 255)        // 0 - free running
-
-#else
-// ATTiny4313
-// HA-Ledlight
-#define ENABLE_PCINT  do {GIFR |= (1 << PCIF0); GIMSK |= (1 << PCIE0); } while(0)
-#define DISABLE_PCINT  GIMSK &= ~(1 << PCIE0)
-
-#define NLINK_RX_INT_ENABLE ENABLE_PCINT
-#define NLINK_RX_INT_DISABLE DISABLE_PCINT
-
-extern int8_t g_ha_nlink_timer_cnt;
-#define NLINK_IO_TIMER_ENABLE  g_ha_nlink_timer_cnt = 0
-#define NLINK_IO_TIMER_DISABLE g_ha_nlink_timer_cnt = -1
-
-#endif
-
-
-#define NLINK_IO_IDLE_TIMEOUT 16    // timeout when TX can start to transmit.
-// TODO: ^^^ Must be unique for a particular device
-
 static void ha_nlink_io_set_idle()
 {
     nlink.io.state = NLINK_IO_STATE_IDLE;
     nlink.io.idle_timer = 0;
     NLINK_RX_INT_ENABLE;
+    NLINK_IO_TIMER_ENABLE;
 }
 static void ha_nlink_io_recover()
 {
@@ -77,17 +44,6 @@ void ha_nlink_init()
 
     NLINK_IO_TX_PORT &= ~NLINK_IO_TX_PIN_MASK;
     NLINK_IO_TX_DIR  |= NLINK_IO_TX_PIN_MASK;   // output
-
-#if 0
-    // HA-entrance
-    // Set INT0 trigger to Falling Edge, Clear interrupt flag
-    MCUCR &= ~(_BV(ISC00) | _BV(ISC01));
-    MCUCR |= (2 << ISC00);
-#else
-    // HA-ledlight
-    // Set PCINT0
-    PCMSK |= NLINK_IO_RX_PIN_MASK;
-#endif
 
     NLINK_IO_DBG_DIR |= NLINK_IO_DBG_PIN_MASK;
     NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN_MASK;
@@ -205,6 +161,7 @@ void ha_nlink_check_tx()
     // Check pending transmittion (in case of previous one failed)
     if (nlink.io.tx_len) {
         nlink.io.tx_rd = 0;
+        ha_nlink_io_set_idle(); // Initiate transfer
         return;
     }
     // Get data to transfer from nodes
@@ -219,6 +176,7 @@ void ha_nlink_check_tx()
                 nlink.io.tx_len = tx_len;
                 nlink.io.tx_rd = 0;
             sei();
+            ha_nlink_io_set_idle(); // Initiate transfer
             return;
         }
     }

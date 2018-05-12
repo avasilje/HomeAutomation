@@ -3,21 +3,12 @@
  *
  * Created: 5/1/2018 11:19:38 PM
  *  Author: Solit
+ *  Keep it HW agnostic!
  */
 
 #pragma once
 
 #define NLINK_IO_RECOVER_TIMER 64 // in nlink clocks
-
-#define NLINK_IO_RX_PORT  PORTD
-#define NLINK_IO_RX_DIR   DDRD
-#define NLINK_IO_RX_PIN   PIND
-#define NLINK_IO_RX_PIN_MASK   _BV(PIND2)   // INT0
-
-#define NLINK_IO_TX_PORT  PORTB
-#define NLINK_IO_TX_DIR   DDRB
-//#define NLINK_IO_TX_PIN   PINB    // Not in use
-#define NLINK_IO_TX_PIN_MASK   _BV(PINB1)
 
 #define NLINK_COMM_BUF_SIZE 16
 
@@ -42,8 +33,6 @@ typedef struct node_s {
 #define NLINK_HDR_OFF_TYPE 3
 #define NLINK_HDR_OFF_LEN  4
 #define NLINK_HDR_OFF_DATA 5
-
-#define NLINK_NODES_NUM 3       // CTRLCON + SWITCH + ???
 
 enum nlink_io_state_e {
     NLINK_IO_STATE_RECOVERING,
@@ -99,5 +88,8 @@ extern void ha_nlink_node_send(node_t *node, uint8_t addr_to, uint8_t cmd);
 extern node_t* ha_nlink_node_register(uint8_t addr, uint8_t type, node_rx_cb_t on_rx_cb);
 extern void ha_nlink_check_rx();
 extern void ha_nlink_check_tx();
+
+extern void isr_nlink_io_on_timer();
+extern void isr_nlink_io_on_start_edge();
 
 extern nlink_t nlink;

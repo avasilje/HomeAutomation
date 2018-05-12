@@ -5,7 +5,8 @@
  *  Author: solit
  */
 #include <stdint.h>
-#include "ha_ledlight_const.h"
+#include "ha-common.h"
+#include "ha-ledlight_const.h"
 
 // TODO: move to pgm?
 #define PWM_PULSE(duty_cycle)  ((duty_cycle * 256 / 100) - 1)
@@ -40,8 +41,8 @@ const uint8_t guca_dimm_on_intensity_table[DIMM_ON_INTENSITIES_NUM] =
     15,
     INTENSITIES_NUM-1   // MAX
 };
-
-const uint8_t guca_disable_roll_table[ROLL_ON_MASK_NUM] =
+#if 0
+const uint8_t guca_disable_roll_table[] =
 {
     0,                  // 0000
     1,                  // 0001
@@ -59,4 +60,14 @@ const uint8_t guca_disable_roll_table[ROLL_ON_MASK_NUM] =
     7,                  // 0111
     14,                 // 1110
     15,                 // 1111
+};
+#endif
+
+const uint8_t guca_disable_roll_table[ROLL_ON_MASK_NUM] =
+{
+    0,                  // 0000
+    13,                 // 1101
+    11,                 // 1011
+    7,                  // 0111
+    14,                 // 1110
 };

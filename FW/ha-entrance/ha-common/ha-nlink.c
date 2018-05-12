@@ -3,9 +3,7 @@
  *
  * Created: 5/1/2018 11:18:00 PM
  *  Author: Solit
- */ 
-
-#include <avr/interrupt.h>
+ */
 #include <stdint.h>
 #include <string.h>
 #include <avr/sfr_defs.h>
@@ -15,21 +13,14 @@
 nlink_t nlink;
 
 #define NODE_FLAG_VALID 1      // for sanity purposes
-#define NODE_FLAG_RX    2      // 
-
-#define NLINK_RX_INT_ENABLE do { GIFR |= INTF0; GICR |= _BV(INT0);} while(0)
-#define NLINK_RX_INT_DISABLE GICR &= ~_BV(INT0)
-
-#define NLINK_IO_IDLE_TIMEOUT 16    // timeout when TX can start to transmit. 
-// TODO: ^^^ Must be unique for a particular device
-
-#define NLINK_IO_TIMER_RELOAD  (0xFF - 255)        // 0 - free running
+#define NODE_FLAG_RX    2      //
 
 static void ha_nlink_io_set_idle()
 {
     nlink.io.state = NLINK_IO_STATE_IDLE;
     nlink.io.idle_timer = 0;
     NLINK_RX_INT_ENABLE;
+    NLINK_IO_TIMER_ENABLE;
 }
 static void ha_nlink_io_recover()
 {
@@ -38,18 +29,7 @@ static void ha_nlink_io_recover()
     nlink.io.recover_timer = NLINK_IO_RECOVER_TIMER;
     nlink.io.rx_wr = 0;
     NLINK_RX_INT_ENABLE;        // Recovery timer will be restarted on pin fall
-}
-
-static void ha_nlink_io_init_timer()
-{   // Timer is always running
-    cli();
-        TCCR2 &= ~(_BV(CS20) | _BV(CS21) | _BV(CS22));
-        TCCR2 |= (2 << CS20);    // prescaler 2 => 1/8
-
-        TIMSK |= _BV(TOIE2);
-        TCNT2 = NLINK_IO_TIMER_RELOAD;
-        TIFR |= _BV(TOV2);
-    sei();
+    NLINK_IO_TIMER_ENABLE;
 }
 
 void ha_nlink_init()
@@ -62,21 +42,16 @@ void ha_nlink_init()
     NLINK_IO_RX_PORT |= NLINK_IO_RX_PIN_MASK;
     NLINK_IO_RX_DIR  &= ~NLINK_IO_RX_PIN_MASK;   // pull-up input
 
-    PORTA |= PINA1;
-    DDRA &= ~PINA1;
-
     NLINK_IO_TX_PORT &= ~NLINK_IO_TX_PIN_MASK;
     NLINK_IO_TX_DIR  |= NLINK_IO_TX_PIN_MASK;   // output
 
-    // Set INT0 trigger to Falling Edge, Clear interrupt flag
-    MCUCR &= ~(_BV(ISC00) | _BV(ISC01));
-    MCUCR |= (2 << ISC00);
-    
+    NLINK_IO_DBG_DIR |= NLINK_IO_DBG_PIN_MASK;
+    NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN_MASK;
+
     ha_nlink_io_recover();
-    ha_nlink_io_init_timer();
 }
 
-node_t* ha_nlink_node_register(uint8_t addr, uint8_t type, node_rx_cb_t on_rx_cb) 
+node_t* ha_nlink_node_register(uint8_t addr, uint8_t type, node_rx_cb_t on_rx_cb)
 {
     // Find next free entry
     int8_t i;
@@ -102,12 +77,12 @@ uint8_t nlink_node_on_rx(uint8_t *rx_buf)
 
     // TODO: check most efficient loop (while + pointer; for + index; etc)
     //       node++ in loop - worst case
-    //       
+    //
     for (uint8_t i = 0; i < NLINK_NODES_NUM; i++) {
         node_t *node = &nlink.nodes[i];
         if (node->addr == 0) break;
 
-        // don't receive own messages 
+        // don't receive own messages
         if (node->addr == addr_from) continue;
 
         if ( node->addr == addr_to ||               // Direct message
@@ -127,13 +102,12 @@ uint8_t nlink_node_on_rx(uint8_t *rx_buf)
 
     return consumed;
 }
-
-void ha_nlink_node_send(node_t *node, uint8_t addr_to, uint8_t cmd) 
+void ha_nlink_node_send(node_t *node, uint8_t addr_to, uint8_t cmd)
 {
     node->tx_buf[NLINK_HDR_OFF_FROM] = node->addr;
     node->tx_buf[NLINK_HDR_OFF_TO  ] = addr_to;
     node->tx_buf[NLINK_HDR_OFF_CMD ] = cmd;
-                 
+
     // Check Local nodes
     uint8_t consumed = nlink_node_on_rx(node->tx_buf);
 
@@ -141,9 +115,9 @@ void ha_nlink_node_send(node_t *node, uint8_t addr_to, uint8_t cmd)
     node->tx_flag = !consumed;
 }
 
-void ha_nlink_check_rx() 
+void ha_nlink_check_rx()
 {
-    if (nlink.io.state != NLINK_IO_STATE_IDLE) 
+    if (nlink.io.state != NLINK_IO_STATE_IDLE)
         return;
 
     // Data can be read after 1 clock in idle state.
@@ -153,23 +127,32 @@ void ha_nlink_check_rx()
 
     uint8_t rx_wr = nlink.io.rx_wr;
 
-    // Check is full message received
-    if ( rx_wr > NLINK_HDR_OFF_LEN &&
-         rx_wr == nlink.io.rx_buf[NLINK_HDR_OFF_LEN] + NLINK_HDR_OFF_DATA) { 
+    // Check is header received
+    if ( rx_wr > NLINK_HDR_OFF_LEN) {
+        // Check  is full message received
+        if ( rx_wr == nlink.io.rx_buf[NLINK_HDR_OFF_LEN] + NLINK_HDR_OFF_DATA) {
 
-        uint8_t rx_buf[NLINK_COMM_BUF_SIZE];
-        
-        // Make local buffer copy and reset write index
-        memcpy(rx_buf, nlink.io.rx_buf, rx_wr - 1);
-        nlink.io.rx_wr = 0;
+            uint8_t rx_buf[NLINK_COMM_BUF_SIZE];
 
-        nlink_node_on_rx(rx_buf);
+            // Make local buffer copy and reset write index
+            memcpy(rx_buf, nlink.io.rx_buf, rx_wr);
+            nlink.io.rx_wr = 0;
+
+            nlink_node_on_rx(rx_buf);
+        } else {
+            // If IDLE timeout already expired, but message still not
+            // completed, then consider it as an error and do recover
+            if (nlink.io.idle_timer == NLINK_IO_IDLE_TIMEOUT) {
+                ha_nlink_io_recover();
+            }
+        }
+
     }
 }
 
-void ha_nlink_check_tx() 
+void ha_nlink_check_tx()
 {
-    if (nlink.io.state != NLINK_IO_STATE_IDLE || 
+    if (nlink.io.state != NLINK_IO_STATE_IDLE ||
         nlink.io.idle_timer != NLINK_IO_IDLE_TIMEOUT) {
         return;
     }
@@ -178,8 +161,9 @@ void ha_nlink_check_tx()
     // Check pending transmittion (in case of previous one failed)
     if (nlink.io.tx_len) {
         nlink.io.tx_rd = 0;
+        ha_nlink_io_set_idle(); // Initiate transfer
         return;
-    } 
+    }
     // Get data to transfer from nodes
     for(uint8_t i = 0; i < ARRAY_SIZE(nlink.nodes); i++) {
         node_t *node = &nlink.nodes[i];
@@ -192,17 +176,18 @@ void ha_nlink_check_tx()
                 nlink.io.tx_len = tx_len;
                 nlink.io.tx_rd = 0;
             sei();
+            ha_nlink_io_set_idle(); // Initiate transfer
             return;
         }
     }
 }
 
-static void isr_nlink_io_rx_on_idle() 
+static void isr_nlink_io_rx_on_idle()
 {
     if (nlink.io.idle_timer < NLINK_IO_IDLE_TIMEOUT) {
         nlink.io.idle_timer++;
     } else {
-        // Disable timer
+        NLINK_IO_TIMER_DISABLE;
     }
 }
 static void isr_nlink_io_rx_on_receiving() {
@@ -212,7 +197,7 @@ static void isr_nlink_io_rx_on_receiving() {
     //   |     |             |                  |
     //   |     |             |                  |
     // Idle   Start       Data 8bits          Stop
-    
+
     uint8_t bit_in = !!(NLINK_IO_RX_PIN & NLINK_IO_RX_PIN_MASK);
     uint8_t bit_cnt = nlink.io.bit_cnt;
 
@@ -242,7 +227,7 @@ static void isr_nlink_io_rx_on_receiving() {
     }
 
     nlink.io.rx_shift_reg = (nlink.io.rx_shift_reg >> 1) | (bit_in << 7);
-    
+
 }
 
 static void isr_nlink_io_on_tx_timer()
@@ -261,7 +246,7 @@ static void isr_nlink_io_on_tx_timer()
                     // 0-data bit
                     NLINK_IO_TX_PORT |= NLINK_IO_TX_PIN_MASK;
                 }
-            } 
+            }
             nlink.io.tx_shift_reg >>= 1;
             break;
 
@@ -279,11 +264,11 @@ static void isr_nlink_io_on_tx_timer()
                     nlink.io.tx_rd = 0;
                     nlink.io.tx_len = 0;
                 } else {
-                    // Transmittion failed. 
+                    // Transmittion failed.
                     // Use tx_rd > tx_len as retransmit required flag
-                    // Retransmittion will be initiated in idle loop 
+                    // Retransmittion will be initiated in idle loop
                     // after idle timeout expired
-                    nlink.io.tx_rd = 0xFF;   
+                    nlink.io.tx_rd = 0xFF;
                 }
                 // Invalidate just received own data
                 nlink.io.rx_wr = 0;
@@ -319,39 +304,34 @@ static void isr_nlink_io_on_rx_timer()
             FATAL_TRAP(__LINE__);
     }
 }
-
-static void isr_nlink_io_on_timer()
+/*
+ * NLINK IO Timer callback should be called by main logic
+ * every 256usec
+ */
+void isr_nlink_io_on_timer()
 {
     if (nlink.io.is_rx_timer) {
+        NLINK_IO_DBG_PORT |= NLINK_IO_DBG_PIN_MASK;
         isr_nlink_io_on_rx_timer();
     } else {
+        NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN_MASK;
         isr_nlink_io_on_tx_timer();
     }
     nlink.io.is_rx_timer = !nlink.io.is_rx_timer;
 }
 
-ISR(TIMER2_OVF_vect)
-{
-    TCNT2 = NLINK_IO_TIMER_RELOAD;
-    // 8*256 clocks @ 8MHz = 8*64us = 256us = 1/2 nlink clock period
-    isr_nlink_io_on_timer();
-}
-
-ISR(INT0_vect)
+void isr_nlink_io_on_start_edge()
 {
     // Triggered on RX falling edge
-
     if (nlink.io.state == NLINK_IO_STATE_RECOVERING) {
         nlink.io.recover_timer = NLINK_IO_RECOVER_TIMER;
         return;
     }
-    
+
     NLINK_RX_INT_DISABLE;
     nlink.io.is_rx_timer = 1;      // Next timer interrupt will be RX
-//    nlink.io.shift_reg = 0;
     nlink.io.bit_cnt = 0;
     nlink.io.state = NLINK_IO_STATE_ACTIVE;
 
-    TIFR |= _BV(TOV2);
-    TCNT2 = NLINK_IO_TIMER_RELOAD + 1;   // Enable timer
+    NLINK_IO_TIMER_ENABLE;
 }

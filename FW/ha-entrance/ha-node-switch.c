@@ -3,8 +3,8 @@
  *
  * Created: 4/30/2018 4:37:10 PM
  *  Author: Solit
- */ 
- // TODO: 
+ */
+ // TODO:
  // 1. Make HW pins independent through include of #ifdef
 #include <avr/io.h>
 #include <stdint.h>
@@ -17,7 +17,7 @@ uint8_t guc_sw_event_mask;
 
 typedef struct {
     uint8_t uc_event;         // OFF_ON, ON_OFF, ON_HOLD, HOLD_OFF
-    uint8_t uc_prev_pin;      // 0/1 not debounced    
+    uint8_t uc_prev_pin;      // 0/1 not debounced
     uint8_t uc_prev_sw;       // pressed/released debounced
     uint8_t uc_hold_timer;
     uint8_t uc_debounce_timer;
@@ -44,7 +44,7 @@ typedef struct {
 #define SW_DEBOUNCE_TIMER     5  // in 10ms ticks
 #define SW_HOLD_TIMER       100  // in 10ms ticks
 #define SW_HOLD_TIMER_NEXT  150  // in 10ms ticks
-#define SW_PIN_PRESSED  0 
+#define SW_PIN_PRESSED  0
 #define SW_PIN_RELEASED 1
 
 #define SW_TYPE_BUTT   2
@@ -52,26 +52,25 @@ typedef struct {
 #define SWITCHES_NUM   5
 
 uint8_t gta_switches_pin_masks[SWITCHES_NUM] = {
-    _BV(SW_PIN0), 
-    _BV(SW_PIN2), 
-    _BV(SW_PIN3), 
-    _BV(SW_PIN4), 
-    _BV(SW_PIN5), 
+    _BV(SW_PIN0),
+    _BV(SW_PIN2),
+    _BV(SW_PIN3),
+    _BV(SW_PIN4),
+    _BV(SW_PIN5),
 };
 
 SWITCH_INFO gta_switches[SWITCHES_NUM];
 
-void switch_on_rx(uint8_t idx, const uint8_t *buf_in) 
+void switch_on_rx(uint8_t idx, const uint8_t *buf_in)
 {
     UNREFERENCED_PARAM(idx);
     UNREFERENCED_PARAM(buf_in);
-    // Nothing to do here. Switch is neither 
+    // Nothing to do here. Switch is neither
     // controllable nor configurable
 }
 
-void ha_node_switch_init() 
+void ha_node_switch_init()
 {
-
     // Set switch pins to pull-up inputs
     SW_DIR  &= ~SW_MASK_ALL;
     SW_PORT |= SW_MASK_ALL;
@@ -92,7 +91,7 @@ void ha_node_switch_init()
 
 // SWITCH DATA
 //      TYPE(SWITCH) EVENT(%)
-//  
+//
     g_switch_nlink_node = ha_nlink_node_register(SWITCH_ADDR, NODE_TYPE_SWITCH, switch_on_rx);
 
     // Clear TX buffer
@@ -102,7 +101,7 @@ void ha_node_switch_init()
 }
 
 
-void ha_node_switch_on_timer() 
+void ha_node_switch_on_timer()
 {
     uint8_t  uc_i;
     uint8_t  uc_sw_state;
@@ -112,7 +111,7 @@ void ha_node_switch_on_timer()
     uc_sw_pins = SW_PIN;
 
     for (uc_i = 0; uc_i < SWITCHES_NUM; uc_i++)
-    { // Loop over all switches 
+    { // Loop over all switches
 
         uc_sw_state = gta_switches[uc_i].uc_prev_sw;
         uc_curr_pin = !!(uc_sw_pins & gta_switches[uc_i].uc_pin_mask);
@@ -123,9 +122,9 @@ void ha_node_switch_on_timer()
         if (uc_curr_pin != gta_switches[uc_i].uc_prev_pin)
         {// current pin state differs from previous
 
-            // increment debounce timer 
+            // increment debounce timer
             gta_switches[uc_i].uc_debounce_timer ++;
-            
+
             if (gta_switches[uc_i].uc_debounce_timer == SW_DEBOUNCE_TIMER)
             { // debounce timer expired
                 gta_switches[uc_i].uc_prev_pin = uc_curr_pin;
@@ -181,7 +180,7 @@ void ha_node_switch_on_timer()
                     gta_switches[uc_i].uc_event = SW_EVENT_ON_HOLD;                           // ---         ON -> HOLD NEXT ---
                     gta_switches[uc_i].uc_hold_timer = SW_HOLD_TIMER;
                 }
-            } 
+            }
         } // End of switch held
 
         gta_switches[uc_i].uc_prev_sw = uc_sw_state;
@@ -202,5 +201,5 @@ void ha_node_switch_on_timer()
     if (len) {
         node->tx_buf[NLINK_HDR_OFF_LEN] = len;
         ha_nlink_node_send(node, LEDLIGHT_ADDR, NLINK_CMD_INFO);
-    }                
+    }
 }

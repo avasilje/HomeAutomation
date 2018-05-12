@@ -7,7 +7,7 @@
  *
  * Created: 08/04/2018
  *  Author: Solit
- */ 
+ */
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -27,7 +27,7 @@ extern T_ACTION gta_action_table[];
 
 uint16_t gus_trap_line;
 
-void FATAL_TRAP (uint16_t us_line_num) { 
+void FATAL_TRAP (uint16_t us_line_num) {
     gus_trap_line = us_line_num;
     while(1);
 }
@@ -37,12 +37,12 @@ void FATAL_TRAP (uint16_t us_line_num) {
 volatile uint8_t guc_in_msg_idx;
 uint8_t guca_in_msg_buff[MSG_BUFF_SIZE];
 
-volatile uint8_t guc_out_msg_wr_idx; 
+volatile uint8_t guc_out_msg_wr_idx;
 volatile uint8_t guc_out_msg_rd_idx;
 uint8_t guca_out_msg_buff[MSG_BUFF_SIZE];   // ??  not in use. see ha_uart
 
 // ---------------------------------
-// --- LEDS specific                                
+// --- LEDS specific
 // ---------------------------------
 #define LED_PORT  PORTB
 #define LED_DIR   DDRB
@@ -56,7 +56,7 @@ uint8_t guca_out_msg_buff[MSG_BUFF_SIZE];   // ??  not in use. see ha_uart
 
 #define DISABLE_TIMER0    TIMSK &= ~(1<<TOIE0)            // Disable Overflow Interrupt
 #define ENABLE_TIMER0     TIMSK |= (1<<TOIE0)   // Enable Overflow Interrupt
-#define CNT_RELOAD       (0xFF - 125)         // 
+#define CNT_RELOAD       (0xFF - 125)         //
 
 #define CNT_TCCRxB       2    // Prescaler value (2->1/8)
 
@@ -80,6 +80,18 @@ typedef struct ha_uart_s {
 
 ha_uart_t ha_uart;
 
+static void init_ha_nlink_timer()
+{   // Timer is always running
+    cli();
+        TCCR2 &= ~(_BV(CS20) | _BV(CS21) | _BV(CS22));
+        TCCR2 |= (2 << CS20);    // prescaler 2 => 1/8
+
+        TIMSK |= _BV(TOIE2);
+        TCNT2 = 0;               // Free running
+        TIFR |= _BV(TOV2);
+    sei();
+}
+
 static void init_uart()
 {
     // Init UART to 0.5Mbps 8N1
@@ -90,7 +102,7 @@ static void init_uart()
     UBRRL = 1;
 
     // Set frame format: 8data, 1stop bit, no parity */
-    UCSRC = 
+    UCSRC =
         _BV(URSEL) |    // Enable access to UCSRC. Otherwise UBRRH will be overwritten
         _BV(UCSZ0) |    // 8 data bits
         _BV(UCSZ1);     // 8 data bits
@@ -108,7 +120,7 @@ static void init_uart()
 void ha_uart_enable_tx() {
     UCSRB |= _BV(UDRIE);  // TX Interrupt enable
 }
- 
+
 static void init_gpio(){
     // Set led to pull down
     LED_DIR  |= LED_MASK_ALL;
@@ -122,7 +134,7 @@ static void command_lookup()
 
     uint8_t uc_act_cmd;
     uint8_t uc_msg_cmd;
-    
+
     // check is command valid
     // MARK = "AV", read pointer must be set on buffer start
     if ( guca_in_msg_buff[0] != 0x41)
@@ -144,13 +156,13 @@ static void command_lookup()
         FATAL_TRAP(__LINE__);
 
     // Find action in table
-    do 
+    do
     {
         pt_action ++;
         uc_act_cmd = pgm_read_byte_near(&pt_action->uc_cmd);
 
         // TRAP if unknown command received (end of table reached)
-        if (uc_act_cmd == 0xFF) 
+        if (uc_act_cmd == 0xFF)
             FATAL_TRAP(__LINE__);
 
         if (uc_msg_cmd == uc_act_cmd){
@@ -175,6 +187,7 @@ void init_timer() {
     ENABLE_TIMER0;
     guc_timer_cnt = 0;
 }
+
 static void check_ctrlcon_tx()
 {
     // Check CTRLCON TX if UART TX is disabled
@@ -196,9 +209,10 @@ static void check_ctrlcon_rx()
 int main(void)
 {
     init_gpio();
-    
+
     init_timer();
 
+    init_ha_nlink_timer();
     // Wait a little just in case
     for(uint8_t uc_i = 0; uc_i < 255U; uc_i++){
 
@@ -210,14 +224,19 @@ int main(void)
     }
 
     init_uart();
+
+    // Set INT0 trigger to Falling Edge, Clear interrupt flag
+    MCUCR &= ~(_BV(ISC00) | _BV(ISC01));
+    MCUCR |= (2 << ISC00);
+
     ha_nlink_init();
 
     ha_node_switch_init();
     ha_node_ctrlcon_init(); // Ctrlcon node must be initialized last because collects info about all other nodes
-    
+
     sei();
 
-    while(1) 
+    while(1)
     {
         // Get number of bytes received (4 bytes at least)
         if (guc_in_msg_idx >= 4)
@@ -237,6 +256,17 @@ int main(void)
     }
     cli();
 
+}
+
+ISR(TIMER2_OVF_vect)
+{
+    // 8*256 clocks @ 8MHz = 8*64us = 256us = 1/2 nlink clock period
+    isr_nlink_io_on_timer();
+}
+
+ISR(INT0_vect)
+{
+    isr_nlink_io_on_start_edge();
 }
 
 ISR(TIMER0_OVF_vect) {
@@ -297,7 +327,7 @@ ISR(USART_RXC_vect) {
         INT_FATAL_TRAP(__LINE__);
 
     guca_in_msg_buff[guc_in_msg_idx++] = uc_data;
-  
+
 }
 
 void action_signature()
@@ -305,8 +335,8 @@ void action_signature()
     uint8_t uc_i;
 
     // Command format
-    // 0x41 0x86 0x21  0xLL    0xAA      
-    // MARK      CMD   Length  Address   
+    // 0x41 0x86 0x21  0xLL    0xAA
+    // MARK      CMD   Length  Address
 
     // Response format
     // 0x41 0x86 0x11    0xLL    0xMM    0xMM    0xCC
@@ -348,7 +378,7 @@ void node_get_info(uint8_t addr) {
     addr = addr;
      // for all registered nodes
      {
-        
+
         // If node addr == addr || addr == BC
             {
                 // mark node as info requested
@@ -356,15 +386,15 @@ void node_get_info(uint8_t addr) {
      }
 }
 
-void action_node_info() 
+void action_node_info()
 {
     // Command format
-    // 0x41 0x86 0x21  0xLL    0xAA      
-    // MARK      CMD   Length  Address   
-    
+    // 0x41 0x86 0x21  0xLL    0xAA
+    // MARK      CMD   Length  Address
+
     // Response format
     // 0x41 0x86 0x21  0xLL    | 0xAA      0xTT   0xDD         | 0xAA      0xTT   0xDD      |
-    // MARK      CMD   Length  | Address   Type   node info    | Address   Type   node info |  
+    // MARK      CMD   Length  | Address   Type   node info    | Address   Type   node info |
 
     // Check is message address is available, wait if not yet
     while(guc_in_msg_idx < 6);
@@ -378,19 +408,19 @@ void action_node_info()
     // If our own, then prepare response
     // Retransmit if addr == BC
     if (addr == NODE_ADDR_BC || node_is_own_addr(addr)) {
-        
+
         if (addr == NODE_ADDR_BC) {
             // Copy to NODE_IF
         }
-        // Respond with node 
+        // Respond with node
         uint8_t wr_idx = 4
-        
+
         while( node_responde(req_addr, &guca_out_msg_buff[]) ;){
 
         }
-            
+
     }
-    
+
     uint8_t data_len = guca_out_msg_buff[uc_i+2] = uc_feedback;
     guc_out_msg_wr_idx = uc_i + 2;
 #endif
@@ -398,8 +428,8 @@ void action_node_info()
 
 T_ACTION gta_action_table[] __attribute__ ((section (".act_const"))) = {
     { "mark", 0x00, (void*)0xFEED        },    // Table signature
-    { "sign", 0x11, action_signature     },    
-    { "ninf", 0x21, action_node_info     },    
+    { "sign", 0x11, action_signature     },
+    { "ninf", 0x21, action_node_info     },
     { ""    , 0xFF, NULL                 }     // End of table
 };
 

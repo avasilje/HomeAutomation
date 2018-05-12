@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "ha-common.h"
 #include "ha-ledlight.h"
-#include "ha_ledlight_const.h"
+#include "ha-ledlight_const.h"
 #include "ha-nlink.h"
 #include "ha-node-switch.h"
 #include "ha-node-ledlight.h"
@@ -65,25 +65,25 @@ void set_steady_state(uint8_t led_num, uint8_t val)
     switch(led_num) {
         case 0:
             // OUT_SW0_0 PINB2  ==> OC0A
-            PORTB = val ? (PORTB & ~OUT_SW0_0_MASK) : (PORTB | OUT_SW0_0_MASK);
+            PORTB = val ? (PORTB | OUT_SW0_0_MASK) : (PORTB & ~OUT_SW0_0_MASK);
             TCCR0A &= ~((1 << COM0A1) | (1 << COM0A0));
             break;
 
         case 1:
             // OUT_SW0_1 ==> OC1A
-            PORTB = val ? (PORTB & ~OUT_SW0_1_MASK) : (PORTB | OUT_SW0_1_MASK);
+            PORTB = val ? (PORTB | OUT_SW0_1_MASK) : (PORTB & ~OUT_SW0_1_MASK);
             TCCR1A &= ~((1 << COM1A1) | (1 << COM1A0));
             break;
 
         case 2:
             // OUT_SW0_2 ==> OC1B
-            PORTB = val ? (PORTB & ~OUT_SW0_2_MASK) : (PORTB | OUT_SW0_2_MASK);
+            PORTB = val ? (PORTB | OUT_SW0_2_MASK) : (PORTB & ~OUT_SW0_2_MASK);
             TCCR1A &= ~((1 << COM1B1) | (1 << COM1B0));
             break;
 
         case 3:
             // OUT_SW1_3 ==> OC0B
-            PORTD = val ? (PORTD & ~OUT_SW1_3_MASK) : (PORTB | OUT_SW1_3_MASK);
+            PORTD = val ? (PORTB | OUT_SW1_3_MASK) : (PORTD & ~OUT_SW1_3_MASK);
             TCCR0A &= ~((1 << COM0B1) | (1 << COM0B0));
             break;
     }
@@ -171,7 +171,7 @@ void dimm_on(){
 
 void led_disable_roll(){
     guc_leds_disabled_idx++;
-    if (guc_leds_disabled_idx >= ROLL_ON_MASK_NUM) guc_leds_disabled_idx = 0;
+    if (guc_leds_disabled_idx == ROLL_ON_MASK_NUM) guc_leds_disabled_idx = 0;
     g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_DIS_MASK ] = guc_leds_disabled_idx;
     light_on();
 }
@@ -407,6 +407,8 @@ int main(void)
     // Enable Timer0 overflow interrupt
     TIMSK = (1<<TOIE0);
 
+    // NLINK configuration & init
+    PCMSK |= NLINK_IO_RX_PIN_MASK;  // Enable Pin Change interrupt
     ha_nlink_init();
 
     ha_ledlight_init();

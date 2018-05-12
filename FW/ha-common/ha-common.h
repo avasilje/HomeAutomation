@@ -3,9 +3,13 @@
  *
  * Created: 5/1/2018 11:39:01 PM
  *  Author: Solit
- */ 
+ */
 
 #pragma once
+
+#include "ha-common-elbox.h"
+#include "ha-common-entrance.h"
+
 extern uint16_t gus_trap_line;
 extern void FATAL_TRAP (uint16_t us_line_num);
 
@@ -18,3 +22,5 @@ extern void FATAL_TRAP (uint16_t us_line_num);
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
 #define UNREFERENCED_PARAM(x) x=x
+
+#define STATIC_ASSERT(COND,MSG) typedef char static_assertion_##MSG[(COND)?1:-1]

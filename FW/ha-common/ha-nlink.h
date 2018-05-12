@@ -3,39 +3,12 @@
  *
  * Created: 5/1/2018 11:19:38 PM
  *  Author: Solit
+ *  Keep it HW agnostic!
  */
 
 #pragma once
 
 #define NLINK_IO_RECOVER_TIMER 64 // in nlink clocks
-#if 0
-// ATMega32
-#define NLINK_IO_RX_PORT  PORTD
-#define NLINK_IO_RX_DIR   DDRD
-#define NLINK_IO_RX_PIN   PIND
-#define NLINK_IO_RX_PIN_MASK   _BV(PIND2)   // INT0
-
-#define NLINK_IO_TX_PORT  PORTB
-#define NLINK_IO_TX_DIR   DDRB
-#define NLINK_IO_TX_PIN_MASK   _BV(PINB1)
-
-#else
-// ATTiny4313
-#define NLINK_IO_RX_PORT  PORTB
-#define NLINK_IO_RX_DIR   DDRB
-#define NLINK_IO_RX_PIN   PINB
-#define NLINK_IO_RX_PIN_MASK   _BV(PINB0)   // PCINT0
-
-#define NLINK_IO_TX_PORT  PORTB
-#define NLINK_IO_TX_DIR   DDRB
-#define NLINK_IO_TX_PIN_MASK   _BV(PINB1)
-
-#define NLINK_IO_DBG_PIN_MASK _BV(PIND0)
-#define NLINK_IO_DBG_PORT PORTD
-#define NLINK_IO_DBG_PIN  PIND
-#define NLINK_IO_DBG_DIR  DDRD
-
-#endif
 
 #define NLINK_COMM_BUF_SIZE 16
 
@@ -60,8 +33,6 @@ typedef struct node_s {
 #define NLINK_HDR_OFF_TYPE 3
 #define NLINK_HDR_OFF_LEN  4
 #define NLINK_HDR_OFF_DATA 5
-
-#define NLINK_NODES_NUM 1       // LEDLIGHT alone
 
 enum nlink_io_state_e {
     NLINK_IO_STATE_RECOVERING,
