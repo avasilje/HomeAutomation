@@ -14,8 +14,7 @@
 
 #define NLINK_NODES_NUM 1       // LEDLIGHT alone
 
-#define NLINK_IO_IDLE_TIMEOUT 10    // timeout when TX can start to transmit.
-// TODO: ^^^ Must be unique for a particular device
+#define NLINK_IO_IDLE_TIMEOUT NLINK_IO_IDLE_TIMEOUT_ELBOX   // timeout when TX can start to transmit.
 
 // ATTiny4313
 #define ENABLE_PCINT  do {GIFR |= (1 << PCIF0); GIMSK |= (1 << PCIE0); } while(0)

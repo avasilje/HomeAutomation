@@ -14,8 +14,7 @@
 
 #define NLINK_NODES_NUM 3       // CTRLCON + SWITCH + ???
 
-#define NLINK_IO_IDLE_TIMEOUT 12    // timeout when TX can start to transmit.
-// TODO: ^^^ Must be unique for a particular device
+#define NLINK_IO_IDLE_TIMEOUT NLINK_IO_IDLE_TIMEOUT_ENTRANCE // timeout when TX can start to transmit.
 
 // AVR32
 #define NLINK_RX_INT_ENABLE do { GIFR |= INTF0; GICR |= _BV(INT0);} while(0)
