@@ -53,11 +53,6 @@ uint8_t dbg_idx = 0;
 
 uint16_t gus_trap_line;
 
-void FATAL_TRAP (uint16_t us_line_num) {
-    gus_trap_line = us_line_num;
-    while(1);
-}
-
 void set_steady_state(uint8_t led_num, uint8_t val)
 {
     // Val 0 ==> On ==> output 1
@@ -83,7 +78,7 @@ void set_steady_state(uint8_t led_num, uint8_t val)
 
         case 3:
             // OUT_SW1_3 ==> OC0B
-            PORTD = val ? (PORTB | OUT_SW1_3_MASK) : (PORTD & ~OUT_SW1_3_MASK);
+            PORTD = val ? (PORTD | OUT_SW1_3_MASK) : (PORTD & ~OUT_SW1_3_MASK);
             TCCR0A &= ~((1 << COM0B1) | (1 << COM0B0));
             break;
     }

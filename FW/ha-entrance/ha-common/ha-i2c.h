@@ -1,5 +1,5 @@
 #pragma once
-
+#include <stdint.h>
 
  enum i2c_tr_state_e {
     I2C_STATE_IDLE   = 0,    // Ready to start

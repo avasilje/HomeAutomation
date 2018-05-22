@@ -1,12 +1,9 @@
 #pragma once
+#include <stdint.h>
 
 // MS860702BA01 - PHT Combination Sensor
 
 // For pressure and temperature sensing, five commands are possible:
-
-
-
-
 
 #define HA_PHTS_CMD_PT_RESET   0x1E     // 1. Reset
 #define HA_PHTS_CMD_PT_RDCAL   0xA0     // 2. Read PROM P&T (112 bit of calibration words)

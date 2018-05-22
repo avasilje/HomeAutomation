@@ -10,9 +10,10 @@
 #include "ha-i2c.h"
 
 // TODO:
-//  1. Add PWM configuration for HVAC control
-//  2. Add hvac_heater_regulation auto/manual functionality
-//  3. Bond with NLINK interface
+//  +1. Add PWM configuration for HVAC control
+//  +2. Add hvac_heater_regulation auto/manual functionality
+//  +3. Bond with NLINK interface
+//  ------- solder / run / debug / commit ------
 //  4. Add I2C GPIO and reg init
 //  5. Add I2C transport
 //  6. Add PHTS functionality
@@ -96,19 +97,23 @@ hvac_t g_hvac;
 
 int8_t g_ha_nlink_timer_cnt;
 int16_t g_ha_hvac_fsm_timer_cnt = 0;
+int16_t g_ha_hvac_fsm_timer = 0;
 
 void hvac_on_rx(uint8_t idx, const uint8_t *buf_in)
 {
+    hvac_t *hvac = &g_hvac;
     UNREFERENCED_PARAM(idx);
     uint8_t len = buf_in[NLINK_HDR_OFF_LEN];
     UNREFERENCED_PARAM(len);
 
-    if (buf_in[NLINK_HDR_OFF_TYPE] == NODE_TYPE_HVAC) {
-        //
-    } else {
+    if (buf_in[NLINK_HDR_OFF_TYPE] != NODE_TYPE_HVAC) {
         // Unexpected event type
         return;
     }
+
+    hvac->state_trgt = (buf_in[NLINK_HDR_OFF_DATA + HVAC_DATA_STATE] & HVAC_DATA_STATE_TRGT_MASK) >> 4;
+    hvac->heater_ctrl_mval = buf_in[NLINK_HDR_OFF_DATA + HVAC_DATA_HEATER_MVAL];
+
 }
 
 int main(void)
@@ -124,6 +129,10 @@ int main(void)
     }
 
     DDRB = 0;
+
+    // Set timer 0 to 8-bit Fast PWM, no prescaler, no cnt - free running
+    TCCR0A = (1 << WGM00) | (1 << WGM01);
+    TCCR0B = (1 << CS00);
 
     // Enable Timer0 overflow interrupt
     TIMSK = (1<<TOIE0);
@@ -150,14 +159,62 @@ int main(void)
                                 ::);
         ha_nlink_check_rx();
         ha_nlink_check_tx();
+
+        if (g_ha_hvac_fsm_timer) {
+            g_ha_hvac_fsm_timer = 0;
+            ha_hvac_fsm();
+        }
     }
+}
+
+void hvac_heater_control(uint8_t pwm_val)
+{
+    if (pwm_val == 0) {
+        // Disable PWM
+        HVAC_HEATER_CONTROL_PORT &= ~HVAC_HEATER_CONTROL_MASK;
+        TCCR0A &= ~((1 << COM0B1) | (1 << COM0B0));
+    } else {
+        // Limit output voltage to 10V
+        // X = 10/12*256 = 213.3
+        // 214 ==> 10.03
+        if (pwm_val > 214) pwm_val = 214;
+        TCCR0A |= (1 << COM0B1);
+        OCR0B = pwm_val;
+    }
+
+}
+void ha_hvac_node_update()
+{
+    node_t *node = g_hvac.node;
+    hvac_t *hvac = &g_hvac;
+
+    node->tx_buf[NLINK_HDR_OFF_TYPE] = NODE_TYPE_HVAC;
+    node->tx_buf[NLINK_HDR_OFF_LEN] = HVAC_DATA_LAST;
+
+    uint8_t val =
+        (hvac->state_curr & HVAC_DATA_STATE_CURR_MASK) |
+        (hvac->state_trgt & HVAC_DATA_STATE_TRGT_MASK);
+
+    if (hvac->state_timer) val |= HVAC_DATA_STATE_STMR_MASK;
+    if (0) val |= HVAC_DATA_STATE_ALRM_MASK;
+
+    node->tx_buf[NLINK_HDR_OFF_DATA + HVAC_DATA_STATE ] = val;
+    node->tx_buf[NLINK_HDR_OFF_DATA + HVAC_DATA_HEATER_MVAL] = hvac->heater_ctrl_mval;
+    node->tx_buf[NLINK_HDR_OFF_DATA + HVAC_DATA_HEATER_CURR] = hvac->heater_ctrl_curr;
+
+    // TODO: Fill Sensor data here
+    // ...
 }
 
 void ha_hvac_init()
 {
-    // Init heater control (PWM 0..10V)
-    // ...
+    hvac_t *hvac = &g_hvac;
+
     hvac_heater_control(0);
+    HVAC_SWITCH_PORT = HVAC_SWITCH_STATE_S1;
+    hvac->state_trgt = HVAC_STATE_S1;
+    hvac->state_curr = HVAC_STATE_S1;
+    hvac->state_timer = HVAC_TIMER_VALVE_CLOSE; // Assume valve is in wrong state
 
     ha_phts_init();
 
@@ -165,37 +222,50 @@ void ha_hvac_init()
     // ...
 
     node_t *node = ha_nlink_node_register(HVAC_ADDR, NODE_TYPE_HVAC, hvac_on_rx);
-    g_hvac.node = node;
-
-    node->tx_buf[NLINK_HDR_OFF_TYPE] = NODE_TYPE_HVAC;
-    node->tx_buf[NLINK_HDR_OFF_LEN] = 1;
-    node->tx_buf[NLINK_HDR_OFF_DATA + HVAC_DATA_XXX ] = 0;
+    hvac->node = node;
 
 }
 
-static void hvac_heater_control(uint8_t v) {
-    if (v == 0) {
-        // See LED steady state
+/*
+ * Set heater control voltage as function of temperature
+ * sensor in case of auto regulation
+ * or set it to fixed value in mode CONST
+ */
+static void hvac_heater_regulation(hvac_t *hvac) {
+
+    if (hvac->heater_ctrl_mval & HVAC_HEATER_CTRL_MODE_MASK) {
+        // TODO: Hc = func(St)
+        hvac_heater_control(0);
     } else {
-        // See LED PWM value
+        uint8_t val = hvac->heater_ctrl_mval & HVAC_HEATER_CTRL_VAL_MASK;
+        if (hvac->heater_ctrl_curr != val) {
+            hvac_heater_control(val);
+            hvac->heater_ctrl_curr = val;
+        }
     }
+
 }
 
-static void hvac_heater_regulation() {
-    // ... Hc = func(St)
-    // Set heater control voltage as function of sensor temperature
-    // or set it to fixed value if configured by user
-    hvac_heater_control(0);
-}
-
-static wait_10ms() {
+static void wait_10ms() {
     // Wait 10ms in idle loop - NOT ISR!
-    // TODO:
+    // 256 clocks @ 20 MHz ==> 12.8usec
+    uint16_t cnt = ((20*1000)/24)*10; // 24 instruction in loop
+                                    // TODO: ^^^ verify
+    while(cnt--) {
+        __asm__ __volatile__ ("    nop\n    nop\n    nop\n    nop\n"\
+                              "    nop\n    nop\n    nop\n    nop\n"\
+                              "    nop\n    nop\n    nop\n    nop\n"\
+                              "    nop\n    nop\n    nop\n    nop\n"
+                                ::);
+    }
+
     return;
 }
 
 
 static void hvac_on_s_plus(){
+    hvac_t *hvac = &g_hvac;
+
     // S+
     switch(hvac->state_curr) {
         case HVAC_STATE_S1:
@@ -234,6 +304,7 @@ static void hvac_on_s_plus(){
 }
 
 static void hvac_on_s_minus(){
+    hvac_t *hvac = &g_hvac;
 
     switch(hvac->state_curr) {
         case HVAC_STATE_S4:
@@ -273,6 +344,7 @@ static void hvac_on_s_minus(){
 }
 
 static void hvac_check_error() {
+    hvac_t *hvac = &g_hvac;
 
     switch(hvac->state_curr) {
         case HVAC_STATE_S1:
@@ -291,21 +363,22 @@ static void hvac_check_error() {
             break;
     }
 }
-
-// TODO: move to idle loop
+/*
+ * HVAC main logic executed @ 20ms
+ */
 void ha_hvac_fsm() {
     hvac_t *hvac = &g_hvac;
 
     ha_phts_poll(&hvac->sensor);
 
-    hvac_heater_regulation();
+    hvac_heater_regulation(hvac);
 
     if (hvac->state_timer > 0) hvac->state_timer --;
 
     // Check transition
     if (hvac->state_curr < hvac->state_trgt) {
         hvac_on_s_plus();
-    } else if () {
+    } else if (hvac->state_curr > hvac->state_trgt) {
         hvac_on_s_minus();
     }
 
@@ -334,8 +407,9 @@ ISR(TIMER0_OVF_vect) {
         }
     }
 
+    g_ha_hvac_fsm_timer_cnt ++;
     if (g_ha_hvac_fsm_timer_cnt > 80 * 20) {    // 20ms
         g_ha_hvac_fsm_timer_cnt = 0;
-        ha_hvac_fsm();
+        g_ha_hvac_fsm_timer = 1;
     }
 }
