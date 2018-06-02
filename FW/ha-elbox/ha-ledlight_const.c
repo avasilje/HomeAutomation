@@ -9,6 +9,7 @@
 #include "ha-ledlight_const.h"
 
 // TODO: move to pgm?
+// Note: Values are non linear so need to be calibrated for precise control
 #define PWM_PULSE(duty_cycle)  ((duty_cycle * 256 / 100) - 1)
 const uint8_t guca_pwm_intensity_table[INTENSITIES_NUM] =
 {

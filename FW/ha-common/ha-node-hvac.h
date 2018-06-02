@@ -24,4 +24,5 @@
 #define HVAC_HEATER_CTRL_MODE_MASK  (1 << 7)
 #define HVAC_HEATER_CTRL_MODE_CONST 0                           // Heater control set directly by user
 #define HVAC_HEATER_CTRL_MODE_TEMP  HVAC_HEATER_CTRL_MODE_MASK  // Auto regulation as function of in/out temperature
-#define HVAC_HEATER_CTRL_VAL_MASK   ((1<< 7) - 1)
+#define HVAC_HEATER_CTRL_VAL_MASK  ((1 << 3) - 1)
+#define HAVC_HEATER_CTRL_VAL_NUM   6

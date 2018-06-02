@@ -13,7 +13,6 @@
 //  +1. Add PWM configuration for HVAC control
 //  +2. Add hvac_heater_regulation auto/manual functionality
 //  +3. Bond with NLINK interface
-//  ------- solder / run / debug / commit ------
 //  4. Add I2C GPIO and reg init
 //  5. Add I2C transport
 //  6. Add PHTS functionality
@@ -93,6 +92,23 @@
  *
  */
 
+/*
+ *   PWM values for heater control. Depends on payload.
+ *   Non linear. Values tabified for 430Ohm resistor load
+ *   Max HEATER_CTRL voltage = 10V
+ *
+ *  #   |    Voltage (V) | Pwm
+ *  ----|----------------|--------
+ *  0   |  0    0.1      | <15  // Value not used
+ *  1   |  2    1.9      | 24
+ *  2   |  4    4.1      | 32
+ *  3   |  6    5.96     | 40
+ *  4   |  8    7.97     | 52
+ *  5   |  10   9.98     | 86
+ *
+ */
+const uint8_t guca_heater_pwm_table[HAVC_HEATER_CTRL_VAL_NUM] = {  0,  24,  32, 40, 52, 86 };
+
 hvac_t g_hvac;
 
 int8_t g_ha_nlink_timer_cnt;
@@ -167,17 +183,16 @@ int main(void)
     }
 }
 
-void hvac_heater_control(uint8_t pwm_val)
+void hvac_heater_control(uint8_t pwm_idx)
 {
-    if (pwm_val == 0) {
+    if (pwm_idx >= HAVC_HEATER_CTRL_VAL_NUM) pwm_idx = HAVC_HEATER_CTRL_VAL_NUM - 1;
+
+    if (pwm_idx == 0) {
         // Disable PWM
         HVAC_HEATER_CONTROL_PORT &= ~HVAC_HEATER_CONTROL_MASK;
         TCCR0A &= ~((1 << COM0B1) | (1 << COM0B0));
     } else {
-        // Limit output voltage to 10V
-        // X = 10/12*256 = 213.3
-        // 214 ==> 10.03
-        if (pwm_val > 214) pwm_val = 214;
+        uint8_t pwm_val = guca_heater_pwm_table[pwm_idx];
         TCCR0A |= (1 << COM0B1);
         OCR0B = pwm_val;
     }
@@ -210,16 +225,19 @@ void ha_hvac_init()
 {
     hvac_t *hvac = &g_hvac;
 
+    HVAC_HEATER_CONTROL_DIR |= HVAC_HEATER_CONTROL_MASK;   // output
     hvac_heater_control(0);
-    HVAC_SWITCH_PORT = HVAC_SWITCH_STATE_S1;
+
+    HVAC_SWITCH_PORT &= ~HVAC_SWITCH_MASK;
+    HVAC_SWITCH_DIR |= HVAC_SWITCH_MASK;
+
+    HVAC_SWITCH_PORT |= HVAC_SWITCH_STATE_S1;
+
     hvac->state_trgt = HVAC_STATE_S1;
     hvac->state_curr = HVAC_STATE_S1;
     hvac->state_timer = HVAC_TIMER_VALVE_CLOSE; // Assume valve is in wrong state
 
     ha_phts_init();
-
-    // Init relays state
-    // ...
 
     node_t *node = ha_nlink_node_register(HVAC_ADDR, NODE_TYPE_HVAC, hvac_on_rx);
     hvac->node = node;
