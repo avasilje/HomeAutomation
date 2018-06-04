@@ -18,21 +18,16 @@
 #include "ha-nlink.h"
 
 nlink_t nlink;
-int dbg[10];
 
 #define NODE_FLAG_VALID 1      // for sanity purposes
 #define NODE_FLAG_RX    2      //
 
 static void ha_nlink_io_set_idle()
 {
-    NLINK_IO_DBG_PORT |= NLINK_IO_DBG_PIN1_MASK;
-
     nlink.io.state = NLINK_IO_STATE_IDLE;
     nlink.io.idle_timer = 0;
     NLINK_RX_INT_ENABLE;
     NLINK_IO_TIMER_ENABLE;
-
-    NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN1_MASK;
 }
 static void ha_nlink_io_recover()
 {
@@ -59,6 +54,9 @@ void ha_nlink_init()
 
     NLINK_IO_DBG_DIR |= (NLINK_IO_DBG_PIN0_MASK | NLINK_IO_DBG_PIN1_MASK);
     NLINK_IO_DBG_PORT &= ~(NLINK_IO_DBG_PIN0_MASK | NLINK_IO_DBG_PIN1_MASK);
+
+    //NLINK_IO_DBG_PORT |= NLINK_IO_DBG_PIN1_MASK;
+    //NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN1_MASK;
 
     ha_nlink_io_recover();
 }
@@ -200,15 +198,10 @@ void ha_nlink_check_tx()
 static void isr_nlink_io_rx_on_idle()
 {
     if (nlink.io.idle_timer < NLINK_IO_IDLE_TIMEOUT) {
-        dbg[5]++;
         nlink.io.idle_timer++;
     } else {
         NLINK_IO_TIMER_DISABLE;
     }
-
-    //if (nlink.io.idle_timer == NLINK_IO_IDLE_TIMEOUT) {
-        //dbg[7]++;
-    //}
 }
 static void isr_nlink_io_rx_on_receiving() {
 
@@ -291,8 +284,6 @@ static void isr_nlink_io_on_tx_timer()
                     // Retransmittion will be initiated in idle loop
                     // after idle timeout expired
                     nlink.io.tx_rd = 0xFF; // aka (tx_len + 1)
-                    dbg[4]++;
-
                 }
                 // Invalidate just received own data
                 nlink.io.rx_wr = 0;
