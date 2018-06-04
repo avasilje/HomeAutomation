@@ -208,6 +208,7 @@ static void check_ctrlcon_rx()
 
 int main(void)
 {
+    OSCCAL = 0xAC;  // TODO: need to be stored in FLASH upon programming
     init_gpio();
 
     init_timer();
@@ -261,6 +262,7 @@ int main(void)
 ISR(TIMER2_OVF_vect)
 {
     // 8*256 clocks @ 8MHz = 8*64us = 256us = 1/2 nlink clock period
+    //TCNT2 = 0;
     isr_nlink_io_on_timer();
 }
 

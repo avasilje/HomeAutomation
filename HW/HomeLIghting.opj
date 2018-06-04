@@ -112,10 +112,10 @@
     (Doc
       (Type "COrSchematicDoc")
       (Frame
-        (Placement "44 2 3 0 990 -8 -31 195 1773 66 746")
-        (Scroll "0 480")
+        (Placement "44 0 1 -1 -1 -8 -31 52 1630 52 732")
+        (Scroll "0 390")
         (Zoom "100")
         (Occurrence "/"))
-      (Path "C:\MYWORKS\HOMELIGHTING\02_HW\HOMELIGHTING.DSN")
+      (Path "C:\MYWORKS\HOMEAUTOMATION\HW\HOMELIGHTING.DSN")
       (Schematic "SCHEMATIC1")
       (Page "PAGE1"))))

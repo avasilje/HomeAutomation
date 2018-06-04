@@ -31,13 +31,14 @@ extern int8_t g_ha_nlink_timer_cnt;
 #define NLINK_IO_RX_PORT  PORTB
 #define NLINK_IO_RX_DIR   DDRB
 #define NLINK_IO_RX_PIN   PINB
-#define NLINK_IO_RX_PIN_MASK   _BV(PINB0)   // PCINT0 function
+#define NLINK_IO_RX_PIN_MASK   _BV(PINB0)   // PCINT0
 
-#define NLINK_IO_TX_PORT  PORTD
-#define NLINK_IO_TX_DIR   DDRD
-#define NLINK_IO_TX_PIN_MASK   _BV(PIND1)
+#define NLINK_IO_TX_PORT  PORTB
+#define NLINK_IO_TX_DIR   DDRB
+#define NLINK_IO_TX_PIN_MASK   _BV(PINB1)
 
-#define NLINK_IO_DBG_PIN_MASK _BV(PIND0)
+#define NLINK_IO_DBG_PIN0_MASK _BV(PIND0)
+#define NLINK_IO_DBG_PIN1_MASK _BV(PIND1)
 #define NLINK_IO_DBG_PORT PORTD
 #define NLINK_IO_DBG_PIN  PIND
 #define NLINK_IO_DBG_DIR  DDRD

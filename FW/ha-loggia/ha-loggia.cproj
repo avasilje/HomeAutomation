@@ -105,7 +105,7 @@
   <avrgcc.compiler.symbols.DefSymbols>
     <ListValues>
       <Value>DEBUG</Value>
-      <Value>HA_DEV_ELBOX</Value>
+      <Value>HA_DEV_LOGGIA</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>
@@ -113,6 +113,7 @@
       <Value>../ha-common</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
+  <avrgcc.compiler.optimization.level>Optimize more (-O2)</avrgcc.compiler.optimization.level>
   <avrgcc.compiler.optimization.PrepareDataForGarbageCollection>False</avrgcc.compiler.optimization.PrepareDataForGarbageCollection>
   <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
   <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
@@ -134,9 +135,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ha-common\ha-i2c.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="ha-common\ha-common-elbox.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="ha-common\ha-common-loggia.h">

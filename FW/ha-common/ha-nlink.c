@@ -1,3 +1,10 @@
+//Find out why elbox & loggia start retransmittion at the same time
+//to reproduce:
+//1. Start loggia
+//2. Start elbox
+//3. Start entrance - continuos retransmittion should occur on the line
+//4. Stop entrance - retransmition still exist
+
 /*
  * ha_nlink.c
  *
@@ -11,16 +18,21 @@
 #include "ha-nlink.h"
 
 nlink_t nlink;
+int dbg[10];
 
 #define NODE_FLAG_VALID 1      // for sanity purposes
 #define NODE_FLAG_RX    2      //
 
 static void ha_nlink_io_set_idle()
 {
+    NLINK_IO_DBG_PORT |= NLINK_IO_DBG_PIN1_MASK;
+
     nlink.io.state = NLINK_IO_STATE_IDLE;
     nlink.io.idle_timer = 0;
     NLINK_RX_INT_ENABLE;
     NLINK_IO_TIMER_ENABLE;
+
+    NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN1_MASK;
 }
 static void ha_nlink_io_recover()
 {
@@ -45,8 +57,8 @@ void ha_nlink_init()
     NLINK_IO_TX_PORT &= ~NLINK_IO_TX_PIN_MASK;
     NLINK_IO_TX_DIR  |= NLINK_IO_TX_PIN_MASK;   // output
 
-    NLINK_IO_DBG_DIR |= NLINK_IO_DBG_PIN_MASK;
-    NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN_MASK;
+    NLINK_IO_DBG_DIR |= (NLINK_IO_DBG_PIN0_MASK | NLINK_IO_DBG_PIN1_MASK);
+    NLINK_IO_DBG_PORT &= ~(NLINK_IO_DBG_PIN0_MASK | NLINK_IO_DBG_PIN1_MASK);
 
     ha_nlink_io_recover();
 }
@@ -156,12 +168,14 @@ void ha_nlink_check_tx()
         nlink.io.idle_timer != NLINK_IO_IDLE_TIMEOUT) {
         return;
     }
+    NLINK_IO_DBG_PORT |= NLINK_IO_DBG_PIN0_MASK;
 
     // IO Idle timeout expired
     // Check pending transmittion (in case of previous one failed)
     if (nlink.io.tx_len) {
         nlink.io.tx_rd = 0;
         ha_nlink_io_set_idle(); // Initiate transfer
+        NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN0_MASK;
         return;
     }
     // Get data to transfer from nodes
@@ -169,14 +183,15 @@ void ha_nlink_check_tx()
         node_t *node = &nlink.nodes[i];
         if (node->tx_flag) {
             node->tx_flag = 0;
-            uint8_t tx_len = node->tx_buf[NLINK_HDR_OFF_LEN] + NLINK_HDR_OFF_DATA;
-            memcpy(nlink.io.tx_buf, node->tx_buf, tx_len);
+            uint8_t tx_buf_len = node->tx_buf[NLINK_HDR_OFF_LEN] + NLINK_HDR_OFF_DATA;
+            memcpy(nlink.io.tx_buf, node->tx_buf, tx_buf_len);
             // Initiate transmittion in next timer interrupt
             cli();
-                nlink.io.tx_len = tx_len;
+                nlink.io.tx_len = tx_buf_len;
                 nlink.io.tx_rd = 0;
             sei();
             ha_nlink_io_set_idle(); // Initiate transfer
+            NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN0_MASK;
             return;
         }
     }
@@ -185,10 +200,15 @@ void ha_nlink_check_tx()
 static void isr_nlink_io_rx_on_idle()
 {
     if (nlink.io.idle_timer < NLINK_IO_IDLE_TIMEOUT) {
+        dbg[5]++;
         nlink.io.idle_timer++;
     } else {
         NLINK_IO_TIMER_DISABLE;
     }
+
+    //if (nlink.io.idle_timer == NLINK_IO_IDLE_TIMEOUT) {
+        //dbg[7]++;
+    //}
 }
 static void isr_nlink_io_rx_on_receiving() {
 
@@ -227,7 +247,6 @@ static void isr_nlink_io_rx_on_receiving() {
     }
 
     nlink.io.rx_shift_reg = (nlink.io.rx_shift_reg >> 1) | (bit_in << 7);
-
 }
 
 static void isr_nlink_io_on_tx_timer()
@@ -251,6 +270,9 @@ static void isr_nlink_io_on_tx_timer()
             break;
 
         case NLINK_IO_STATE_IDLE:
+            if (nlink.io.tx_len == 0) {
+                break;
+            }
             if (nlink.io.tx_rd < nlink.io.tx_len) {
                 // Something to send
                 nlink.io.tx_shift_reg = nlink.io.tx_buf[nlink.io.tx_rd++];
@@ -268,7 +290,9 @@ static void isr_nlink_io_on_tx_timer()
                     // Use tx_rd > tx_len as retransmit required flag
                     // Retransmittion will be initiated in idle loop
                     // after idle timeout expired
-                    nlink.io.tx_rd = 0xFF;
+                    nlink.io.tx_rd = 0xFF; // aka (tx_len + 1)
+                    dbg[4]++;
+
                 }
                 // Invalidate just received own data
                 nlink.io.rx_wr = 0;
@@ -311,10 +335,8 @@ static void isr_nlink_io_on_rx_timer()
 void isr_nlink_io_on_timer()
 {
     if (nlink.io.is_rx_timer) {
-        NLINK_IO_DBG_PORT |= NLINK_IO_DBG_PIN_MASK;
         isr_nlink_io_on_rx_timer();
     } else {
-        NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN_MASK;
         isr_nlink_io_on_tx_timer();
     }
     nlink.io.is_rx_timer = !nlink.io.is_rx_timer;

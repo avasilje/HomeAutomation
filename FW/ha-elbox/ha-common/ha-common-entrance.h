@@ -20,7 +20,7 @@
 #define NLINK_RX_INT_ENABLE do { GIFR |= INTF0; GICR |= _BV(INT0);} while(0)
 #define NLINK_RX_INT_DISABLE GICR &= ~_BV(INT0)
 
-#define NLINK_IO_TIMER_ENABLE  do {TIFR |= _BV(TOV2); TIMSK |= _BV(TOIE2);} while(0)
+#define NLINK_IO_TIMER_ENABLE  do {TIFR |= _BV(TOV2); TIMSK |= _BV(TOIE2); TCNT2 = 0;} while(0)
 #define NLINK_IO_TIMER_DISABLE TIMSK &= ~_BV(TOIE2)
 
 #define NLINK_IO_RX_PORT  PORTD
@@ -34,10 +34,11 @@
 
 extern int8_t g_ha_nlink_timer_cnt;
 
-#define NLINK_IO_DBG_PIN_MASK _BV(PIND0)
-#define NLINK_IO_DBG_PORT PORTD
-#define NLINK_IO_DBG_PIN  PIND
-#define NLINK_IO_DBG_DIR  DDRD
+#define NLINK_IO_DBG_PIN0_MASK _BV(PINB2)
+#define NLINK_IO_DBG_PIN1_MASK _BV(PINB2)
+#define NLINK_IO_DBG_PORT PORTB
+#define NLINK_IO_DBG_PIN  PINB
+#define NLINK_IO_DBG_DIR  DDRB
 
 
 #endif /* HA_COMMON_XXX_H_ */
