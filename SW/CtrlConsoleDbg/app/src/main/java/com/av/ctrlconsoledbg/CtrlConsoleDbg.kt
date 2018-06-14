@@ -13,6 +13,8 @@ import com.av.uart.AvUart
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import kotlin.experimental.and
+
 data class CcdUartConnected(val dummy:Int = 0)
 data class CcdNodeInfoGet(val addr: Int = 0)
 
@@ -33,16 +35,99 @@ data class CcdNodeInfoSet(val dummy: Int) {
 }
 
 // Message received from the device
-data class CcdNodeInfoResp(val dummy: Int) {
-    val addr: Int = 0
-    val type: CcdNodeType = CcdNodeType.HVAC
-    val data: ByteArray? = null
-}
+data class CcdNodeInfoResp(
+    val addr: Int,
+    val type: CcdNodeType,
+    val data: ByteArray
+)
 
 // Message received from UI. Upon reception generalized to CcdNodeInfo and sent to the device
-data class NodeHvacInfoSet(val dummy: Int) {
-    var addr: Int =0
-    var info: NodeHvacInfo? = null
+data class NodeLedLightChannelInfo(
+        var disabled: Boolean,
+        var intensity: Int
+)
+
+data class NodeLedLightInfo(
+        var mode: Boolean,
+        var channels: Array<NodeLedLightChannelInfo>
+)
+
+class CcdNodeLedLight(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.LEDLIGHT) {
+    // Parameters received from the Node
+    var info: NodeLedLightInfo
+
+    // Parameters configured by user from UI
+    var userInfo : NodeLedLightInfo
+
+    init {
+
+        info = NodeLedLightInfo(    // Default value
+                mode = false,
+                channels = arrayOf(
+                        NodeLedLightChannelInfo( disabled = false, intensity = 0),
+                        NodeLedLightChannelInfo( disabled = false, intensity = 0),
+                        NodeLedLightChannelInfo( disabled = false, intensity = 0)))
+
+        // Update Info from binary data
+        update(data)
+        userInfo = info
+    }
+
+    override fun pack(): ByteArray? {
+        val disabledMask =
+                (if (userInfo.channels[0].disabled) 1 else 0) +
+                (if (userInfo.channels[1].disabled) 2 else 0) +
+                (if (userInfo.channels[2].disabled) 4 else 0)
+        return byteArrayOf(
+                if (userInfo.mode) 1 else 0,
+                disabledMask.toByte(),
+                userInfo.channels[0].intensity.toByte(),
+                userInfo.channels[1].intensity.toByte(),
+                userInfo.channels[2].intensity.toByte())
+    }
+
+    override fun update(data: ByteArray?) {
+        if (data == null) return
+
+        info = NodeLedLightInfo(
+                mode = (data[0].toInt() != 0),
+                channels = arrayOf(
+                        NodeLedLightChannelInfo( disabled = (data[1].and(0x01).toInt() != 0) , intensity = data[2].toInt()),
+                        NodeLedLightChannelInfo( disabled = (data[1].and(0x02).toInt() != 0) , intensity = data[3].toInt()),
+                        NodeLedLightChannelInfo( disabled = (data[1].and(0x04).toInt() != 0) , intensity = data[4].toInt())))
+    }
+
+    companion object {
+        private const val TAG = "LedLightNode"
+    }
+}
+
+data class NodeSwitchInfo(
+    var state: Int = 0,
+    var dstAddr: Int
+)
+
+class CcdNodeSwitch(addr: Int) : CcdNode(addr, CcdNodeType.SWITCH) {
+    // Parameters received from the Node
+    var info: NodeSwitchInfo? = null
+
+    // Parameters configured by user from UI
+    var userState = 0
+    var userAddr = 0
+
+    override fun pack(): ByteArray? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun update(data: ByteArray?) {
+        if (data?.size != 2) return
+        info = NodeSwitchInfo(
+                state = data[0].toInt(),
+                dstAddr = data[1].toInt())
+    }
+    companion object {
+        private const val TAG = "SwitchNode"
+    }
 }
 
 data class NodeHvacInfo(
@@ -56,7 +141,7 @@ data class NodeHvacInfo(
     var valveActual: Int = 0,
     var valve: Int = 0
 )
-class CcdNodeHvac(addr: Int) : CcdNode(addr) {
+class CcdNodeHvac(addr: Int) : CcdNode(addr, CcdNodeType.HVAC) {
     // Parameters received from the Node
     var info: NodeHvacInfo? = null
 
@@ -86,17 +171,20 @@ class CcdNodeHvac(addr: Int) : CcdNode(addr) {
     }
 }
 
-abstract class CcdNode(val addr: Int) {
-    val type: CcdNodeType = CcdNodeType.HVAC
-    val data: ByteArray? = null
+abstract class CcdNode(
+        val addr: Int,
+        val type: CcdNodeType) {
 
     abstract fun update(data: ByteArray?)
     abstract fun pack() : ByteArray?
 
 }
-enum class CcdNodeType {
-    LIGHT_SWITCH,
-    HVAC
+enum class CcdNodeType(v: Int) {
+    NONE(0x00),
+    HVAC(0x10),
+    LEDLIGHT(0x20),
+    SWITCH(0x30),
+    CTRLCON(0x40)
 }
 
 class CtrlConsoleDbgActivity : AppCompatActivity() {
@@ -173,17 +261,24 @@ class CtrlConsoleDbgActivity : AppCompatActivity() {
                 CcdNodeType.HVAC -> {
                     node = CcdNodeHvac(msg.addr)
                 }
-                CcdNodeType.LIGHT_SWITCH -> {
-                    node = CcdNodeHvac(msg.addr)
+                CcdNodeType.SWITCH -> {
+                    node = CcdNodeSwitch(msg.addr)
+                }
+                CcdNodeType.LEDLIGHT -> {
+                    node = CcdNodeLedLight(msg.addr, msg.data)
+                }
+                else -> {
+                    Log.d(TAG, "Unknow node type - ${msg.type}, from ${msg.addr}")
+                    return
                 }
             }
             nodes[msg.addr] = node
+        } else {
+            node.update(msg.data)
         }
-        node.update(msg.data)
 
         // Send notification to UI
         EventBus.getDefault().post(node)
-
     }
 
     companion object {

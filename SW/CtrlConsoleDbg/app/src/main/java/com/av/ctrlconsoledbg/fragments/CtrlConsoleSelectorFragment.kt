@@ -51,21 +51,32 @@ class CtrlConsoleSelectorFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var nodeHvac: CcdNodeHvac? = null
-        val cc = mCtrlConsole!!
-        cc.nodes.forEach { _, v ->
-            if (v.type == CcdNodeType.HVAC) {
-                nodeHvac = v as CcdNodeHvac
-            }
-        }
-
-        selector_butt_hvac.isEnabled = (nodeHvac != null)
+        selector_butt_hvac.isEnabled = true
         selector_butt_hvac.setOnClickListener { _ ->
             mCtrlConsole!!.supportFragmentManager.beginTransaction()
-                    .replace(R.id.ctrl_console_function, CtrlConsoleSelectorFragment(), CtrlConsoleSelectorFragment::class.java.name)
+                    .replace(R.id.ctrl_console_function, CtrlConsoleHvacFragment(), CtrlConsoleHvacFragment::class.java.name)
                     .commit()
-
         }
+
+        selector_butt_ledlight.isEnabled = true
+        selector_butt_ledlight.setOnClickListener { _ ->
+            mCtrlConsole!!.supportFragmentManager.beginTransaction()
+                    .replace(R.id.ctrl_console_function, CtrlConsoleLedLightFragment(), CtrlConsoleLedLightFragment::class.java.name)
+                    .commit()
+        }
+
+        selector_butt_test.setOnClickListener { _ ->
+            EventBus.getDefault().post(
+                    CcdNodeInfoResp(
+                            addr = 0x70,
+                            type = CcdNodeType.LEDLIGHT,
+                            data = byteArrayOf(
+                                    1, // mode
+                                    3, // disabled mask
+                                    4, 5, 6 // Intensity
+                            )))
+        }
+
     }
 
     override fun onDestroyView() {

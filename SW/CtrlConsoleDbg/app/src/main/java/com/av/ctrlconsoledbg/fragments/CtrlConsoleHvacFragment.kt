@@ -58,14 +58,17 @@ class CtrlConsoleHvacFragment : Fragment() {
 
         var nodeHvac: CcdNodeHvac? = null
         val cc = mCtrlConsole!!
-        cc.nodes.forEach { _, v ->
+
+        val it = cc.nodes.iterator()
+        while (it.hasNext()) {
+            val v = it.next().value
             if (v.type == CcdNodeType.HVAC) {
                 nodeHvac = v as CcdNodeHvac
             }
         }
 
         if (nodeHvac != null) {
-            updateHvacInfo(nodeHvac!!.info)
+            updateHvacInfo(nodeHvac.info)
         }
     }
 

@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Button
+        android:id="@+id/ll_user_apply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:text="Apply"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="4dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="232dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toTopOf="@+id/ll_ch0_details"
+        app:layout_constraintBottom_toBottomOf="@+id/ll_ch2_details"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_ch0_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ll_ch0_disabled"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:gravity="center"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:src="@drawable/ic_check_box_outline_blank_black_24dp" />
+
+        <SeekBar
+            android:id="@+id/ll_ch0_intensity_bar"
+            android:layout_width="148dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="8dp"
+            android:checked="false"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:min="0"
+            android:max="18"/>
+
+        <EditText
+            android:id="@+id/ll_ch0_intensity"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="sans-serif"
+            android:inputType="number"
+            android:text="10%"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@+id/ll_ch0_intensity_bar"
+            app:layout_constraintTop_toBottomOf="@+id/ll_ch0_label" />
+
+        <TextView
+            android:id="@+id/ll_ch0_disabled_actual"
+            android:layout_width="32dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="12dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="En"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@+id/ll_ch0_intensity"
+            app:layout_constraintTop_toBottomOf="@+id/ll_ch0_label" />
+
+        <TextView
+            android:id="@+id/ll_ch0_intensity_actual"
+            android:layout_width="40dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="4dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="100%"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_ch1_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_ch0_details">
+
+        <ImageView
+            android:id="@+id/ll_ch1_disabled"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:gravity="center"
+
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+
+            android:src="@drawable/ic_check_box_outline_blank_black_24dp"
+            />
+
+        <SeekBar
+            android:id="@+id/ll_ch1_intensity_bar"
+            android:layout_width="148dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="8dp"
+            android:checked="false"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:min="0"
+            android:max="18"/>
+
+        <EditText
+            android:id="@+id/ll_ch1_intensity"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="sans-serif"
+            android:inputType="number"
+            android:text="10%"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/ll_ch1_disabled_actual"
+            android:layout_width="32dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="12dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="En"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/ll_ch1_intensity_actual"
+            android:layout_width="40dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="4dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="100%"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_ch2_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_ch1_details">
+
+        <ImageView
+            android:id="@+id/ll_ch2_disabled"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:gravity="center"
+
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:src="@drawable/ic_check_box_outline_blank_black_24dp"
+            />
+
+
+        <SeekBar
+            android:id="@+id/ll_ch2_intensity_bar"
+            android:layout_width="148dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="8dp"
+            android:checked="false"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:min="0"
+            android:max="18"/>
+
+        <EditText
+            android:id="@+id/ll_ch2_intensity"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="sans-serif"
+            android:inputType="number"
+            android:text="10%"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+
+        <TextView
+            android:id="@+id/ll_ch2_disabled_actual"
+            android:layout_width="32dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="12dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="En"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/ll_ch2_intensity_actual"
+            android:layout_width="40dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="4dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="100%"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_marginTop="16dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@+id/ll_ch2_details"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_chAll_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider1">
+
+
+        <Switch
+            android:id="@+id/ll_chAll_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:checked="false"
+            android:fontFamily="sans-serif"
+            android:text=""
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+        <SeekBar
+            android:id="@+id/ll_chAll_intensity_bar"
+            android:layout_width="160dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="32dp"
+            android:checked="false"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:min="0"
+            android:max="18"/>
+
+        <EditText
+            android:id="@+id/ll_chAll_intensity"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+
+            android:fontFamily="sans-serif"
+            android:inputType="number"
+            android:text="10%"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+
+        <TextView
+            android:id="@+id/ll_chAll_mode_actual"
+            android:layout_width="32dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="On"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@+id/ll_ch0_disabled_actual"
+            app:layout_constraintTop_toBottomOf="@+id/ll_ch0_label" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_marginTop="16dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@+id/ll_chAll_details"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_switches"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider2">
+
+        <LinearLayout
+            android:id="@+id/ll_sw0_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_ch0_label">
+
+
+            <TextView
+                android:id="@+id/ll_sw0_state"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+
+                android:gravity="center"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:drawableStart="@drawable/ic_radio_button_checked_black_32dp"
+                android:drawablePadding="4dp"
+                android:text="On->Off"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/ll_sw0_dst"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:fontFamily="sans-serif"
+                android:inputType="number"
+                android:text="0xFF"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+       </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_sw1_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_ch0_label">
+
+
+            <TextView
+                android:id="@+id/ll_sw1_state"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+
+                android:gravity="center"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:drawableStart="@drawable/ic_radio_button_checked_black_32dp"
+                android:drawablePadding="4dp"
+                android:text="On->Off"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/ll_sw1_dst"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:fontFamily="sans-serif"
+                android:inputType="number"
+                android:text="0xFF"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_sw2_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_ch0_label">
+
+
+            <TextView
+                android:id="@+id/ll_sw2_state"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+
+                android:gravity="center"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:drawableStart="@drawable/ic_radio_button_checked_black_32dp"
+                android:drawablePadding="4dp"
+                android:text="On->Off"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/ll_sw2_dst"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:fontFamily="sans-serif"
+                android:inputType="number"
+                android:text="0xFF"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

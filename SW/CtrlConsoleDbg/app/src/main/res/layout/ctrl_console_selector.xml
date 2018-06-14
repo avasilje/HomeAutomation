@@ -21,7 +21,7 @@
         />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/selector_butt_ledlight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="LIGHT"
@@ -31,4 +31,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
+
+    <Button
+        android:id="@+id/selector_butt_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TEST"
+
+        android:layout_marginStart="256dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
 </android.support.constraint.ConstraintLayout>
