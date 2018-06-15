@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import com.av.ctrlconsoledbg.*
+import com.av.ctrlconsoledbg.CcdNodeLedLight.Companion.intensityFromIdx
 import kotlinx.android.synthetic.main.ctrl_console_ledlight.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -151,7 +152,6 @@ class CtrlConsoleLedLightFragment: Fragment() {
                     if (llInfo != null) {
                         updateLedLightInfo(llInfo)
                     }
-
                     refreshLedLightUserInfo(v.userInfo)
                 }
                 CcdNodeType.SWITCH -> {
@@ -175,16 +175,13 @@ class CtrlConsoleLedLightFragment: Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNodeLedLightInfo(node: CcdNodeLedLight) {
-        val ll_info = node.info ?: return
-        updateLedLightInfo(ll_info)
+        updateLedLightInfo(node.info)
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNodeSwitchInfo(node: CcdNodeSwitch) {
         val sw_info = node.info ?: return
         updateSwitchInfo(node.addr, sw_info)
     }
-
-    fun intensityFromIdx(idx: Int) = if (idx < intensityTbl.size) intensityTbl[idx] else  -1
 
     fun updateLedLightInfo(infoActual: NodeLedLightInfo)
     {
@@ -251,12 +248,12 @@ class CtrlConsoleLedLightFragment: Fragment() {
 
     fun updateSwitchInfo(addr: Int, info: NodeSwitchInfo)
     {
-        val state = when(info.state) {
-            SW_EVENT_NONE     -> ""
-            SW_EVENT_ON_OFF   -> "ON->OFF"
-            SW_EVENT_OFF_ON   -> "OFF->ON"
-            SW_EVENT_ON_HOLD  -> "ON->HOLD"
-            SW_EVENT_HOLD_OFF -> "HOLD->OFF"
+        val state = when(info.event) {
+            CcdNodeSwitchEvent.NONE     -> "OFF"
+            CcdNodeSwitchEvent.ON_OFF   -> "OFF"
+            CcdNodeSwitchEvent.OFF_ON   -> "ON"
+            CcdNodeSwitchEvent.ON_HOLD  -> "HELD"
+            CcdNodeSwitchEvent.HOLD_OFF -> "OFF"
             else -> "ERR"
         }
         val dstAddr = String.format("0x%02X", info.dstAddr)
@@ -273,13 +270,6 @@ class CtrlConsoleLedLightFragment: Fragment() {
     }
 
     companion object {
-        private val intensityTbl = intArrayOf(0, 3, 6, 10, 14, 18, 23, 28, 33, 38, 44, 50, 56, 63, 70, 75, 85, 93, 100)
-        private const val SW_EVENT_NONE     = 0
-        private const val SW_EVENT_ON_OFF   = 1
-        private const val SW_EVENT_OFF_ON   = 2
-        private const val SW_EVENT_ON_HOLD  = 3
-        private const val SW_EVENT_HOLD_OFF = 4
-
         private const val TAG = "CcdUIxxx"
 
     }

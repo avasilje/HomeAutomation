@@ -66,15 +66,22 @@ class CtrlConsoleSelectorFragment : Fragment() {
         }
 
         selector_butt_test.setOnClickListener { _ ->
+//            EventBus.getDefault().post(
+//                    CcdNodeInfoResp(
+//                            addr = 0x70,
+//                            type = CcdNodeType.LEDLIGHT,
+//                            data = byteArrayOf(
+//                                    1, // mode
+//                                    3, // disabled mask
+//                                    4, 5, 6 // Intensity
+//                            )))
+            var test0: Byte = 0
+            var test1: Byte = 0
             EventBus.getDefault().post(
                     CcdNodeInfoResp(
                             addr = 0x70,
-                            type = CcdNodeType.LEDLIGHT,
-                            data = byteArrayOf(
-                                    1, // mode
-                                    3, // disabled mask
-                                    4, 5, 6 // Intensity
-                            )))
+                            type = CcdNodeType.HVAC,
+                            data = byteArrayOf(test0, test1)))
         }
 
     }
