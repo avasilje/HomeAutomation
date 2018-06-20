@@ -52,7 +52,8 @@
 #define HVAC_PHTS_I2C_ADDR_PT   0x76 // Pressure and Temperature
 #define HVAC_PHTS_I2C_ADDR_RH   0x40 // Relative Humidity RH
 
-#define HVAC_TIMER_SEC  100
+#define HVAC_TIMER_PERIOD_MS	10
+#define HVAC_TIMER_SEC  (1000 / HVAC_TIMER_PERIOD_MS)
 #define HVAC_TIMER_VALVE_OPEN       (10 * HVAC_TIMER_SEC)  // TODO: TBD. Time while motor rotates valve from one state to another
 #define HVAC_TIMER_VALVE_CLOSE      HVAC_TIMER_VALVE_OPEN
 

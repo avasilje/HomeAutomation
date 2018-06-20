@@ -161,7 +161,7 @@ int main(void)
     ha_nlink_init();
 
     ha_hvac_init();
-
+	
     g_ha_hvac_fsm_timer_cnt = 0;
 
     sei();
@@ -237,7 +237,11 @@ void ha_hvac_init()
     hvac->state_curr = HVAC_STATE_S1;
     hvac->state_timer = HVAC_TIMER_VALVE_CLOSE; // Assume valve is in wrong state
 
-    ha_phts_init();
+   hvac->sensor.d1_poll_timeout = (10 / HVAC_TIMER_PERIOD_MS);
+   hvac->sensor.d2_poll_timeout = (10 / HVAC_TIMER_PERIOD_MS);
+   hvac->sensor.idle_timeout = HVAC_TIMER_SEC;	// poll sensors once per second
+
+    ha_phts_init(hvac->sensor);
 
     node_t *node = ha_nlink_node_register(HVAC_ADDR, NODE_TYPE_HVAC, hvac_on_rx);
     hvac->node = node;
@@ -382,7 +386,7 @@ static void hvac_check_error() {
     }
 }
 /*
- * HVAC main logic executed @ 20ms
+ * HVAC main logic executed @ 10ms
  */
 void ha_hvac_fsm() {
     hvac_t *hvac = &g_hvac;
@@ -426,7 +430,7 @@ ISR(TIMER0_OVF_vect) {
     }
 
     g_ha_hvac_fsm_timer_cnt ++;
-    if (g_ha_hvac_fsm_timer_cnt > 80 * 20) {    // 20ms
+    if (g_ha_hvac_fsm_timer_cnt > 80 * HVAC_TIMER_PERIOD_MS) {
         g_ha_hvac_fsm_timer_cnt = 0;
         g_ha_hvac_fsm_timer = 1;
     }
