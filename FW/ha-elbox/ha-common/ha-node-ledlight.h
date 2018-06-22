@@ -8,5 +8,7 @@
 #pragma once
 #define LL_DATA_MODE        0
 #define LL_DATA_DIS_MASK    1
-#define LL_DATA_INTENSITY   2
+#define LL_DATA_INTENSITY0  2
+#define LL_DATA_INTENSITY1  3
+#define LL_DATA_INTENSITY2  4
 

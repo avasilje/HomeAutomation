@@ -1,5 +1,6 @@
 package com.av.ctrlconsoledbg
 
+import android.util.Log
 import kotlin.experimental.and
 
 // Message received from UI. Upon reception generalized to CcdNodeInfo and sent to the device
@@ -49,6 +50,11 @@ class CcdNodeLedLight(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.LE
 
     override fun update(data: ByteArray?) {
         if (data == null) return
+
+        if (data.size != 5) {
+            Log.e(TAG, "Bad length on update")
+            return
+        }
 
         info = NodeLedLightInfo(
                 mode = (data[0].toInt() != 0),

@@ -29,7 +29,7 @@ typedef struct node_s {
 
 #define NLINK_HDR_OFF_FROM 0
 #define NLINK_HDR_OFF_TO   1
-#define NLINK_HDR_OFF_CMD  2
+#define NLINK_HDR_OFF_CMD  2    // TODO: Q: Is it really necessary?
 #define NLINK_HDR_OFF_TYPE 3
 #define NLINK_HDR_OFF_LEN  4
 #define NLINK_HDR_OFF_DATA 5

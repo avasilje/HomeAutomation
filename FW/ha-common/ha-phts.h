@@ -3,33 +3,47 @@
 
 // MS860702BA01 - PHT Combination Sensor
 
-// For pressure and temperature sensing, five commands are possible:
+#define HA_PHTS_PT_PROM_SIZE	0x07	// in 16bit words
+#define HA_PHTS_RH_PROM_SIZE	0x07	// in 16bit words
 
-#define HA_PHTS_CMD_PT_RESET   0x1E     // 1. Reset
-#define HA_PHTS_CMD_PT_RDCAL   0xA0     // 2. Read PROM P&T (112 bit of calibration words)
-#define HA_PHTS_CMD_PT_D1CON   0x40     // 3. D1 conversion
-#define HA_PHTS_CMD_PT_D2CON   0x50     // 4. D2 conversion
-#define HA_PHTS_CMD_PT_RDADC   0x00     // 5. Read ADC (24 bit pressure / temperature)
+typedef struct pt_coef_s {
+	uint16_t crc_factory_def;				// 4bit CRC + factory defined data
+	uint16_t c1_pressure_sensitivity;		// Pressure sensitivity | SENS T1
+	uint16_t c2_pressure_offset;			// Pressure offset | OFF T1
+	uint16_t c3_pressure_sensitivity_tcoef;	// Temperature coefficient of pressure sensitivity | TCS
+	uint16_t c4_pressure_offset_tcoef;		// Temperature coefficient of pressure offset | TCO
+	uint16_t c5_ref_temperature;			// Reference temperature | T REF
+	uint16_t c6_temperature_tcoef;			// Temperature coefficient of the temperature | TEMPSENS
+} pt_coef_t;
 
-// Resolution add-on for D1/D2 conversion command
-#define HA_PHTS_CMD_PT_OSR_256     0x00
-#define HA_PHTS_CMD_PT_OSR_512     0x02
-#define HA_PHTS_CMD_PT_OSR_1024    0x04
-#define HA_PHTS_CMD_PT_OSR_2048    0x06
-#define HA_PHTS_CMD_PT_OSR_4096    0x08
-#define HA_PHTS_CMD_PT_OSR_8192    0x0A
+union pt_prom_u {
+	uint8_t raw[HA_PHTS_PT_PROM_SIZE << 1];
+	pt_coef_t coef;
+};
 
-// For relative humidity sensing, six commands are possible:
-#define HA_PHTS_CMD_RH_RESET    0xFE    // 1. Reset
-#define HA_PHTS_CMD_RH_WRUSR    0xE6    // 2. Write user register
-#define HA_PHTS_CMD_RH_RDUSR    0xE7    // 3. Read user register
-#define HA_PHTS_CMD_RH_MSRHM    0xE5    // 4. Measure RH (Hold master)
-#define HA_PHTS_CMD_RH_MSRNH    0xF5    // 5. Measure RH (No Hold master)
-#define HA_PHTS_CMD_RH_RDCAL    0xA0    // 6. PROM read RH
+typedef union adc_out_u {
+	uint8_t raw[4];
+	uint16_t s[2];
+} adc_out_t;
+
+#define PHTS_STATE_NONE			0
+#define PHTS_STATE_IDLE			1
+#define PHTS_STATE_POLL_PT_D1	2
+#define PHTS_STATE_POLL_PT_D2	3
 
 typedef struct phts_s {
    int8_t poll_timer;
-   // Calibration data
+   int8_t state;
+   
+   // Timeouts configured once by a parent module before ha_phts_init()
+   uint8_t d1_poll_timeout;
+   uint8_t d2_poll_timeout;
+   uint8_t idle_timeout;
+   
+   union pt_prom_u pt_prom;
+   adc_out_t temperature;
+   adc_out_t pressure;
+   uint8_t	 read_cnt;		// Free running counter to ensure sensors' data have been updated
 } phts_t;
 
 void ha_phts_poll(phts_t *sensor);

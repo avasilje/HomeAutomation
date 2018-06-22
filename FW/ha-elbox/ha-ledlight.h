@@ -26,6 +26,7 @@
 typedef struct {
     uint8_t  uc_current_intensity_idx;
     uint8_t  uc_target_intensity_idx;
+    uint8_t  uc_on_intensity_idx;
     uint8_t  uc_fade_timer;
 } LED_INFO;
 

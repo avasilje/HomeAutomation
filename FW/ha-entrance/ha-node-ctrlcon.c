@@ -3,7 +3,7 @@
  *
  * Created: 5/1/2018 11:26:18 PM
  *  Author: Solit
- */ 
+ */
 #include <avr/interrupt.h>
 #include <stdint.h>
 #include <string.h>
@@ -13,7 +13,7 @@
 
 // HVAC DATA
 //      TYPE(HVAC) HEATER(%), VALVE(ON/OFF), MOTOR (I/II/OFF), TEMP, PRES, HUM.
-//  
+//
 typedef struct ctrlcon_peer_s {
     uint8_t idx;            // Discovered node's index. Filled at register. Used while unload to UART toward UI
     uint8_t peer_flags;     // RX flag NODE_FLAG_xxx
@@ -35,13 +35,13 @@ typedef struct ctrlcon_s {
 ctrlcon_t cc;
 
 static void ctrlcon_new_peer(uint8_t peer_idx, uint8_t remote_addr, uint8_t type) {
-    cc.peers[peer_idx].idx = peer_idx; 
+    cc.peers[peer_idx].idx = peer_idx;
     cc.peers[peer_idx].peer_flags = PEER_FLAG_VALID;
     cc.peers[peer_idx].remote_addr = remote_addr;
     cc.peers[peer_idx].type = type;
 }
 
-void ctrlcon_on_rx(uint8_t idx, const uint8_t *buf_in) 
+void ctrlcon_on_rx(uint8_t idx, const uint8_t *buf_in)
 {
     UNREFERENCED_PARAM(idx);
     uint8_t peer_idx;
@@ -64,12 +64,46 @@ void ctrlcon_on_rx(uint8_t idx, const uint8_t *buf_in)
 	    FATAL_TRAP(__LINE__); // Peer not found and new can't be created
     }
 
+/*
+    // Proceed and reformat specific messages if necessary
+    switch(peer->type) {
+        case NODE_TYPE_SWITCH:
+        case NODE_TYPE_LEDLIGHT:
+        case NODE_TYPE_HVAC :
+        default:
+    }
+    uint8_t len = buf_in[NLINK_HDR_OFF_LEN] + NLINK_HDR_OFF_DATA;
+    if (len > sizeof(peer->rx_buf)) len = sizeof(peer->rx_buf);
+    memcpy(peer->rx_buf, buf_in, len);
+*/
+
     memcpy(peer->rx_buf, buf_in, NLINK_COMM_BUF_SIZE);
     peer->peer_flags |= PEER_FLAG_RX;
 }
 
-uint8_t ha_node_ctrlcon_to_sent(uint8_t *buf) 
+void ha_node_ctrlcon_peer_set_rx(uint8_t remote_peer_addr)
 {
+    uint8_t peer_idx;
+
+    // Check is peer already exists
+    ctrlcon_peer_t *peer = &cc.peers[0];
+    for (peer_idx = 0; peer_idx < ARRAY_SIZE(cc.peers); peer_idx++, peer++) {
+	    if (peer->remote_addr == remote_peer_addr) {
+		    break;
+	    }
+    }
+
+    if (peer_idx == ARRAY_SIZE(cc.peers)) {
+	    return;
+    }
+
+    peer->peer_flags |= PEER_FLAG_RX;
+}
+
+uint8_t ha_node_ctrlcon_to_sent(uint8_t *buf)
+{
+    // Copy to buf - ADDR TYPE LEN DATA
+    //
     // Prepare data to be sent to UART
     for (uint8_t peer_idx = 0; peer_idx < ARRAY_SIZE(cc.peers); peer_idx++) {
         ctrlcon_peer_t *peer = &cc.peers[peer_idx];
@@ -86,12 +120,12 @@ uint8_t ha_node_ctrlcon_to_sent(uint8_t *buf)
     return 0;
 }
 
-void ha_node_ctrlcon_init() 
+void ha_node_ctrlcon_init()
 {
     memset((uint8_t*)&cc, 0, sizeof(ctrlcon_t));
 
     cc.cc_node = ha_nlink_node_register(CTRLCON_ADDR, NODE_TYPE_CTRLCON, ctrlcon_on_rx);
-    
+
     // Send initial discovery.
     // All remote peers should respond with CTRLCON_ADDR in destination
     ha_nlink_node_send(cc.cc_node, NODE_ADDR_BC, NLINK_CMD_RD_REQ);

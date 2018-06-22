@@ -1,5 +1,7 @@
 /*
  * TODO:
+ *   1. Replace UART fatal trap to resync
+ *   2.
  */
 
 /*
@@ -73,6 +75,9 @@ uint8_t dbg_idx = 0;
 uint8_t guc_timer_cnt;
 
 typedef struct ha_uart_s {
+    // 0x41 0x86 0x22  0xLL    | 0xAA      0xTT   0xDD
+    // MARK      CMD   Length  | Address   Type   node info
+
     uint8_t tx_buf[NLINK_COMM_BUF_SIZE];
     uint8_t tx_rd_idx;
     uint8_t tx_len;
@@ -190,11 +195,30 @@ void init_timer() {
 
 static void check_ctrlcon_tx()
 {
+
+#define UART_CC_HDR_MARK0 0
+#define UART_CC_HDR_MARK1 1
+#define UART_CC_HDR_CMD   2
+#define UART_CC_HDR_LEN   3
+#define UART_CC_HDR_SIZE  4
+
+    // 0x41 0x86 0x21  0xLL    | Node info
+    // MARK      CMD   Length  | ADDR TYPE LEN DATA
+
     // Check CTRLCON TX if UART TX is disabled
     if (0 == (UCSRB & _BV(UDRIE))) {
         // Nothing to sent - check ctrlcon
-        ha_uart.tx_len = ha_node_ctrlcon_to_sent(ha_uart.tx_buf);
-        if (ha_uart.tx_len) {
+        //ha_uart.tx_len = ha_node_ctrlcon_to_sent(ha_uart.tx_buf);
+        //if (ha_uart.tx_len) {
+
+        uint8_t bytes_to_send = ha_node_ctrlcon_to_sent(&ha_uart.tx_buf[UART_CC_HDR_SIZE]);
+        if (bytes_to_send) {
+            ha_uart.tx_buf[UART_CC_HDR_MARK0] = 0x41;
+            ha_uart.tx_buf[UART_CC_HDR_MARK1] = 0x86;
+            ha_uart.tx_buf[UART_CC_HDR_CMD  ] = 0x21;
+            ha_uart.tx_buf[UART_CC_HDR_LEN  ] = bytes_to_send;
+            ha_uart.tx_len = bytes_to_send + UART_CC_HDR_SIZE;
+
             ha_uart.tx_rd_idx = 0;
             UCSRB |= _BV(UDRIE);
         }
@@ -209,6 +233,7 @@ static void check_ctrlcon_rx()
 int main(void)
 {
     OSCCAL = 0xAC;  // TODO: need to be stored in FLASH upon programming
+
     init_gpio();
 
     init_timer();
@@ -374,29 +399,38 @@ void action_signature()
     return;
 }
 
-
-void node_get_info(uint8_t addr) {
-
-    addr = addr;
-     // for all registered nodes
-     {
-
-        // If node addr == addr || addr == BC
-            {
-                // mark node as info requested
-            }
-     }
-}
-
-void action_node_info()
+void action_node_info_get()
 {
     // Command format
     // 0x41 0x86 0x21  0xLL    0xAA
     // MARK      CMD   Length  Address
 
-    // Response format
-    // 0x41 0x86 0x21  0xLL    | 0xAA      0xTT   0xDD         | 0xAA      0xTT   0xDD      |
-    // MARK      CMD   Length  | Address   Type   node info    | Address   Type   node info |
+    // Response format (NLINK_HDR_OFF_xxx)
+    // 0x41 0x86 0x21  0xLL    | 0xAA        0xAA     0xCC   0xTT  0xLL      0xDD         |
+    // MARK      CMD   Length  | Addr_From   Addr_To  CMD    Type  Data Len  node info    |
+
+    // Sanity - check message length
+    if (guca_in_msg_buff[3] != 1) {
+        FATAL_TRAP(__LINE__);
+    }
+
+    // Check is message address is available, wait if not yet
+    while(guc_in_msg_idx < 5);
+
+    // Get node address
+    uint8_t req_addr = guca_in_msg_buff[4];
+
+    // Set RX flag in peer to initiate transfer.
+    // The transfer will be initiated later in the idle loop
+    ha_node_ctrlcon_peer_set_rx(req_addr);
+}
+
+void action_node_info_set()
+{
+    return;
+    // Command format
+    // 0x41 0x86 0x22  0xLL    | 0xAA      0xTT   0xDD
+    // MARK      CMD   Length  | Address   Type   node info
 
     // Check is message address is available, wait if not yet
     while(guc_in_msg_idx < 6);
@@ -404,34 +438,13 @@ void action_node_info()
     // Get node address
     uint8_t req_addr = guca_in_msg_buff[4];
 
-    node_get_info(req_addr);
-#if 0
-
-    // If our own, then prepare response
-    // Retransmit if addr == BC
-    if (addr == NODE_ADDR_BC || node_is_own_addr(addr)) {
-
-        if (addr == NODE_ADDR_BC) {
-            // Copy to NODE_IF
-        }
-        // Respond with node
-        uint8_t wr_idx = 4
-
-        while( node_responde(req_addr, &guca_out_msg_buff[]) ;){
-
-        }
-
-    }
-
-    uint8_t data_len = guca_out_msg_buff[uc_i+2] = uc_feedback;
-    guc_out_msg_wr_idx = uc_i + 2;
-#endif
 }
 
 T_ACTION gta_action_table[] __attribute__ ((section (".act_const"))) = {
     { "mark", 0x00, (void*)0xFEED        },    // Table signature
     { "sign", 0x11, action_signature     },
-    { "ninf", 0x21, action_node_info     },
+    { "nget", 0x21, action_node_info_get },
+    { "nset", 0x22, action_node_info_set },
     { ""    , 0xFF, NULL                 }     // End of table
 };
 

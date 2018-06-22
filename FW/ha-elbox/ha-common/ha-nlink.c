@@ -85,9 +85,6 @@ uint8_t nlink_node_on_rx(uint8_t *rx_buf)
     uint8_t addr_to = rx_buf[NLINK_HDR_OFF_TO];
     uint8_t addr_from = rx_buf[NLINK_HDR_OFF_FROM];
 
-    // TODO: check most efficient loop (while + pointer; for + index; etc)
-    //       node++ in loop - worst case
-    //
     for (uint8_t i = 0; i < NLINK_NODES_NUM; i++) {
         node_t *node = &nlink.nodes[i];
         if (node->addr == 0) break;
@@ -166,14 +163,12 @@ void ha_nlink_check_tx()
         nlink.io.idle_timer != NLINK_IO_IDLE_TIMEOUT) {
         return;
     }
-    NLINK_IO_DBG_PORT |= NLINK_IO_DBG_PIN0_MASK;
 
     // IO Idle timeout expired
     // Check pending transmittion (in case of previous one failed)
     if (nlink.io.tx_len) {
         nlink.io.tx_rd = 0;
         ha_nlink_io_set_idle(); // Initiate transfer
-        NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN0_MASK;
         return;
     }
     // Get data to transfer from nodes
@@ -189,7 +184,6 @@ void ha_nlink_check_tx()
                 nlink.io.tx_rd = 0;
             sei();
             ha_nlink_io_set_idle(); // Initiate transfer
-            NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN0_MASK;
             return;
         }
     }
@@ -326,8 +320,10 @@ static void isr_nlink_io_on_rx_timer()
 void isr_nlink_io_on_timer()
 {
     if (nlink.io.is_rx_timer) {
+        NLINK_IO_DBG_PORT |= NLINK_IO_DBG_PIN0_MASK;
         isr_nlink_io_on_rx_timer();
     } else {
+        NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN0_MASK;
         isr_nlink_io_on_tx_timer();
     }
     nlink.io.is_rx_timer = !nlink.io.is_rx_timer;

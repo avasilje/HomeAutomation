@@ -49,7 +49,7 @@ abstract class CcdNode(
     abstract fun pack() : ByteArray?
 
 }
-enum class CcdNodeType(v: Int) {
+enum class CcdNodeType(val type: Int) {
     NONE(0x00),
     HVAC(0x10),
     LEDLIGHT(0x20),

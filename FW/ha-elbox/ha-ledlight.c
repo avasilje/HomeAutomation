@@ -29,7 +29,6 @@ uint8_t euc_leds_disabled_idx __attribute__ ((section (".config_param")));
 
 LED_INFO gta_leds[LEDS_NUM];
 
-uint8_t  guc_on_intensity_idx;
 uint8_t  guc_leds_disabled_idx;
 uint8_t  guc_sw_event_mask;     //
 uint8_t  guc_curr_led_mode;     //
@@ -135,7 +134,7 @@ void light_on(){
 
     for (uint8_t uc_i = 0; uc_i < LEDS_NUM; uc_i ++, led_mask <<= 1) {
         LED_INFO *led = &gta_leds[uc_i];
-        led->uc_target_intensity_idx =  led_mask & disabled_mask ? 0 : guc_on_intensity_idx;
+        led->uc_target_intensity_idx =  led_mask & disabled_mask ? 0 : led->uc_on_intensity_idx;
         led->uc_fade_timer = LED_FADEIN_PERIOD;
     }
 
@@ -155,12 +154,26 @@ void light_off(){
 
 void dimm_on(){
 
-    if (guc_on_intensity_idx == 0) {
-        guc_on_intensity_idx = DIMM_ON_INTENSITIES_NUM - 1;
-        return;
+    uint8_t all_off = 0;
+    for (uint8_t uc_i = 0; uc_i < LEDS_NUM; uc_i ++) {
+        if (gta_leds[uc_i].uc_on_intensity_idx == 0) {
+            all_off ++;
+        } else {
+            gta_leds[uc_i].uc_on_intensity_idx--
+        }
+        gta_leds[uc_i].uc_fade_timer = LED_FADEOUT_PERIOD;
     }
-    guc_on_intensity_idx --;
-    g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY] = guc_on_intensity_idx;
+
+    //Wrap around intensity only when LED are OFF
+    if (all_off == LEDS_NUM) {
+        for (uint8_t uc_i = 0; uc_i < LEDS_NUM; uc_i ++) {
+            gta_leds[uc_i].uc_on_intensity_idx = DIMM_ON_INTENSITIES_NUM - 1;
+        }
+    }
+
+    g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY0] = gta_leds[0].uc_on_intensity_idx;
+    g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY1] = gta_leds[1].uc_on_intensity_idx;
+    g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY2] = gta_leds[2].uc_on_intensity_idx;
     light_on();
 }
 
@@ -261,12 +274,20 @@ void ledlight_on_rx(uint8_t idx, const uint8_t *buf_in)
 {
     UNREFERENCED_PARAM(idx);
     uint8_t len = buf_in[NLINK_HDR_OFF_LEN];
-
+    !!!!!!!!! debug multi channel intensity from CCD !!!!!
     if (buf_in[NLINK_HDR_OFF_TYPE] == NODE_TYPE_LEDLIGHT) {
         // Direct LEDLIGHT state info. Typically received from user console
-//         uint8_t mask, pwm, steady_detected, steady_val;
-//         set_pwm(mask, pwm);
-//         set_steady_state(steady_detected, steady_val);
+        guc_curr_led_mode = g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_MODE];
+        guc_leds_disabled_idx = g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_DIS_MASK];
+        gta_leds[0].uc_on_intensity_idx = g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY0];
+        gta_leds[1].uc_on_intensity_idx = g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY1];
+        gta_leds[2].uc_on_intensity_idx = g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY2];
+
+        if (guc_curr_led_mode == LED_MODE_ON) {
+            light_on();
+        } else if (guc_curr_led_mode == LED_MODE_OFF) {
+            light_off();
+        }
 
     } else if (buf_in[NLINK_HDR_OFF_TYPE] == NODE_TYPE_SWITCH) {
         // Switch event
@@ -300,13 +321,18 @@ void ha_ledlight_init()
     guc_leds_steady = 0;
 
     guc_leds_disabled_idx = 0;                      // All Enabled
-    guc_on_intensity_idx = INTENSITIES_NUM - 1;     // Max
+    gta_leds[0].uc_on_intensity_idx = INTENSITIES_NUM - 1;     // Max;
+    gta_leds[1].uc_on_intensity_idx = INTENSITIES_NUM - 1;     // Max;
+    gta_leds[2].uc_on_intensity_idx = INTENSITIES_NUM - 1;     // Max;
 
     node->tx_buf[NLINK_HDR_OFF_TYPE] = NODE_TYPE_LEDLIGHT;
     node->tx_buf[NLINK_HDR_OFF_LEN] = 3;
     // node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_MODE     ] = LED_MODE_OFF;
     node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_DIS_MASK ] = guc_leds_disabled_idx;
-    node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY] = guc_on_intensity_idx;
+
+    g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY0] = gta_leds[0].uc_on_intensity_idx;
+    g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY1] = gta_leds[1].uc_on_intensity_idx;
+    g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY2] = gta_leds[2].uc_on_intensity_idx;
 
     light_off();
 }
