@@ -36,7 +36,7 @@ class CcdNodeHvac(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.HVAC) 
         userInfo = info
     }
 
-    override fun pack(): ByteArray? {
+    override fun pack(): ByteArray {
         // Pack set only target state & heater control
         val state = (info.stateTarget.ordinal shl 4).toByte()
         val heater =

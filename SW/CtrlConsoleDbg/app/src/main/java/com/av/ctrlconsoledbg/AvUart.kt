@@ -2,6 +2,7 @@ package com.av.uart
 
 import android.content.Context
 import android.util.Log
+import com.av.ctrlconsoledbg.CcdNode
 import com.av.ctrlconsoledbg.CcdNodeInfoResp
 import com.av.ctrlconsoledbg.CcdNodeType
 import com.av.ctrlconsoledbg.CcdUartConnected
@@ -13,8 +14,7 @@ import com.ftdi.j2xx.D2xxManager
 import com.ftdi.j2xx.FT_Device
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class AvUartTxMsg {
-    var buff = ByteArray(10)    // Todo: get array size from contructor's input param
+class AvUartTxMsg(var buff: ByteArray) {
     var rdIdx = 0
 }
 
@@ -32,7 +32,7 @@ class AvUart(val context: Context) {
 
     val rxHdr: ByteArray = byteArrayOf(0, 0, 0, 0)
 
-    var rxSynced:Boolean = false
+    var rxSynced: Boolean = false
 
     var txBuff: ByteArray? = null
 
@@ -44,6 +44,12 @@ class AvUart(val context: Context) {
         DEV_CONFIG
     }
 
+
+    fun packSync() = byteArrayOf(
+            0x41.toByte(),
+            0x86.toByte(),
+            RX_BUFF_HDR_CMD_RESYNC,
+            0)
 
     fun initialize() {
         Log.d(TAG, "Initializing")
@@ -153,40 +159,22 @@ class AvUart(val context: Context) {
         }
 
     }
-    private fun rxBuffDispatchNodeInfo() {
 
 
-    }
+
     private fun rxBuffDispatch() {
-
         val buffLen = rxHdr[RX_BUFF_HDR_OFF_LEN].toInt()
+
+        if (rxBuff.size != buffLen){ // TODO: Q:? where buffer size is defined ?
+            Log.e(TAG, "Bad packet length ${rxBuff.size} != ${buffLen}")
+            return
+        }
         when(rxHdr[RX_BUFF_HDR_OFF_CMD]){
-            RX_BUFF_HDR_CMD_NODE_INFO -> {
-                val nodeInfoLen = rxBuff[CCD_NODE_INFO_LEN].toInt()
-                val nodeInfoAddr = rxBuff[CCD_NODE_INFO_FROM].toInt()
-
-                if (rxBuff.size < CCD_NODE_INFO_DATA) {
-                    Log.e(TAG, "NODE_INFO: Corrupted")
-                    return
-                }
-                if (buffLen != nodeInfoLen + CCD_NODE_INFO_DATA) {
-                    Log.e(TAG, "NODE_INFO: Bad message length $buffLen != ${nodeInfoLen + CCD_NODE_INFO_DATA}")
-                    return
-                }
-                if ( nodeInfoAddr == 0xFF) {
-                    Log.e(TAG, "NODE_INFO: Bad address")
-                }
-
-                val nodeType = CcdNodeType.values().find { t -> t.type == rxBuff[CCD_NODE_INFO_TYPE].toInt() }
-                if (nodeType == null) {
-                    Log.d(TAG, "NODE_INFO: Bad type $nodeType")
-                    return
-                }
-                EventBus.getDefault().post(
-                        CcdNodeInfoResp(
-                                addr = rxBuff[CCD_NODE_INFO_FROM].toInt(),
-                                type = nodeType,
-                                data = rxBuff.copyOfRange(CCD_NODE_INFO_DATA, CCD_NODE_INFO_DATA + nodeInfoLen)))
+            RX_BUFF_HDR_CMD_CTRLCON_INFO -> {
+                CcdNode.onRx(rxBuff)
+            }
+            RX_BUFF_HDR_CMD_RESYNC -> {
+                txMsgQueue.add(AvUartTxMsg(buff = packSync()))
             }
             else -> {
                 Log.e(TAG, "Unknown message")
@@ -224,10 +212,11 @@ class AvUart(val context: Context) {
             // Read data
             val btr = rxHdr[RX_BUFF_HDR_OFF_LEN].toInt()
             if (dev.queueStatus >= btr) {
-                if (dev.read(rxBuff, btr) != btr) {
+                if (btr > 0 && dev.read(rxBuff, btr) != btr) {
                     rxSynced = false
                     Log.d(TAG, "Can't read Data from the device")
                 } else {
+                    // TODO: Q: Truncate buffer to btr?
                     rxBuffDispatch()
                     rxHdr[RX_BUFF_HDR_OFF_LEN] = 0    // Invalidate packet
                 }
@@ -257,23 +246,10 @@ class AvUart(val context: Context) {
         private const val RX_BUFF_HDR_OFF_MARK1 = 1
         private const val RX_BUFF_HDR_OFF_CMD   = 2
         private const val RX_BUFF_HDR_OFF_LEN   = 3
+        private const val RX_BUFF_HDR_OFF_DATA  = 4
 
-        private const val RX_BUFF_HDR_CMD_NODE_INFO  = 0x21.toByte()
-
-/*
-#define NLINK_HDR_OFF_FROM 0
-#define NLINK_HDR_OFF_TO   1
-#define NLINK_HDR_OFF_CMD  2
-#define NLINK_HDR_OFF_TYPE 3
-#define NLINK_HDR_OFF_LEN  4
-#define NLINK_HDR_OFF_DATA 5
- */
-        private const val CCD_NODE_INFO_FROM = 0
-        private const val CCD_NODE_INFO_TO   = 1
-        private const val CCD_NODE_INFO_CMD  = 2
-        private const val CCD_NODE_INFO_TYPE = 3
-        private const val CCD_NODE_INFO_LEN  = 4
-        private const val CCD_NODE_INFO_DATA = 5
+        private const val RX_BUFF_HDR_CMD_CTRLCON_INFO  = 0x21.toByte()
+        private const val RX_BUFF_HDR_CMD_RESYNC  = 0x31.toByte()
     }
 }
 
@@ -309,7 +285,7 @@ class AvUartPoll(private val avUart: AvUart) : Runnable {
 
                 avUart.checkRx()
 
-                // Check is something to read
+                avUart.checkTx()
 
                 Thread.sleep(50)
 

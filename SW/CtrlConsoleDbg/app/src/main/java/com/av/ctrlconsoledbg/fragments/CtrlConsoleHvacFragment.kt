@@ -3,20 +3,13 @@ package com.av.ctrlconsoledbg.fragments
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.text.Editable
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import com.av.ctrlconsoledbg.*
-import com.av.ctrlconsoledbg.CcdNodeLedLight.Companion.intensityFromIdx
-import com.av.ctrlconsoledbg.R.id.ll_ch0_intensity
 import kotlinx.android.synthetic.main.ctrl_console_hvac.*
-import kotlinx.android.synthetic.main.ctrl_console_selector.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -25,6 +18,7 @@ class CtrlConsoleHvacFragment : Fragment() {
 
     private var mCtrlConsole: CtrlConsoleDbgActivity? = null
     private var userInfo: NodeHvacInfo? = null
+    !!!!!!!!!!! ^^^ replace with complete node !!!! Mark node on userInfo changes in order to send update to CtrlCon Node
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -75,33 +69,33 @@ class CtrlConsoleHvacFragment : Fragment() {
         }
         val elementListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val info = userInfo?: return
+                val _userInfo = userInfo?: return
                 if (v == null) return
                 when(v.id) {      // how to get callers ID???
                     hvac_valve_icon.id -> {
-                        if (info.stateTarget == CcdNodeHvacState.S2) {
-                            info.stateTarget = CcdNodeHvacState.S1
+                        if (_userInfo.stateTarget == CcdNodeHvacState.S2) {
+                            _userInfo.stateTarget = CcdNodeHvacState.S1
                         } else {
-                            info.stateTarget = CcdNodeHvacState.S2
+                            _userInfo.stateTarget = CcdNodeHvacState.S2
                         }
                     }
                     hvac_motor_icon.id -> {
-                        if (info.stateTarget == CcdNodeHvacState.S3) {
-                            info.stateTarget = CcdNodeHvacState.S2
+                        if (_userInfo.stateTarget == CcdNodeHvacState.S3) {
+                            _userInfo.stateTarget = CcdNodeHvacState.S2
                         } else {
-                            info.stateTarget = CcdNodeHvacState.S3
+                            _userInfo.stateTarget = CcdNodeHvacState.S3
                         }
                     }
                     hvac_heater_icon.id -> {
-                        if (info.stateTarget == CcdNodeHvacState.S4) {
-                            info.stateTarget = CcdNodeHvacState.S3
+                        if (_userInfo.stateTarget == CcdNodeHvacState.S4) {
+                            _userInfo.stateTarget = CcdNodeHvacState.S3
                         } else {
-                            info.stateTarget = CcdNodeHvacState.S4
+                            _userInfo.stateTarget = CcdNodeHvacState.S4
                         }
                     }
                     else -> return
                 }
-                refreshHvacUserInfo(info)
+                refreshHvacUserInfoUI()
             }
         }
 
@@ -129,9 +123,11 @@ class CtrlConsoleHvacFragment : Fragment() {
             if (v.type == CcdNodeType.HVAC) {
                 val nodeHvac = v as CcdNodeHvac
                 if (nodeHvac != null) {
-                    updateHvacInfo(nodeHvac.info)
+                    updateHvacInfoUI(nodeHvac.info)
                 }
-                refreshHvacUserInfo(v.userInfo)
+                userInfo = v.userInfo
+                refreshHvacUserInfoUI()
+
             }
         }
 
@@ -144,10 +140,10 @@ class CtrlConsoleHvacFragment : Fragment() {
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNodeHvacInfo(node: CcdNodeHvac) {
-        updateHvacInfo(node.info)
+        updateHvacInfoUI(node.info)
     }
 
-    fun updateHvacInfo(infoActual: NodeHvacInfo)
+    fun updateHvacInfoUI(infoActual: NodeHvacInfo)
     {
         when(infoActual.stateTarget){
             CcdNodeHvacState.S1 -> {
@@ -181,11 +177,13 @@ class CtrlConsoleHvacFragment : Fragment() {
         enableAll(true)
     }
 
-    fun refreshHvacUserInfo(userInfoIn: NodeHvacInfo)
+    fun refreshHvacUserInfoUI()
     {
+        val _userInfo = userInfo?:return
+
         val elementActive = R.drawable.ic_element_en_64dp
         val elementInactive = R.drawable.ic_element_dis_64dp
-        when(userInfoIn.stateTarget){
+        when(_userInfo.stateTarget){
             CcdNodeHvacState.S1 -> {
                 hvac_valve_icon.setImageResource(elementInactive)
                 hvac_valve_state.text = "Closed"
@@ -219,13 +217,11 @@ class CtrlConsoleHvacFragment : Fragment() {
                 hvac_heater_state.text = "Heating"
             }
         }
-        hvac_state_user.text = userInfoIn.stateTarget.name
+        hvac_state_user.text = _userInfo.stateTarget.name
 
-        hvac_heater_mode.isChecked = (userInfoIn.heaterMode == CcdNodeHvacHeaterMode.AUTO)
-        hvac_heater_bar.progress = userInfoIn.heaterTarget.ordinal
-        hvac_heater_value.text = CcdNodeHvac.ctrlToString(userInfoIn.heaterMode, userInfoIn.heaterTarget)
-
-        userInfo = userInfoIn
+        hvac_heater_mode.isChecked = (_userInfo.heaterMode == CcdNodeHvacHeaterMode.AUTO)
+        hvac_heater_bar.progress = _userInfo.heaterTarget.ordinal
+        hvac_heater_value.text = CcdNodeHvac.ctrlToString(_userInfo.heaterMode, _userInfo.heaterTarget)
     }
 
     fun enableAll(enabled: Boolean) {

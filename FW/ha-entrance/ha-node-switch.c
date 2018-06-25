@@ -8,6 +8,7 @@
  // 1. Make HW pins independent through include of #ifdef
 #include <avr/io.h>
 #include <stdint.h>
+#include <stddef.h>
 #include "ha-common.h"
 #include "ha-nlink.h"
 #include "ha-node-switch.h"
@@ -92,7 +93,7 @@ void ha_node_switch_init()
 // SWITCH DATA
 //      TYPE(SWITCH) EVENT(%)
 //
-    g_switch_nlink_node = ha_nlink_node_register(SWITCH_ADDR, NODE_TYPE_SWITCH, switch_on_rx);
+    g_switch_nlink_node = ha_nlink_node_register(SWITCH_ADDR, NODE_TYPE_SWITCH, switch_on_rx, (node_tx_cb_t)NULL);
 
     // Clear TX buffer
     node_t *node = g_switch_nlink_node;
