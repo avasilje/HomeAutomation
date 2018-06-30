@@ -21,6 +21,8 @@
 #include "ha-node-switch.h"
 #include "ha-node-ctrlcon.h"
 #include "ha-entrance.h"
+#include "ha-i2c.h"
+#include "ha-phts.h"
 
 HW_INFO gt_hw_info __attribute__ ((section (".act_const"))) = {0, 2, "AV HA Entrance"};
 PF_PVOID gpf_action_func;
@@ -84,17 +86,16 @@ typedef struct ha_uart_s {
 } ha_uart_t;
 
 ha_uart_t ha_uart;
+ha_phts_t g_ha_phts;
 
 static void init_ha_nlink_timer()
 {   // Timer is always running
-    cli();
-        TCCR2 &= ~(_BV(CS20) | _BV(CS21) | _BV(CS22));
-        TCCR2 |= (2 << CS20);    // prescaler 2 => 1/8
+    TCCR2 &= ~(_BV(CS20) | _BV(CS21) | _BV(CS22));
+    TCCR2 |= (2 << CS20);    // prescaler 2 => 1/8
 
-        TIMSK |= _BV(TOIE2);
-        TCNT2 = 0;               // Free running
-        TIFR |= _BV(TOV2);
-    sei();
+    TIMSK |= _BV(TOIE2);
+    TCNT2 = 0;               // Free running
+    TIFR |= _BV(TOV2);
 }
 
 static void init_uart()
@@ -236,6 +237,9 @@ int main(void)
 
     init_gpio();
 
+    NLINK_IO_DBG_DIR |= (NLINK_IO_DBG_PIN0_MASK | NLINK_IO_DBG_PIN1_MASK);
+    NLINK_IO_DBG_PORT &= ~(NLINK_IO_DBG_PIN0_MASK | NLINK_IO_DBG_PIN1_MASK);
+
     init_timer();
 
     init_ha_nlink_timer();
@@ -256,6 +260,13 @@ int main(void)
     MCUCR |= (2 << ISC00);
 
     ha_nlink_init();
+
+    NLINK_IO_DBG_PORT |= NLINK_IO_DBG_PIN1_MASK;
+
+    ha_i2c_init();
+    ha_phts_init(&g_ha_phts);
+
+    NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN1_MASK;
 
     ha_node_switch_init();
     ha_node_ctrlcon_init(); // Ctrlcon node must be initialized last because collects info about all other nodes

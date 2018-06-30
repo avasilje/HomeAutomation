@@ -41,5 +41,15 @@ extern int8_t g_ha_nlink_timer_cnt;
 #define NLINK_IO_DBG_DIR  DDRB
 
 
+#define I2C_SDA_PORT PORTC
+#define I2C_SDA_PIN  PINC
+#define I2C_SDA_DIR  DDRC
+#define I2C_SDA		 PINC1      // ATMega32 pin20
+
+#define I2C_SCL_PORT PORTC
+#define I2C_SCL_PIN  PINC
+#define I2C_SCL_DIR  DDRC
+#define I2C_SCL		 PINC0      // ATMega32 pin19
+
 #endif /* HA_COMMON_XXX_H_ */
 #endif /* HA_DEV_ELBOX */
