@@ -1,6 +1,6 @@
 /*
  * TODO:
- *   1. Replace UART fatal trap to resync
+ *   1. 
  *   2.
  */
 
@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ha-common.h"
+#include "ha-uart.h"
 #include "ha-nlink.h"
 #include "ha-node-switch.h"
 #include "ha-node-ctrlcon.h"
@@ -31,19 +32,15 @@ extern T_ACTION gta_action_table[];
 
 uint16_t gus_trap_line;
 
+void action_default();
+
 void FATAL_TRAP (uint16_t us_line_num) {
     gus_trap_line = us_line_num;
     while(1);
 }
 
-
-#define MSG_BUFF_SIZE 32
-volatile uint8_t guc_in_msg_idx;
-uint8_t guca_in_msg_buff[MSG_BUFF_SIZE];
-
-volatile uint8_t guc_out_msg_wr_idx;
-volatile uint8_t guc_out_msg_rd_idx;
-uint8_t guca_out_msg_buff[MSG_BUFF_SIZE];   // ??  not in use. see ha_uart
+STATIC_ASSERT( (HA_UART_RX_BUFF_SIZE - UART_CC_HDR_SIZE) > NLINK_COMM_BUF_SIZE, UART_RX_BUFFER_TO_SMALL);
+STATIC_ASSERT( (HA_UART_TX_BUFF_SIZE - UART_CC_HDR_SIZE) > NLINK_COMM_BUF_SIZE, UART_TX_BUFFER_TO_SMALL);
 
 // ---------------------------------
 // --- LEDS specific
@@ -76,18 +73,6 @@ uint8_t dbg_idx = 0;
 
 uint8_t guc_timer_cnt;
 
-typedef struct ha_uart_s {
-    // 0x41 0x86 0x22  0xLL    | 0xAA      0xTT   0xDD
-    // MARK      CMD   Length  | Address   Type   node info
-
-    uint8_t tx_buf[NLINK_COMM_BUF_SIZE];
-    uint8_t tx_rd_idx;
-    uint8_t tx_len;
-} ha_uart_t;
-
-ha_uart_t ha_uart;
-ha_phts_t g_ha_phts;
-
 static void init_ha_nlink_timer()
 {   // Timer is always running
     TCCR2 &= ~(_BV(CS20) | _BV(CS21) | _BV(CS22));
@@ -98,58 +83,19 @@ static void init_ha_nlink_timer()
     TIFR |= _BV(TOV2);
 }
 
-static void init_uart()
+static void init_gpio()
 {
-    // Init UART to 0.5Mbps 8N1
-
-    // Set baud rate. UBRR = Fosc/8/BAUD - 1
-    // Fosc = 8MHz, UBRR = 8*10^6/16/250000 - 1 = 1
-    UBRRH = 0;
-    UBRRL = 1;
-
-    // Set frame format: 8data, 1stop bit, no parity */
-    UCSRC =
-        _BV(URSEL) |    // Enable access to UCSRC. Otherwise UBRRH will be overwritten
-        _BV(UCSZ0) |    // 8 data bits
-        _BV(UCSZ1);     // 8 data bits
-
-    // Enable receiver and transmitter
-    UCSRB =
-        _BV(RXCIE)|     // RX Interrupt enable
-        _BV(RXEN) |     // Receiver enabled
-        _BV(TXEN);      // Transmitter enabled
-
-    ha_uart.tx_rd_idx = 0;
-    ha_uart.tx_len = 0;
-}
-
-void ha_uart_enable_tx() {
-    UCSRB |= _BV(UDRIE);  // TX Interrupt enable
-}
-
-static void init_gpio(){
     // Set led to pull down
     LED_DIR  |= LED_MASK_ALL;
     LED_PORT &= ~LED_MASK_ALL;
 }
 
-static void command_lookup()
+void command_lookup(uint8_t uc_msg_cmd)
 {
     T_ACTION    *pt_action;
     PF_PVOID    pf_func;
 
     uint8_t uc_act_cmd;
-    uint8_t uc_msg_cmd;
-
-    // check is command valid
-    // MARK = "AV", read pointer must be set on buffer start
-    if ( guca_in_msg_buff[0] != 0x41)
-        FATAL_TRAP(__LINE__);
-
-    if ( guca_in_msg_buff[1] != 0x86)
-        FATAL_TRAP(__LINE__);
-
-    uc_msg_cmd = guca_in_msg_buff[2];
 
     // --------------------------------------------------
     // --- Find received command in actions' table
@@ -162,14 +108,16 @@ static void command_lookup()
         FATAL_TRAP(__LINE__);
 
     // Find action in table
-    do
-    {
+    do {
         pt_action ++;
         uc_act_cmd = pgm_read_byte_near(&pt_action->uc_cmd);
 
-        // TRAP if unknown command received (end of table reached)
-        if (uc_act_cmd == 0xFF)
-            FATAL_TRAP(__LINE__);
+        // if unknown command received (end of table reached) just 
+		// readout from UART amount of bytes specified in header
+        if (uc_act_cmd == 0xFF) {
+            gpf_action_func = action_default;	
+			break;
+		}
 
         if (uc_msg_cmd == uc_act_cmd){
             // get functor from table
@@ -180,55 +128,16 @@ static void command_lookup()
 
     gpf_action_func();
 
-    // Clear RX buffer index in order to receive next message
-    guc_in_msg_idx = 0;
-
     return;
 }
 
-void init_timer() {
+void init_timer() 
+{
     // timer - Timer0. Incrementing counting till UINT8_MAX
     TCCR0 = CNT_TCCRxB;
     TCNT0 = CNT_RELOAD;
     ENABLE_TIMER0;
     guc_timer_cnt = 0;
-}
-
-static void check_ctrlcon_tx()
-{
-
-#define UART_CC_HDR_MARK0 0
-#define UART_CC_HDR_MARK1 1
-#define UART_CC_HDR_CMD   2
-#define UART_CC_HDR_LEN   3
-#define UART_CC_HDR_SIZE  4
-
-    // 0x41 0x86 0x21  0xLL    | Node info
-    // MARK      CMD   Length  | ADDR TYPE LEN DATA
-
-    // Check CTRLCON TX if UART TX is disabled
-    if (0 == (UCSRB & _BV(UDRIE))) {
-        // Nothing to sent - check ctrlcon
-        //ha_uart.tx_len = ha_node_ctrlcon_to_sent(ha_uart.tx_buf);
-        //if (ha_uart.tx_len) {
-
-        uint8_t bytes_to_send = ha_node_ctrlcon_to_sent(&ha_uart.tx_buf[UART_CC_HDR_SIZE]);
-        if (bytes_to_send) {
-            ha_uart.tx_buf[UART_CC_HDR_MARK0] = 0x41;
-            ha_uart.tx_buf[UART_CC_HDR_MARK1] = 0x86;
-            ha_uart.tx_buf[UART_CC_HDR_CMD  ] = 0x21;
-            ha_uart.tx_buf[UART_CC_HDR_LEN  ] = bytes_to_send;
-            ha_uart.tx_len = bytes_to_send + UART_CC_HDR_SIZE;
-
-            ha_uart.tx_rd_idx = 0;
-            UCSRB |= _BV(UDRIE);
-        }
-    }
-}
-
-static void check_ctrlcon_rx()
-{
-    // Check nodes flags
 }
 
 int main(void)
@@ -244,7 +153,7 @@ int main(void)
 
     init_ha_nlink_timer();
     // Wait a little just in case
-    for(uint8_t uc_i = 0; uc_i < 255U; uc_i++){
+    for(uint8_t uc_i = 0; uc_i < 255U; uc_i++) {
 
         __asm__ __volatile__ ("    nop\n    nop\n    nop\n    nop\n"\
                               "    nop\n    nop\n    nop\n    nop\n"\
@@ -253,7 +162,7 @@ int main(void)
                                 ::);
     }
 
-    init_uart();
+    ha_uart_init();
 
     // Set INT0 trigger to Falling Edge, Clear interrupt flag
     MCUCR &= ~(_BV(ISC00) | _BV(ISC01));
@@ -278,21 +187,9 @@ int main(void)
 
     sei();
 
-    while(1)
-    {
-        // Get number of bytes received (4 bytes at least)
-        if (guc_in_msg_idx >= 4)
-        {
-            // Init transmitter's buffer
-            guc_out_msg_wr_idx = 0;
-            guc_out_msg_rd_idx = 0;
-
-            // Find and execute command from the ACTIONS TABLE
-            command_lookup();
-        }
-
-        check_ctrlcon_tx();
-        check_ctrlcon_rx();
+    while(1) {
+        ha_uart_check_tx();
+        ha_uart_check_rx();
         ha_nlink_check_rx();
         ha_nlink_check_tx();
     }
@@ -329,8 +226,7 @@ ISR(TIMER0_OVF_vect) {
 
     // Update global PWM counter
     guc_timer_cnt ++;
-    if (guc_timer_cnt == TIMER_CNT_PERIOD)
-    {
+    if (guc_timer_cnt == TIMER_CNT_PERIOD) {
         guc_timer_cnt = 0;
     }
 
@@ -338,51 +234,28 @@ ISR(TIMER0_OVF_vect) {
     // --- Check switches
     // --- results in globals: guc_sw_event_hold, guc_sw_event_push
     // --------------------------------------------------
-    if (guc_timer_cnt == 1)
-    {   // Every 10ms
+    if (guc_timer_cnt == 1){
+		// Every 10ms
         ha_node_switch_on_timer();
+
+		ha_uart_on_timer();
     }
 }
 
+void action_default()
+{
+	// Command format
+	// 0x41 0x86    0x??       0xLL       ...
+	// MARK         Any CMD    Length     xxx
 
-ISR(USART_UDRE_vect) {
-
-    // Unload TX buffer if not empty
-    if (ha_uart.tx_rd_idx != ha_uart.tx_len) {
-        UDR = ha_uart.tx_buf[ha_uart.tx_rd_idx];
-        UCSRA |= (1 << TXC); // Clear transmit complete flag
-        ha_uart.tx_rd_idx ++;
-        if (ha_uart.tx_rd_idx == ha_uart.tx_len) {
-            // No more data - disable interrupt
-            UCSRB &= ~_BV(UDRIE);
-        }
-        return;
-    }
-}
-
-ISR(USART_RXC_vect) {
-
-    uint8_t uc_status;
-    uint8_t uc_data;
-
-    // get RX status, trap if something wrong
-    uc_status = UCSRA;
-    uc_data = UDR;
-
-    // Check Frame Error (FE0) and DATA overflow (DOR0)
-    if ( uc_status & (_BV(FE) | _BV(DOR)) )
-        INT_FATAL_TRAP(__LINE__);
-
-    if ( guc_in_msg_idx == MSG_BUFF_SIZE )
-        INT_FATAL_TRAP(__LINE__);
-
-    guca_in_msg_buff[guc_in_msg_idx++] = uc_data;
-
+	// Receive full message
+	uint8_t len = ha_uart.rx_buff[UART_CC_HDR_LEN];
+	while(ha_uart.rx_wr_idx < len);
 }
 
 void action_signature()
 {
-    uint8_t uc_i;
+    // uint8_t uc_i;
 
     // Command format
     // 0x41 0x86 0x21  0xLL    0xAA
@@ -393,8 +266,8 @@ void action_signature()
     // MARK      Length  Major   Minor   String name
 
     // Check is message length available, wait if not yet
-    while(guc_in_msg_idx < 5);
-
+    while(ha_uart.rx_wr_idx < 5);
+/*
     // Write header & length
     guca_out_msg_buff[0] = 0x41;
     guca_out_msg_buff[1] = 0x86;
@@ -413,61 +286,62 @@ void action_signature()
     }
 
     // Check no more input data received
-    if (guc_in_msg_idx != 2)
+    if (ha_uart.rx_wr_idx != 2)
         FATAL_TRAP(__LINE__);
 
     guc_out_msg_wr_idx = SIGN_LEN + 6;
-
+*/
     // End of action_signature
     return;
 }
 
-void action_node_info_get()
+void action_ctrlcon_get()
 {
     // Command format
     // 0x41 0x86 0x21  0xLL    0xAA
     // MARK      CMD   Length  Address
+#define CC_ACTION_GET_OFF_ADDR	0
+#define CC_ACTION_GET_SIZE	(CC_ACTION_GET_OFF_ADDR + 1)
 
     // Response format (NLINK_HDR_OFF_xxx)
     // 0x41 0x86 0x21  0xLL    | 0xAA        0xAA     0xCC   0xTT  0xLL      0xDD         |
     // MARK      CMD   Length  | Addr_From   Addr_To  CMD    Type  Data Len  node info    |
 
     // Sanity - check message length
-    if (guca_in_msg_buff[3] != 1) {
-        FATAL_TRAP(__LINE__);
+    if (ha_uart.rx_buff[UART_CC_HDR_LEN] != CC_ACTION_GET_SIZE) {
+        ha_uart_resync();
     }
 
     // Check is message address is available, wait if not yet
-    while(guc_in_msg_idx < 5);
+    while(ha_uart.rx_wr_idx < UART_CC_HDR_SIZE + CC_ACTION_GET_SIZE);
 
     // Get node address
-    uint8_t req_addr = guca_in_msg_buff[4];
+    uint8_t req_addr = ha_uart.rx_buff[UART_CC_HDR_SIZE + CC_ACTION_GET_OFF_ADDR];
 
-    // Set RX flag in peer to initiate transfer.
+    // Set RX flag in peer to initiate transfer node info to UART
     // The transfer will be initiated later in the idle loop
     ha_node_ctrlcon_peer_set_rx(req_addr);
 }
 
-void action_node_info_set()
+void action_ctrlcon_set()
 {
     return;
     // Command format
-    // 0x41 0x86 0x22  0xLL    | 0xAA      0xTT   0xDD
-    // MARK      CMD   Length  | Address   Type   node info
+    // 0x41 0x86 0x22  0xLL    | 
+    // MARK      CMD   Length  | 
 
-    // Check is message address is available, wait if not yet
-    while(guc_in_msg_idx < 6);
+	// Receive full message
+	action_default();
 
-    // Get node address
-    uint8_t req_addr = guca_in_msg_buff[4];
+	ha_node_ctrlcon_on_rx_uart(&ha_uart.rx_buff[UART_CC_HDR_SIZE], ha_uart.rx_buff[UART_CC_HDR_LEN]);
 
 }
 
 T_ACTION gta_action_table[] __attribute__ ((section (".act_const"))) = {
     { "mark", 0x00, (void*)0xFEED        },    // Table signature
     { "sign", 0x11, action_signature     },
-    { "nget", 0x21, action_node_info_get },
-    { "nset", 0x22, action_node_info_set },
+    { "cc_g", 0x21, action_ctrlcon_get },
+    { "cc_s", 0x22, action_ctrlcon_set },
     { ""    , 0xFF, NULL                 }     // End of table
 };
 

@@ -10,6 +10,7 @@ import com.av.bleservice.AvBleService
 import com.av.bleservice.CcdBleDeviceDiscovered
 import com.av.ctrlconsoledbg.fragments.CtrlConsoleSelectorFragment
 import com.av.uart.AvUart
+import com.av.uart.AvUartTxMsg
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -46,8 +47,61 @@ abstract class CcdNode(
         val type: CcdNodeType) {
 
     abstract fun update(data: ByteArray?)
-    abstract fun pack() : ByteArray?
+    abstract fun pack() : ByteArray
 
+    var userInfoChanges: Int = 0
+    var userInfoChangesLastTx: Int = 0
+
+    companion object {
+        const val TAG = "CcdNode"
+        /*
+        #define NLINK_HDR_OFF_FROM 0
+        #define NLINK_HDR_OFF_TO   1
+        #define NLINK_HDR_OFF_CMD  2
+        #define NLINK_HDR_OFF_TYPE 3
+        #define NLINK_HDR_OFF_LEN  4
+        #define NLINK_HDR_OFF_DATA 5
+         */
+        private const val CCD_NODE_INFO_FROM = 0
+        private const val CCD_NODE_INFO_TO   = 1
+        private const val CCD_NODE_INFO_CMD  = 2
+        private const val CCD_NODE_INFO_TYPE = 3
+        private const val CCD_NODE_INFO_LEN  = 4
+        private const val CCD_NODE_INFO_DATA = 5
+
+        /*
+         * Called from AvUart thread
+         * Does sanity check and post message with specified note type
+         */
+        fun onRx(rxBuff: ByteArray) {
+            val nodeInfoLen = rxBuff[CCD_NODE_INFO_LEN].toInt()
+            val nodeInfoAddr = rxBuff[CCD_NODE_INFO_FROM].toInt()
+
+            if (rxBuff.size < CCD_NODE_INFO_DATA) {
+                Log.e(TAG, "NODE_INFO: Corrupted")
+                return
+            }
+            if (rxBuff.size != nodeInfoLen + CCD_NODE_INFO_DATA) {
+                Log.e(TAG, "NODE_INFO: Bad message length ${rxBuff.size}!=${nodeInfoLen + CCD_NODE_INFO_DATA}")
+                return
+            }
+            if ( nodeInfoAddr == 0xFF) {
+                Log.e(TAG, "NODE_INFO: Bad address")
+            }
+
+            val nodeType = CcdNodeType.values().find { t -> t.type == rxBuff[CCD_NODE_INFO_TYPE].toInt() }
+            if (nodeType == null) {
+                Log.d(TAG, "NODE_INFO: Bad type $nodeType")
+                return
+            }
+            EventBus.getDefault().post(
+                    CcdNodeInfoResp(
+                            addr = rxBuff[CCD_NODE_INFO_FROM].toInt(),
+                            type = nodeType,
+                            data = rxBuff.copyOfRange(CCD_NODE_INFO_DATA, CCD_NODE_INFO_DATA + nodeInfoLen)))
+
+        }
+    }
 }
 enum class CcdNodeType(val type: Int) {
     NONE(0x00),
@@ -149,6 +203,28 @@ class CtrlConsoleDbgActivity : AppCompatActivity() {
 
         // Send notification to UI
         EventBus.getDefault().post(node)
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onUartIdle() {
+
+        val it = nodes.iterator()
+        while (it.hasNext()) {
+            val node = it.next().value
+            when (node.type) {
+                CcdNodeType.LEDLIGHT,
+                CcdNodeType.SWITCH -> {
+                    if (node.userInfoChangesLastTx != node.userInfoChanges) {
+                        node.userInfoChangesLastTx = node.userInfoChanges
+                        uart.txMsgQueue.add( AvUartTxMsg(buff = node.pack()) )
+                        Log.d(TAG, "Node (${node.type}@${node.addr}) updated by userInfo")
+                    }
+                }
+                else -> { // Do nothing }
+                }
+            }
+        }
+
     }
 
     companion object {

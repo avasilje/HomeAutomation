@@ -61,7 +61,7 @@ void ha_nlink_init()
     ha_nlink_io_recover();
 }
 
-node_t* ha_nlink_node_register(uint8_t addr, uint8_t type, node_rx_cb_t on_rx_cb)
+node_t* ha_nlink_node_register(uint8_t addr, uint8_t type, node_rx_cb_t on_rx_cb, node_tx_cb_t on_tx_cb)
 {
     // Find next free entry
     int8_t i;
@@ -76,6 +76,7 @@ node_t* ha_nlink_node_register(uint8_t addr, uint8_t type, node_rx_cb_t on_rx_cb
     node->addr = addr;
     node->type = type;
     node->on_rx_cb = on_rx_cb;
+    node->on_tx_cb = on_tx_cb;
     return node;
 }
 
@@ -156,6 +157,20 @@ void ha_nlink_check_rx()
 
     }
 }
+static uint8_t ha_nlink_on_tx_default(uint8_t idx, uint8_t *buf)
+{
+	UNREFERENCED_PARAM(idx);
+	node_t *node = &nlink.nodes[idx];
+	
+	if (node->tx_flag == 0) {
+		return 0;
+	}
+
+	node->tx_flag = 0;
+	uint8_t tx_buf_len = node->tx_buf[NLINK_HDR_OFF_LEN] + NLINK_HDR_OFF_DATA;
+	memcpy(buf, node->tx_buf, tx_buf_len);
+	return tx_buf_len;
+}
 
 void ha_nlink_check_tx()
 {
@@ -165,7 +180,7 @@ void ha_nlink_check_tx()
     }
 
     // IO Idle timeout expired
-    // Check pending transmittion (in case of previous one failed)
+    // Check pending transfer (in case of previous one failed)
     if (nlink.io.tx_len) {
         nlink.io.tx_rd = 0;
         ha_nlink_io_set_idle(); // Initiate transfer
@@ -174,18 +189,25 @@ void ha_nlink_check_tx()
     // Get data to transfer from nodes
     for(uint8_t i = 0; i < ARRAY_SIZE(nlink.nodes); i++) {
         node_t *node = &nlink.nodes[i];
-        if (node->tx_flag) {
-            node->tx_flag = 0;
-            uint8_t tx_buf_len = node->tx_buf[NLINK_HDR_OFF_LEN] + NLINK_HDR_OFF_DATA;
-            memcpy(nlink.io.tx_buf, node->tx_buf, tx_buf_len);
-            // Initiate transmittion in next timer interrupt
-            cli();
-                nlink.io.tx_len = tx_buf_len;
-                nlink.io.tx_rd = 0;
-            sei();
-            ha_nlink_io_set_idle(); // Initiate transfer
-            return;
-        }
+		uint8_t tx_buf_len;
+		if (node->tx_flag == 0) {
+			continue;
+		}
+		
+		if (node->on_tx_cb) {
+			tx_buf_len = node->on_tx_cb(i, nlink.io.tx_buf);
+		} else {
+			tx_buf_len = ha_nlink_on_tx_default(i, nlink.io.tx_buf);
+		}
+
+		// Initiate transfer in next timer interrupt
+		if (tx_buf_len) {
+			cli();
+				nlink.io.tx_len = tx_buf_len;
+				nlink.io.tx_rd = 0;
+			sei();
+			ha_nlink_io_set_idle(); // Initiate transfer
+		}
     }
 }
 
@@ -269,7 +291,7 @@ static void isr_nlink_io_on_tx_timer()
                 // Check that transmitted header equals to received
                 if ( nlink.io.rx_buf[0] == nlink.io.tx_buf[0] &&
                      nlink.io.rx_buf[1] == nlink.io.tx_buf[1]) {
-                    // Transmittion OK
+                    // Transfer is OK
                     nlink.io.tx_rd = 0;
                     nlink.io.tx_len = 0;
                 } else {

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import com.av.ctrlconsoledbg.*
 import com.av.ctrlconsoledbg.CcdNodeLedLight.Companion.intensityFromIdx
+import com.av.uart.AvUartTxMsg
 import kotlinx.android.synthetic.main.ctrl_console_ledlight.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -19,7 +20,8 @@ class CtrlConsoleLedLightFragment: Fragment() {
 
     private var mCtrlConsole: CtrlConsoleDbgActivity? = null
 
-    private var userInfo: NodeLedLightInfo? = null
+    private var userInfo: NodeLedLightInfo? = null  // Q: ? Is it link to node.userInfo
+    !!!!!!!!!!! ^^^ replace with complete node !!!! Mark node on userInfo changes in order to send update to CtrlCon Node
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -62,20 +64,20 @@ class CtrlConsoleLedLightFragment: Fragment() {
         enableAll(false)
         val intensityBarListener = object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar :SeekBar , progress : Int, fromUser : Boolean){
-                val info = userInfo?: return
+                val _userInfo = userInfo?: return
                 val s = "${intensityFromIdx(progress)}%"
                 when (seekBar.id) {
                     ll_ch0_intensity_bar.id -> {
                         ll_ch0_intensity.setText(s)
-                        info.channels[0].intensity = progress
+                        _userInfo.channels[0].intensity = progress
                     }
                     ll_ch1_intensity_bar.id -> {
                         ll_ch1_intensity.setText(s)
-                        info.channels[1].intensity = progress
+                        _userInfo.channels[1].intensity = progress
                     }
                     ll_ch2_intensity_bar.id -> {
                         ll_ch2_intensity.setText(s)
-                        info.channels[2].intensity = progress
+                        _userInfo.channels[2].intensity = progress
                     }
                     ll_chAll_intensity_bar.id -> {
                         ll_ch0_intensity.setText(s)
@@ -84,9 +86,9 @@ class CtrlConsoleLedLightFragment: Fragment() {
                         ll_ch0_intensity_bar.progress = progress
                         ll_ch1_intensity_bar.progress = progress
                         ll_ch2_intensity_bar.progress = progress
-                        info.channels[0].intensity = progress
-                        info.channels[1].intensity = progress
-                        info.channels[2].intensity = progress
+                        _userInfo.channels[0].intensity = progress
+                        _userInfo.channels[1].intensity = progress
+                        _userInfo.channels[2].intensity = progress
                         ll_chAll_intensity.setText(s)
                     }
                     else -> return
@@ -101,21 +103,21 @@ class CtrlConsoleLedLightFragment: Fragment() {
         }
         val disabledListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val info = userInfo?: return
+                val _userInfo = userInfo?: return
                 if (v == null) return
                 val ch: NodeLedLightChannelInfo
                 val item: View
                 when(v.id) {      // how to get callers ID???
                     ll_ch0_disabled.id -> {
-                        ch = info.channels[0]
+                        ch = _userInfo.channels[0]
                         item = ll_ch0_disabled
                     }
                     ll_ch1_disabled.id -> {
-                        ch = info.channels[1]
+                        ch = _userInfo.channels[1]
                         item = ll_ch1_disabled
                     }
                     ll_ch2_disabled.id -> {
-                        ch = info.channels[2]
+                        ch = _userInfo.channels[2]
                         item = ll_ch2_disabled
                     }
                     else -> return
@@ -150,9 +152,11 @@ class CtrlConsoleLedLightFragment: Fragment() {
                 CcdNodeType.LEDLIGHT -> {
                     val llInfo = (v as CcdNodeLedLight).info
                     if (llInfo != null) {
-                        updateLedLightInfo(llInfo)
+                        updateLedLightInfoUI(llInfo)
                     }
-                    refreshLedLightUserInfo(v.userInfo)
+
+                    userInfo = v.userInfo
+                    refreshLedLightUserInfoUI()
                 }
                 CcdNodeType.SWITCH -> {
                     val sw_info = (v as CcdNodeSwitch).info
@@ -175,15 +179,14 @@ class CtrlConsoleLedLightFragment: Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNodeLedLightInfo(node: CcdNodeLedLight) {
-        updateLedLightInfo(node.info)
+        updateLedLightInfoUI(node.info)
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNodeSwitchInfo(node: CcdNodeSwitch) {
-        val sw_info = node.info ?: return
-        updateSwitchInfo(node.addr, sw_info)
+        updateSwitchInfo(node.addr, node.info)
     }
 
-    fun updateLedLightInfo(infoActual: NodeLedLightInfo)
+    fun updateLedLightInfoUI(infoActual: NodeLedLightInfo)
     {
         ll_chAll_mode_actual.text = if (infoActual.mode) "On" else "Off"
         ll_ch0_disabled_actual.text = if (infoActual.channels[0].disabled) "Dis" else "En"
@@ -200,31 +203,31 @@ class CtrlConsoleLedLightFragment: Fragment() {
         enableAll(true)
     }
 
-    fun refreshLedLightUserInfo(userInfoIn: NodeLedLightInfo)
+    fun refreshLedLightUserInfoUI()
     {
+        val _userInfo = userInfo?: return
+
         val disTrue = R.drawable.ic_check_box_outline_blank_black_24dp
         val disFalse = R.drawable.ic_check_box_black_24dp
-        ll_ch0_disabled.setImageResource( if (userInfoIn.channels[0].disabled) disTrue else disFalse)
-        ll_ch1_disabled.setImageResource( if (userInfoIn.channels[1].disabled) disTrue else disFalse)
-        ll_ch2_disabled.setImageResource( if (userInfoIn.channels[2].disabled) disTrue else disFalse)
+        ll_ch0_disabled.setImageResource( if (_userInfo.channels[0].disabled) disTrue else disFalse)
+        ll_ch1_disabled.setImageResource( if (_userInfo.channels[1].disabled) disTrue else disFalse)
+        ll_ch2_disabled.setImageResource( if (_userInfo.channels[2].disabled) disTrue else disFalse)
 
-        ll_ch0_intensity_bar.progress = userInfoIn.channels[0].intensity
-        ll_ch1_intensity_bar.progress = userInfoIn.channels[1].intensity
-        ll_ch2_intensity_bar.progress = userInfoIn.channels[2].intensity
+        ll_ch0_intensity_bar.progress = _userInfo.channels[0].intensity
+        ll_ch1_intensity_bar.progress = _userInfo.channels[1].intensity
+        ll_ch2_intensity_bar.progress = _userInfo.channels[2].intensity
 
-        val s0 = "${intensityFromIdx(userInfoIn.channels[0].intensity)}%"
-        val s1 = "${intensityFromIdx(userInfoIn.channels[1].intensity)}%"
-        val s2 = "${intensityFromIdx(userInfoIn.channels[2].intensity)}%"
+        val s0 = "${intensityFromIdx(_userInfo.channels[0].intensity)}%"
+        val s1 = "${intensityFromIdx(_userInfo.channels[1].intensity)}%"
+        val s2 = "${intensityFromIdx(_userInfo.channels[2].intensity)}%"
 
         ll_ch0_intensity.setText(s0)
         ll_ch1_intensity.setText(s1)
         ll_ch2_intensity.setText(s2)
 
-        ll_chAll_intensity_bar.progress = userInfoIn.channels[0].intensity
+        ll_chAll_intensity_bar.progress = _userInfo.channels[0].intensity
         ll_chAll_intensity.setText(s0)
-        ll_chAll_mode.isChecked = userInfoIn.mode
-
-        userInfo = userInfoIn
+        ll_chAll_mode.isChecked = _userInfo.mode
     }
 
     fun enableAll(enabled: Boolean) {

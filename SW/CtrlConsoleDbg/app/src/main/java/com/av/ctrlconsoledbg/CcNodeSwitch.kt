@@ -14,9 +14,9 @@ class CcdNodeSwitch(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.SWIT
         info = NodeSwitchInfo(CcdNodeSwitchEvent.NONE, 0)
         update(data)
     }
-    override fun pack(): ByteArray? {
+    override fun pack(): ByteArray {
         // Switch node is read only so far
-        TODO("not implemented")
+        return byteArrayOf()
     }
 
     override fun update(data: ByteArray?) {

@@ -13,6 +13,7 @@
 #define NLINK_COMM_BUF_SIZE 16
 
 typedef void (*node_rx_cb_t)(uint8_t idx, const uint8_t *buf_in);
+typedef uint8_t (*node_tx_cb_t)(uint8_t idx, uint8_t *buf_out);
 
 typedef struct node_s {
     uint8_t idx;
@@ -22,6 +23,7 @@ typedef struct node_s {
     uint8_t type;       // Node type
     uint8_t rx_buf[NLINK_COMM_BUF_SIZE];
     node_rx_cb_t on_rx_cb;
+    node_tx_cb_t on_tx_cb;
 
     uint8_t tx_buf[NLINK_COMM_BUF_SIZE];
     uint8_t tx_flag;
@@ -85,7 +87,7 @@ typedef struct nlink_s {
 
 extern void ha_nlink_init();
 extern void ha_nlink_node_send(node_t *node, uint8_t addr_to, uint8_t cmd);
-extern node_t* ha_nlink_node_register(uint8_t addr, uint8_t type, node_rx_cb_t on_rx_cb);
+extern node_t* ha_nlink_node_register(uint8_t addr, uint8_t type, node_rx_cb_t on_rx_cb, node_tx_cb_t on_tx_cb);
 extern void ha_nlink_check_rx();
 extern void ha_nlink_check_tx();
 

@@ -15,6 +15,7 @@ data class NodeLedLightInfo(
 )
 
 class CcdNodeLedLight(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.LEDLIGHT) {
+
     // Parameters received from the Node
     var info: NodeLedLightInfo
 
@@ -35,7 +36,7 @@ class CcdNodeLedLight(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.LE
         userInfo = info
     }
 
-    override fun pack(): ByteArray? {
+    override fun pack(): ByteArray {
         val disabledMask =
                 (if (userInfo.channels[0].disabled) 1 else 0) +
                 (if (userInfo.channels[1].disabled) 2 else 0) +
