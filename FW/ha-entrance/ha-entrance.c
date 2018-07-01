@@ -258,15 +258,20 @@ int main(void)
     // Set INT0 trigger to Falling Edge, Clear interrupt flag
     MCUCR &= ~(_BV(ISC00) | _BV(ISC01));
     MCUCR |= (2 << ISC00);
-
     ha_nlink_init();
 
-    NLINK_IO_DBG_PORT |= NLINK_IO_DBG_PIN1_MASK;
+    // Set INT1 trigger to Rising Edge, Clear interrupt flag
+    MCUCR &= ~(_BV(ISC10) | _BV(ISC11));
+    MCUCR |= (3 << ISC10);
 
+    I2C_SCL_INT_PORT &= ~I2C_SCL_INT_MSK;
+    I2C_SCL_INT_DIR  &= ~I2C_SCL_INT_MSK;   // input no pull-up (external pull-up assumed)
+
+    // Enable TWI to enable spike filtering and BW limit
+    // ...
     ha_i2c_init();
-    ha_phts_init(&g_ha_phts);
 
-    NLINK_IO_DBG_PORT &= ~NLINK_IO_DBG_PIN1_MASK;
+    ha_phts_init(&g_ha_phts);
 
     ha_node_switch_init();
     ha_node_ctrlcon_init(); // Ctrlcon node must be initialized last because collects info about all other nodes
@@ -307,6 +312,11 @@ ISR(INT0_vect)
     isr_nlink_io_on_start_edge();
 }
 
+ISR(INT1_vect)
+{
+    ha_i2c_isr_on_scl_edge();
+}
+
 ISR(TIMER0_OVF_vect) {
 
 #define TIMER_CNT_PERIOD 80   // 100Hz    10ms. Precision 125usec
@@ -314,6 +324,8 @@ ISR(TIMER0_OVF_vect) {
     // --- Reload Timer
     // --------------------------------------------------
     TCNT0 = CNT_RELOAD;
+
+    ha_i2c_isr_on_timer();
 
     // Update global PWM counter
     guc_timer_cnt ++;

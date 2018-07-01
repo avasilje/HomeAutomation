@@ -1,3 +1,8 @@
+/*
+ * TODO:
+ *    1. Add phts I2C transaction
+ *    2. Add result ready callback - will be processed upon transaction completed
+ */
 #include "ha-phts.h"
 #include "ha-i2c.h"
 
