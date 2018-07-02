@@ -41,5 +41,31 @@ extern int8_t g_ha_nlink_timer_cnt;
 #define NLINK_IO_DBG_DIR  DDRB
 
 
+#define I2C_SDA_PORT PORTC
+#define I2C_SDA_PIN  PINC
+#define I2C_SDA_DIR  DDRC
+#define I2C_SDA_MSK	 _BV(PINC1)      // ATMega32 pin20
+#define I2C_SDA 	 PINC1
+
+#define I2C_SCL_PORT PORTC
+#define I2C_SCL_PIN  PINC
+#define I2C_SCL_DIR  DDRC
+#define I2C_SCL_MSK	 _BV(PINC0)      // ATMega32 pin19
+#define I2C_SCL	     PINC0
+
+#define I2C_SCL_INT_PORT  PORTD
+#define I2C_SCL_INT_DIR   DDRD
+#define I2C_SCL_INT_PIN   PIND
+#define I2C_SCL_INT_MSK   _BV(PIND3)   // INT1
+
+#define I2C_SCL_INT_ENABLE do { GIFR |= INTF1; GICR |= _BV(INT1);} while(0)
+#define I2C_SCL_INT_DISABLE GICR &= ~_BV(INT1)
+
+#define I2C_SCL_LOW  do {I2C_SCL_DIR |= I2C_SCL_MSK; } while (0)
+#define I2C_SCL_HIGH  do {I2C_SCL_DIR &= ~I2C_SCL_MSK; } while (0)
+
+#define I2C_SDA_LOW  do {I2C_SDA_DIR |= I2C_SDA_MSK; } while (0)
+#define I2C_SDA_HIGH  do {I2C_SDA_DIR &= ~I2C_SDA_MSK; } while (0)
+
 #endif /* HA_COMMON_XXX_H_ */
 #endif /* HA_DEV_ELBOX */

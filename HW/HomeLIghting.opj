@@ -99,10 +99,12 @@
   (GlobalState
     (FileView
       (Path "Design Resources")
-      (Path "Design Resources" ".\homelighting.dsn")
-      (Path "Design Resources" ".\homelighting.dsn" "SCHEMATIC1")
+      (Path "Design Resources" "c:\myworks\homeautomation\hw\homelighting.dsn")
+      (Path "Design Resources" "c:\myworks\homeautomation\hw\homelighting.dsn"
+         "SCHEMATIC1")
       (Path "Outputs")
-      (Select "Design Resources" ".\homelighting.dsn" "SCHEMATIC1" "PAGE1"))
+      (Select "Design Resources"
+         "c:\myworks\homeautomation\hw\homelighting.dsn" "SCHEMATIC1" "PAGE1"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
@@ -112,9 +114,9 @@
     (Doc
       (Type "COrSchematicDoc")
       (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 52 1630 52 732")
-        (Scroll "0 390")
-        (Zoom "100")
+        (Placement "44 2 3 -1 -1 -8 -31 52 1630 52 732")
+        (Scroll "0 1167")
+        (Zoom "200")
         (Occurrence "/"))
       (Path "C:\MYWORKS\HOMEAUTOMATION\HW\HOMELIGHTING.DSN")
       (Schematic "SCHEMATIC1")

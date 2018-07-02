@@ -17,7 +17,8 @@ typedef struct pt_coef_s {
 } pt_coef_t;
 
 union pt_prom_u {
-	uint8_t raw[HA_PHTS_PT_PROM_SIZE << 1];
+	uint8_t raw8[HA_PHTS_PT_PROM_SIZE << 1];
+	uint16_t raw16[HA_PHTS_PT_PROM_SIZE + 1];   
 	pt_coef_t coef;
 };
 
@@ -44,8 +45,8 @@ typedef struct phts_s {
    adc_out_t temperature;
    adc_out_t pressure;
    uint8_t	 read_cnt;		// Free running counter to ensure sensors' data have been updated
-} phts_t;
+} ha_phts_t;
 
-void ha_phts_poll(phts_t *sensor);
-void ha_phts_init();
+void ha_phts_poll(ha_phts_t *sensor);
+void ha_phts_init(ha_phts_t *sensor);
 

@@ -69,7 +69,7 @@ typedef struct hvac_s {
     uint8_t heater_ctrl_curr;  // Current PWM value set
 
     node_t   *node;
-    phts_t   sensor;
+    ha_phts_t   sensor;
 } hvac_t;
 
 extern void ha_hvac_fsm();
