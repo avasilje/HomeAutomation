@@ -45,7 +45,7 @@ uint32_t temperature = 0;
 uint32_t pressure = 0;
 uint8_t d1_dbg = PT_CMD_CONVERT_D1_OSR_4096;
 uint8_t d2_dbg = PT_CMD_CONVERT_D2_OSR_4096;
-
+#if 0
 static void ha_phts_pt_prom_crc(ha_phts_t *sensor)
 {
     uint16_t *n_prom = sensor->pt_prom.raw16;
@@ -75,221 +75,118 @@ static void ha_phts_pt_prom_crc(ha_phts_t *sensor)
     n_rem= (n_rem >> 12) & 0x000F; // final 4-bit remainder is CRC code
     //return (n_rem ^ 0x00);
 }
+#endif 
 
-static uint8_t ha_phts_rh_user_get(uint8_t *user_out)
-{
-	uint8_t nack = ha_i2c_write_cmd(RH_ADDR_WR, RH_CMD_USER_REG_RD);
-	if (nack)
-        return nack;
+void ha_phts_state_init(i2c_trans_t *tr) {
+	
+	ha_phts_t *sensor = (ha_phts_t *)tr->cb_ctx;
 
-	ha_i2c_read_8(RH_ADDR_RD, 1, user_out);
-	return 0;
+	// TODO: Check transaction error 
+	switch (tr->cb_param) {
+		case TR_PARAM_PT_RESET:
+			ha_i2c_cmd(PT_ADDR_WR, RH_CMD_RESET, ha_phts_state_init, sensor, TR_PARAM_RH_RESET);
+			break;
+
+		case TR_PARAM_RH_RESET:
+			sensor->prom_rd_idx = 0;
+			ha_i2c_read16(RH_ADDR_WR, PT_CMD_PROM_RD, ha_phts_state_init, sensor, TR_PARAM_PT_PROM);
+			break;
+
+		case TR_PARAM_PT_PROM:
+			sensor->pt_prom.raw8[sensor->prom_rd_idx + 0] = tr->data[3];
+			sensor->pt_prom.raw8[sensor->prom_rd_idx + 1] = tr->data[4];
+			sensor->prom_rd_idx += 2;
+
+			if (sensor->prom_rd_idx == (HA_PHTS_PT_PROM_SIZE << 1)) {
+				// PT PROM read finished - state to IDLE
+				sensor->state = PHTS_STATE_IDLE;
+				sensor->poll_timer = sensor->idle_timeout;
+			} else {
+				// Continue PT PROM reading
+				ha_i2c_read16(RH_ADDR_WR, PT_CMD_PROM_RD + sensor->prom_rd_idx, ha_phts_state_init, sensor, TR_PARAM_PT_PROM);
+			}
+			break;
+
+		}
 }
 
-static uint8_t ha_phts_rh_user_set(uint8_t *user_in)
-{
-	//uint8_t nack = ha_i2c_write_cmd(RH_ADDR_WR, RH_CMD_USER_REG_WR);
-	//if (nack)
-        //return nack;
+void ha_phts_state_measure(i2c_trans_t *tr) {
+	
+	ha_phts_t *sensor = (ha_phts_t *)tr->cb_ctx;
 
-	ha_i2c_write_8(RH_ADDR_WR, RH_CMD_USER_REG_WR, user_in);
-	return 0;
-}
+	// TODO: Check transaction error
+	switch (tr->cb_param) {
+		case TR_PARAM_PT_D1_START:
+			sensor->state = PHTS_STATE_PT_D1_POLL;
+			sensor->poll_timer = sensor->d1_poll_timeout;
+			break;
+		case TR_PARAM_PT_D1_POLL:
+			sensor->pressure.raw8[0] = tr->data[3];
+			sensor->pressure.raw8[1] = tr->data[4];
 
+			sensor->state = PHTS_STATE_PT_D2_CONVERT;
+			sensor->poll_timer = 0;	// start in next poll cycle
+			break;
 
-static uint8_t ha_phts_pt_get(uint8_t *adc_out)
-{
-	uint8_t nack = ha_i2c_write_cmd(PT_ADDR_WR, PT_CMD_ADC_RD);
-	if (nack)
-        return nack;
+		case TR_PARAM_PT_D2_START:
+			sensor->state = PHTS_STATE_PT_D2_POLL;
+			sensor->poll_timer = sensor->d2_poll_timeout;
+			break;
 
-	ha_i2c_read_24(PT_ADDR_RD, 0, adc_out);
-	return 0;
-}
+		case TR_PARAM_PT_D2_POLL:
+			sensor->temperature.raw8[0] = tr->data[3];
+			sensor->temperature.raw8[1] = tr->data[4];
 
-static void ha_phts_pt_convert_d1()
-{
-	ha_i2c_write_cmd(PT_ADDR_WR, d1_dbg);
-}
-static void ha_phts_pt_convert_d2()
-{
-	ha_i2c_write_cmd(PT_ADDR_WR, d2_dbg);
+			sensor->state = PHTS_STATE_IDLE;
+			sensor->poll_timer = sensor->idle_timeout;	
+			break;
+
+	} // End of state_measurement switch
 }
 
 void ha_phts_poll(ha_phts_t *sensor) {
+
+	if (sensor->poll_timer < 0) {
+		return;
+	}
 
     if (sensor->poll_timer > 0 ) {
         sensor->poll_timer --;
         return;
     }
 
+	// Disable timer by default
+	sensor->poll_timer = -1;
+
 	switch(sensor->state) {
+		case PHTS_STATE_INIT:
+			ha_i2c_cmd(PT_ADDR_WR, PT_CMD_RESET, ha_phts_state_init, sensor, TR_PARAM_PT_RESET);
+			break;
+
 		case PHTS_STATE_IDLE:
-			ha_phts_pt_convert_d1();
-			sensor->state = PHTS_STATE_POLL_PT_D1;
-			sensor->poll_timer = sensor->d1_poll_timeout;
+			// Initiate measurement
+			ha_i2c_cmd(PT_ADDR_WR, PT_CMD_CONVERT_D1_OSR_8192, ha_phts_state_measure, sensor, TR_PARAM_PT_D1_START);
 			break;
-		case PHTS_STATE_POLL_PT_D1:
-			if (ha_phts_pt_get(sensor->temperature.raw)) {
-				sensor->poll_timer = sensor->d1_poll_timeout;
-				break;	// ADC result not ready yet
-			}
-			ha_phts_pt_convert_d2();
-			sensor->state = PHTS_STATE_POLL_PT_D2;
-			sensor->poll_timer = PHTS_STATE_POLL_PT_D2;
+
+		case PHTS_STATE_PT_D1_POLL:	
+			ha_i2c_read24(RH_ADDR_WR, PT_CMD_ADC_RD, ha_phts_state_measure, sensor, TR_PARAM_PT_D1_POLL);
 			break;
-		case PHTS_STATE_POLL_PT_D2:
-			if (ha_phts_pt_get(sensor->pressure.raw)) {
-				sensor->poll_timer = sensor->d2_poll_timeout;
-				break;	// ADC result not ready yet
-			}
-			sensor->read_cnt ++;
-			sensor->state = PHTS_STATE_IDLE;
-			sensor->poll_timer = sensor->idle_timeout;
+
+		case PHTS_STATE_PT_D2_CONVERT:
+			ha_i2c_cmd(PT_ADDR_WR, PT_CMD_CONVERT_D2_OSR_8192, ha_phts_state_measure, sensor, TR_PARAM_PT_D2_START);
 			break;
+
+		case PHTS_STATE_PT_D2_POLL:
+			ha_i2c_read24(RH_ADDR_WR, PT_CMD_ADC_RD, ha_phts_state_measure, sensor, TR_PARAM_PT_D2_POLL);		// Switch poll back to IDLE
+			break;
+
 	}
-}
 
-/*
- * PHT sensor reset
- * Should be executed once, just after power up
- */
-static void sec_delay()
-{
-	// Note: the delay must be bigger than time between SCL released and SCL high
-	uint8_t i, j, k;
-    for (k = 0; k < 10; k++) {      // 35 => 1sec;
-        for (j = 0; j < 80; j ++) {
-	        for(i = 0; i < 128; i++){
-		        __asm__ __volatile__ (
-                "    nop\n    nop\n    nop\n    nop\n"\
-                "    nop\n    nop\n    nop\n    nop\n"\
-                "    nop\n    nop\n    nop\n    nop\n"\
-		        ::);
-	        }
-        }
-    }
-
-}
-
-static void rst_delay()
-{
-	// Note: the delay must be bigger than time between SCL released and SCL high
-	uint8_t i, j;
-    for (j = 0; j < 80; j ++) {
-	    for(i = 0; i < 128; i++){
-		    __asm__ __volatile__ (
-            "    nop\n    nop\n    nop\n    nop\n"\
-            "    nop\n    nop\n    nop\n    nop\n"\
-            "    nop\n    nop\n    nop\n    nop\n"\
-		    ::);
-	    }
-    }
-
-}
-
-void ha_phts_reset()
-{
-	ha_i2c_write_cmd(PT_ADDR_WR, PT_CMD_RESET);
-    rst_delay();
-	ha_i2c_write_cmd(RH_ADDR_WR, RH_CMD_RESET);
-    rst_delay();
-}
-
-/*
- * Read pressure & temperature (PT) calibration values
- * Should be executed once, just after reset
- */
-void ha_phts_prom_read_pt(ha_phts_t *sensor)
-{
-	int8_t i;
-	uint8_t *data_ptr = sensor->pt_prom.raw8;
-	uint8_t addr = PT_CMD_PROM_RD;
-
-	for (i = 0; i < HA_PHTS_PT_PROM_SIZE; i++) {
-		ha_i2c_write_cmd(PT_ADDR_WR, addr);
-		ha_i2c_read_16(PT_ADDR_RD, 0, data_ptr);
-		addr += 2;
-		data_ptr += 2;
-	}
-    ha_phts_pt_prom_crc(sensor);
-}
-
-/*
- * Read relative humidity (RH) calibration values
- * Should be executed once, just after reset
- */
-void ha_phts_prom_read_rh()
-{
-	// Not in use
 }
 
 void ha_phts_init(ha_phts_t *sensor) {
 
-    uint8_t user_out, user_in;
-	ha_phts_reset();
-    uint16_t prom;
-    uint8_t prom_addr = PT_CMD_PROM_RD;
-
-    //ha_phts_rh_user_get(&user_out);
-    //ha_phts_rh_user_set(&user_in);
-    rst_delay();
-
-    ha_i2c_write_cmd(PT_ADDR_WR, prom_addr);
-    rst_delay();
-	ha_i2c_read_16(PT_ADDR_RD, 0, &prom);
-    rst_delay();
-
-    ha_i2c_write_cmd(PT_ADDR_WR, prom_addr);
-    rst_delay();
-	ha_i2c_read_16(PT_ADDR_RD, 0, &prom);
-    rst_delay();
-
-    ha_i2c_write_cmd(PT_ADDR_WR, prom_addr);
-    rst_delay();
-	ha_i2c_read_16(PT_ADDR_RD, 0, &prom);
-    rst_delay();
-
-    ha_i2c_write_cmd(PT_ADDR_WR, prom_addr);
-    rst_delay();
-	ha_i2c_read_16(PT_ADDR_RD, 0, &prom);
-    rst_delay();
-
-    ha_phts_prom_read_pt(sensor);
-
-    //pressure = 0;
-    //ha_phts_pt_convert_d2();
-    //rst_delay();
-    //rst_delay();
-    //ha_phts_pt_get((uint8_t*)&pressure);
-    //rst_delay();
-
-    while(temperature != 111) {
-        ha_phts_pt_convert_d2();
-        rst_delay();
-        ha_phts_pt_get((uint8_t*)&temperature);
-        sec_delay();
-    }
-
-    temperature = 0;
-    ha_phts_pt_convert_d1();
-    rst_delay();
-    rst_delay();
-    ha_phts_pt_get((uint8_t*)&temperature);
-    rst_delay();
-
-    temperature = 0;
-    ha_phts_pt_convert_d1();
-    rst_delay();
-    rst_delay();
-    ha_phts_pt_get((uint8_t*)&temperature);
-    rst_delay();
-
-    temperature = 0;
-    ha_phts_pt_convert_d2();
-    rst_delay();
-    rst_delay();
-    ha_phts_pt_get((uint8_t*)&pressure);
-    rst_delay();
+	sensor->state = PHTS_STATE_INIT;
+	sensor->poll_timer = 0;
 
 }

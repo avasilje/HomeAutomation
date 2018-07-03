@@ -1,7 +1,7 @@
 /*
  * TODO:
- *   1.
- *   2.
+ *   1. Make PHTS as part of node METEO
+ *   2. Add PHTS sensor error handling
  */
 
 /*
@@ -14,8 +14,11 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
+
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "ha-common.h"
 #include "ha-uart.h"
 #include "ha-nlink.h"
@@ -33,6 +36,7 @@ extern T_ACTION gta_action_table[];
 uint16_t gus_trap_line;
 
 ha_phts_t   g_ha_phts_sensor;
+uint8_t g_phts_poll_flag = 0;
 
 void action_default();
 
@@ -194,6 +198,11 @@ int main(void)
         ha_uart_check_rx();
         ha_nlink_check_rx();
         ha_nlink_check_tx();
+
+		if (g_phts_poll_flag) {
+			g_phts_poll_flag = 0;
+			ha_phts_poll(&g_ha_phts_sensor);
+		}
     }
     cli();
 
@@ -241,6 +250,7 @@ ISR(TIMER0_OVF_vect) {
         ha_node_switch_on_timer();
 
 		ha_uart_on_timer();
+		g_phts_poll_flag = 1;
     }
 }
 

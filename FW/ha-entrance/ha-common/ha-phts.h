@@ -23,18 +23,30 @@ union pt_prom_u {
 };
 
 typedef union adc_out_u {
-	uint8_t raw[4];
+	uint8_t raw8[4];
 	uint16_t s[2];
 } adc_out_t;
 
-#define PHTS_STATE_NONE			0
-#define PHTS_STATE_IDLE			1
-#define PHTS_STATE_POLL_PT_D1	2
-#define PHTS_STATE_POLL_PT_D2	3
+#define PHTS_STATE_IDLE				1
+#define PHTS_STATE_INIT				2
+#define PHTS_STATE_PT_D1_CONVERT	3
+#define PHTS_STATE_PT_D1_POLL		4
+#define PHTS_STATE_PT_D2_CONVERT	5
+#define PHTS_STATE_PT_D2_POLL		6
+
+#define TR_PARAM_PT_RESET 2
+#define TR_PARAM_RH_RESET 3
+#define TR_PARAM_PT_PROM  4
+#define TR_PARAM_RH_PROM  5
+#define TR_PARAM_PT_D1_START 6
+#define TR_PARAM_PT_D1_POLL  7
+#define TR_PARAM_PT_D2_START 8
+#define TR_PARAM_PT_D2_POLL  9
 
 typedef struct phts_s {
    int8_t poll_timer;
    int8_t state;
+   int8_t prom_rd_idx;
    
    // Timeouts configured once by a parent module before ha_phts_init()
    uint8_t d1_poll_timeout;
@@ -42,6 +54,7 @@ typedef struct phts_s {
    uint8_t idle_timeout;
    
    union pt_prom_u pt_prom;
+
    adc_out_t temperature;
    adc_out_t pressure;
    uint8_t	 read_cnt;		// Free running counter to ensure sensors' data have been updated
