@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/phts_coefficients"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hvac_states_user"
+        >
+        <LinearLayout
+            android:id="@+id/phts_coefficients_action"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="200dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_ch1_details">
+
+            <Button
+                android:id="@+id/phts_reset_pt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RESET PT"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                />
+            <Button
+                android:id="@+id/phts_reset_rh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RESET RH"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                />
+            <Button
+                android:id="@+id/phts_coef_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PROM READ"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/phts_coefficients_values"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_ch1_details">
+
+        <TextView
+            android:id="@+id/phts_coeff_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Coeff 1"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/phts_coeff_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Coeff 2"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/phts_coeff_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Coeff 3"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/phts_coeff_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Coeff 4"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/phts_coeff_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Coeff 5"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/phts_coeff_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Coeff 6"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            />
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/phts_aux"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phts_coefficients"
+        >
+        <LinearLayout
+            android:id="@+id/phts_aux_actual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <TextView
+                android:id="@+id/phts_aux_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="Aux        : "
+                android:textSize="14sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/phts_state_actual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="State:"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/phts_read_cnt_actual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="Read Cnt:"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/phts_coeff_idx_actual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="Coeff Idx:"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/phts_aux_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phts_aux_actual"
+            >
+
+            <TextView
+                android:id="@+id/phts_aux_user_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="Aux user: "
+                android:textSize="14sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/phts_state_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="State:"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/phts_read_cnt_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="Read Cnt:"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/phts_coeff_idx_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="Coeff Idx:"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                />
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/phts_sensor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phts_aux"
+        >
+        <TextView
+            android:id="@+id/phts_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Sensors"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/phts_temp_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="temp: "
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/phts_temp_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="26Grad"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@+id/phts_temp_label"
+            app:layout_constraintTop_toTopOf="@+id/phts_temp_label"
+            />
+
+        <TextView
+            android:id="@+id/phts_pressure_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Pressure: "
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/phts_pressure_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="1010Pa"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@+id/phts_pressure_label"
+            app:layout_constraintTop_toTopOf="@+id/phts_pressure_label"
+            />
+
+        <TextView
+            android:id="@+id/phts_humidity_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="68dp"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Humidity: "
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/phts_humidity_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="78%"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@+id/phts_humidity_label"
+            app:layout_constraintTop_toTopOf="@+id/phts_humidity_label"
+            />
+
+
+        <Button
+            android:id="@+id/phts_read"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="READ"
+            android:layout_marginStart="200dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

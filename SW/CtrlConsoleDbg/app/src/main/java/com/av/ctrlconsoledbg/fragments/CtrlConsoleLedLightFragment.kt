@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import com.av.ctrlconsoledbg.*
 import com.av.ctrlconsoledbg.CcdNodeLedLight.Companion.intensityFromIdx
-import com.av.uart.AvUartTxMsg
 import kotlinx.android.synthetic.main.ctrl_console_ledlight.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -20,8 +19,8 @@ class CtrlConsoleLedLightFragment: Fragment() {
 
     private var mCtrlConsole: CtrlConsoleDbgActivity? = null
 
-    private var userInfo: NodeLedLightInfo? = null  // Q: ? Is it link to node.userInfo
-    !!!!!!!!!!! ^^^ replace with complete node !!!! Mark node on userInfo changes in order to send update to CtrlCon Node
+    private var nodeLL: CcdNodeLedLight? = null  // Q: ? Is it link to node.nodeLL
+    private var nodeSwitch: CcdNodeSwitch? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -64,7 +63,7 @@ class CtrlConsoleLedLightFragment: Fragment() {
         enableAll(false)
         val intensityBarListener = object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar :SeekBar , progress : Int, fromUser : Boolean){
-                val _userInfo = userInfo?: return
+                val _userInfo = nodeLL?.info?: return
                 val s = "${intensityFromIdx(progress)}%"
                 when (seekBar.id) {
                     ll_ch0_intensity_bar.id -> {
@@ -103,7 +102,7 @@ class CtrlConsoleLedLightFragment: Fragment() {
         }
         val disabledListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val _userInfo = userInfo?: return
+                val _userInfo = nodeLL?.info?: return
                 if (v == null) return
                 val ch: NodeLedLightChannelInfo
                 val item: View
@@ -139,30 +138,24 @@ class CtrlConsoleLedLightFragment: Fragment() {
         ll_ch1_intensity_bar.setOnSeekBarChangeListener (intensityBarListener)
         ll_ch2_intensity_bar.setOnSeekBarChangeListener (intensityBarListener)
 
-        ll_chAll_mode.setOnCheckedChangeListener { _, b -> userInfo?.mode = b }
+        ll_chAll_mode.setOnCheckedChangeListener { _, b -> nodeLL?.info?.mode = b }
         ll_chAll_intensity_bar.setOnSeekBarChangeListener (intensityBarListener)
 
         val cc = mCtrlConsole!!
 
         val it = cc.nodes.iterator()
         while (it.hasNext()) {
-            val v = it.next().value
-            Log.d(TAG, "${v.addr}")
-            when (v.type) {
+            val _node = it.next().value
+            Log.d(TAG, "${_node.addr}")
+            when (_node.type) {
                 CcdNodeType.LEDLIGHT -> {
-                    val llInfo = (v as CcdNodeLedLight).info
-                    if (llInfo != null) {
-                        updateLedLightInfoUI(llInfo)
-                    }
-
-                    userInfo = v.userInfo
+                    nodeLL = _node as CcdNodeLedLight
+                    updateLedLightInfoUI()
                     refreshLedLightUserInfoUI()
                 }
                 CcdNodeType.SWITCH -> {
-                    val sw_info = (v as CcdNodeSwitch).info
-                    if (sw_info != null) {
-                        updateSwitchInfo(v.addr, sw_info)
-                    }
+                    nodeSwitch = _node as CcdNodeSwitch
+                    updateSwitchInfoUI(_node.addr)
                 }
                 else -> {
                     // Do nothing
@@ -179,23 +172,27 @@ class CtrlConsoleLedLightFragment: Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNodeLedLightInfo(node: CcdNodeLedLight) {
-        updateLedLightInfoUI(node.info)
+        nodeLL = node
+        updateLedLightInfoUI()
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNodeSwitchInfo(node: CcdNodeSwitch) {
-        updateSwitchInfo(node.addr, node.info)
+        nodeSwitch = node
+        updateSwitchInfoUI(node.addr)
     }
 
-    fun updateLedLightInfoUI(infoActual: NodeLedLightInfo)
+    fun updateLedLightInfoUI()
     {
-        ll_chAll_mode_actual.text = if (infoActual.mode) "On" else "Off"
-        ll_ch0_disabled_actual.text = if (infoActual.channels[0].disabled) "Dis" else "En"
-        ll_ch1_disabled_actual.text = if (infoActual.channels[1].disabled) "Dis" else "En"
-        ll_ch2_disabled_actual.text = if (infoActual.channels[2].disabled) "Dis" else "En"
+        val _infoActual = nodeLL?.info?:return
 
-        val s0 = "${intensityFromIdx(infoActual.channels[0].intensity)}%"
-        val s1 = "${intensityFromIdx(infoActual.channels[1].intensity)}%"
-        val s2 = "${intensityFromIdx(infoActual.channels[2].intensity)}%"
+        ll_chAll_mode_actual.text = if (_infoActual.mode) "On" else "Off"
+        ll_ch0_disabled_actual.text = if (_infoActual.channels[0].disabled) "Dis" else "En"
+        ll_ch1_disabled_actual.text = if (_infoActual.channels[1].disabled) "Dis" else "En"
+        ll_ch2_disabled_actual.text = if (_infoActual.channels[2].disabled) "Dis" else "En"
+
+        val s0 = "${intensityFromIdx(_infoActual.channels[0].intensity)}%"
+        val s1 = "${intensityFromIdx(_infoActual.channels[1].intensity)}%"
+        val s2 = "${intensityFromIdx(_infoActual.channels[2].intensity)}%"
         ll_ch0_intensity_actual.text = s0
         ll_ch1_intensity_actual.text = s1
         ll_ch2_intensity_actual.text = s2
@@ -205,7 +202,7 @@ class CtrlConsoleLedLightFragment: Fragment() {
 
     fun refreshLedLightUserInfoUI()
     {
-        val _userInfo = userInfo?: return
+        val _userInfo = nodeLL?.info?: return
 
         val disTrue = R.drawable.ic_check_box_outline_blank_black_24dp
         val disFalse = R.drawable.ic_check_box_black_24dp
@@ -249,9 +246,11 @@ class CtrlConsoleLedLightFragment: Fragment() {
         ll_chAll_mode.isEnabled          = enabled
     }
 
-    fun updateSwitchInfo(addr: Int, info: NodeSwitchInfo)
+    fun updateSwitchInfoUI(addr: Int)
     {
-        val state = when(info.event) {
+        val _infoActual = nodeSwitch?.info?:return
+
+        val state = when(_infoActual.event) {
             CcdNodeSwitchEvent.NONE     -> "OFF"
             CcdNodeSwitchEvent.ON_OFF   -> "OFF"
             CcdNodeSwitchEvent.OFF_ON   -> "ON"
@@ -259,7 +258,7 @@ class CtrlConsoleLedLightFragment: Fragment() {
             CcdNodeSwitchEvent.HOLD_OFF -> "OFF"
             else -> "ERR"
         }
-        val dstAddr = String.format("0x%02X", info.dstAddr)
+        val dstAddr = String.format("0x%02X", _infoActual.dstAddr)
 
         when(addr) {
             0x80 -> {
