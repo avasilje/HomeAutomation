@@ -108,7 +108,8 @@ enum class CcdNodeType(val type: Int) {
     HVAC(0x10),
     LEDLIGHT(0x20),
     SWITCH(0x30),
-    CTRLCON(0x40)
+    PHTS(0x40),
+    CTRLCON(0x50)
 }
 
 class CtrlConsoleDbgActivity : AppCompatActivity() {
@@ -190,6 +191,9 @@ class CtrlConsoleDbgActivity : AppCompatActivity() {
                 }
                 CcdNodeType.LEDLIGHT -> {
                     node = CcdNodeLedLight(msg.addr, msg.data)
+                }
+                CcdNodeType.PHTS -> {
+                    node = CcdNodePhts(msg.addr, msg.data)
                 }
                 else -> {
                     Log.d(TAG, "Unknow node type - ${msg.type}, from ${msg.addr}")

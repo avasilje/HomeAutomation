@@ -17,8 +17,7 @@ import org.greenrobot.eventbus.ThreadMode
 class CtrlConsoleHvacFragment : Fragment() {
 
     private var mCtrlConsole: CtrlConsoleDbgActivity? = null
-    private var userInfo: NodeHvacInfo? = null
-    !!!!!!!!!!! ^^^ replace with complete node !!!! Mark node on userInfo changes in order to send update to CtrlCon Node
+    private var nodeHvac: CcdNodeHvac? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,9 +56,9 @@ class CtrlConsoleHvacFragment : Fragment() {
         enableAll(false)
         val heaterBarListener = object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar :SeekBar , progress : Int, fromUser : Boolean){
-                val info = userInfo?: return
-                info.heaterTarget = CcdNodeHvacHeaterCtrl.values()[progress]
-                hvac_heater_value.text = CcdNodeHvac.ctrlToString(info.heaterMode, info.heaterTarget)
+                val _userInfo = nodeHvac?.userInfo?: return
+                _userInfo.heaterTarget = CcdNodeHvacHeaterCtrl.values()[progress]
+                hvac_heater_value.text = CcdNodeHvac.ctrlToString(_userInfo.heaterMode, _userInfo.heaterTarget)
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
@@ -69,7 +68,7 @@ class CtrlConsoleHvacFragment : Fragment() {
         }
         val elementListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val _userInfo = userInfo?: return
+                val _userInfo = nodeHvac?.userInfo?: return
                 if (v == null) return
                 when(v.id) {      // how to get callers ID???
                     hvac_valve_icon.id -> {
@@ -106,14 +105,14 @@ class CtrlConsoleHvacFragment : Fragment() {
         hvac_heater_bar.setOnSeekBarChangeListener (heaterBarListener)
 
         hvac_heater_mode.setOnCheckedChangeListener { v, b ->
-            val info = userInfo
-            if (info != null) {
+            val _userInfo = nodeHvac?.userInfo
+            if (_userInfo != null) {
                 if (b) {
-                    info.heaterMode = CcdNodeHvacHeaterMode.AUTO
+                    _userInfo.heaterMode = CcdNodeHvacHeaterMode.AUTO
                 } else {
-                    info.heaterMode = CcdNodeHvacHeaterMode.MANUAL
+                    _userInfo.heaterMode = CcdNodeHvacHeaterMode.MANUAL
                 }
-                hvac_heater_value.text = CcdNodeHvac.ctrlToString(info.heaterMode, info.heaterTarget)
+                hvac_heater_value.text = CcdNodeHvac.ctrlToString(_userInfo.heaterMode, _userInfo.heaterTarget)
             }
         }
 
@@ -121,13 +120,9 @@ class CtrlConsoleHvacFragment : Fragment() {
         while (it.hasNext()) {
             val v = it.next().value
             if (v.type == CcdNodeType.HVAC) {
-                val nodeHvac = v as CcdNodeHvac
-                if (nodeHvac != null) {
-                    updateHvacInfoUI(nodeHvac.info)
-                }
-                userInfo = v.userInfo
+                nodeHvac = v as CcdNodeHvac
+                updateHvacInfoUI()
                 refreshHvacUserInfoUI()
-
             }
         }
 
@@ -140,12 +135,14 @@ class CtrlConsoleHvacFragment : Fragment() {
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNodeHvacInfo(node: CcdNodeHvac) {
-        updateHvacInfoUI(node.info)
+        nodeHvac = node
+        updateHvacInfoUI()
     }
 
-    fun updateHvacInfoUI(infoActual: NodeHvacInfo)
+    fun updateHvacInfoUI()
     {
-        when(infoActual.stateTarget){
+        val _infoActual = nodeHvac?.info?:return
+        when(_infoActual.stateTarget){
             CcdNodeHvacState.S1 -> {
                 hvac_valve_state_actual.text = "Closed"
                 hvac_motor_state_actual.text = "Stopped"
@@ -169,17 +166,17 @@ class CtrlConsoleHvacFragment : Fragment() {
             }
         }
 
-        val stateStr = "${infoActual.stateCurr.name} --> ${infoActual.stateTarget.name}"
+        val stateStr = "${_infoActual.stateCurr.name} --> ${_infoActual.stateTarget.name}"
         hvac_state_actual.text = stateStr
 
-        val s = "${infoActual.heaterMode.name} - ${CcdNodeHvac.ctrlToString(infoActual.heaterMode, infoActual.heaterTarget)}"
+        val s = "${_infoActual.heaterMode.name} - ${CcdNodeHvac.ctrlToString(_infoActual.heaterMode, _infoActual.heaterTarget)}"
         hvac_heater_actual.text = s
         enableAll(true)
     }
 
     fun refreshHvacUserInfoUI()
     {
-        val _userInfo = userInfo?:return
+        val _userInfo = nodeHvac?.userInfo?:return
 
         val elementActive = R.drawable.ic_element_en_64dp
         val elementInactive = R.drawable.ic_element_dis_64dp

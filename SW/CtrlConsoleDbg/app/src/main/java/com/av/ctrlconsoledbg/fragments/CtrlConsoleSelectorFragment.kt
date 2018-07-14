@@ -65,16 +65,27 @@ class CtrlConsoleSelectorFragment : Fragment() {
                     .commit()
         }
 
+        selector_butt_phts.isEnabled = true
+        selector_butt_phts.setOnClickListener { _ ->
+            mCtrlConsole!!.supportFragmentManager.beginTransaction()
+                    .replace(R.id.ctrl_console_function, CtrlConsolePhtsFragment(), CtrlConsolePhtsFragment::class.java.name)
+                    .commit()
+        }
+
         selector_butt_test.setOnClickListener { _ ->
-//            EventBus.getDefault().post(
-//                    CcdNodeInfoResp(
-//                            addr = 0x70,
-//                            type = CcdNodeType.LEDLIGHT,
-//                            data = byteArrayOf(
-//                                    1, // mode
-//                                    3, // disabled mask
-//                                    4, 5, 6 // Intensity
-//                            )))
+/*
+            EventBus.getDefault().post(
+                    CcdNodeInfoResp(
+                            addr = 0x70,
+                            type = CcdNodeType.LEDLIGHT,
+                            data = byteArrayOf(
+                                    1, // mode
+                                    3, // disabled mask
+                                    4, 5, 6 // Intensity
+                            )))
+*/
+/*
+
             var test0: Byte = 0
             var test1: Byte = 0
             EventBus.getDefault().post(
@@ -82,6 +93,17 @@ class CtrlConsoleSelectorFragment : Fragment() {
                             addr = 0x70,
                             type = CcdNodeType.HVAC,
                             data = byteArrayOf(test0, test1)))
+
+*/
+
+            var test0: Byte = CcdNodePhtsState.INIT.ordinal.toByte()
+            var test1: Byte = 0
+            EventBus.getDefault().post(
+                    CcdNodeInfoResp(
+                            addr = 0x70,
+                            type = CcdNodeType.PHTS,
+                            data = byteArrayOf(test0, test1)))
+
         }
 
     }
