@@ -70,6 +70,13 @@ typedef struct hvac_s {
 
     node_t   *node;
     ha_phts_t   sensor;
+    union pt_prom_u sensor_pt_prom;
+
+    uint8_t sensor_prev_rd_cnt;
+    uint8_t sensor_prev_state;
+    uint8_t sensor_prev_prom_rd_idx;
+    uint8_t sensor_temperature;
+    uint8_t sensor_pressure;
 } hvac_t;
 
 extern void ha_hvac_fsm();

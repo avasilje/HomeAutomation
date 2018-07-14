@@ -80,12 +80,18 @@ node_t* ha_nlink_node_register(uint8_t addr, uint8_t type, node_rx_cb_t on_rx_cb
     return node;
 }
 
+/*
+ * The function returns TRUE (consumed) if receiving messages
+ * was fully process and further processing not supposed. This is
+ * typically for direct node addressing.
+ */
 uint8_t nlink_node_on_rx(uint8_t *rx_buf)
 {
     uint8_t consumed = 0;
     uint8_t addr_to = rx_buf[NLINK_HDR_OFF_TO];
     uint8_t addr_from = rx_buf[NLINK_HDR_OFF_FROM];
 
+    consumed = 0;
     for (uint8_t i = 0; i < NLINK_NODES_NUM; i++) {
         node_t *node = &nlink.nodes[i];
         if (node->addr == 0) break;
@@ -116,11 +122,8 @@ void ha_nlink_node_send(node_t *node, uint8_t addr_to, uint8_t cmd)
     node->tx_buf[NLINK_HDR_OFF_TO  ] = addr_to;
     node->tx_buf[NLINK_HDR_OFF_CMD ] = cmd;
 
-    // Check Local nodes
-    uint8_t consumed = nlink_node_on_rx(node->tx_buf);
-
-    // Mark as "to be send outward" if not consumed
-    node->tx_flag = !consumed;
+    // Mark as "to be send"
+    node->tx_flag = 1;
 }
 
 void ha_nlink_check_rx()
@@ -129,7 +132,9 @@ void ha_nlink_check_rx()
         return;
 
     // Data can be read after 1 clock in idle state.
-    // This is because TX should invalidate RX data after check
+    // This is because TX should invalidate RX data after check in
+    // order to avoid receiving own messages via HW.
+    // Att: Communication between local nodes doesn't involve nlink IO HW!
     if (nlink.io.idle_timer < 1)
         return;
 
@@ -157,14 +162,11 @@ void ha_nlink_check_rx()
 
     }
 }
-static uint8_t ha_nlink_on_tx_default(uint8_t idx, uint8_t *buf)
+uint8_t ha_nlink_on_tx_default(uint8_t idx, uint8_t *buf)
 {
-	UNREFERENCED_PARAM(idx);
 	node_t *node = &nlink.nodes[idx];
-	
-	if (node->tx_flag == 0) {
-		return 0;
-	}
+
+//	assert(node->tx_flag != 0)
 
 	node->tx_flag = 0;
 	uint8_t tx_buf_len = node->tx_buf[NLINK_HDR_OFF_LEN] + NLINK_HDR_OFF_DATA;
@@ -193,7 +195,7 @@ void ha_nlink_check_tx()
 		if (node->tx_flag == 0) {
 			continue;
 		}
-		
+
 		if (node->on_tx_cb) {
 			tx_buf_len = node->on_tx_cb(i, nlink.io.tx_buf);
 		} else {
@@ -202,11 +204,17 @@ void ha_nlink_check_tx()
 
 		// Initiate transfer in next timer interrupt
 		if (tx_buf_len) {
+            // Check local nodes
+            if (nlink_node_on_rx(nlink.io.tx_buf)) {
+                return;
+            }
+
+            // Initiate transfer
 			cli();
 				nlink.io.tx_len = tx_buf_len;
 				nlink.io.tx_rd = 0;
 			sei();
-			ha_nlink_io_set_idle(); // Initiate transfer
+			ha_nlink_io_set_idle();
 		}
     }
 }

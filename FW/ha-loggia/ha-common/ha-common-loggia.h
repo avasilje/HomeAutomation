@@ -43,16 +43,23 @@ extern int8_t g_ha_nlink_timer_cnt;
 #define NLINK_IO_DBG_PIN  PIND
 #define NLINK_IO_DBG_DIR  DDRD
 
-
 #define I2C_SDA_PORT PORTB
 #define I2C_SDA_PIN  PINB
 #define I2C_SDA_DIR  DDRB
-#define I2C_SDA		 PINB5
+#define I2C_SDA_MSK	 _BV(PINB5)      // ATMega4313
+#define I2C_SDA 	 PINB5
 
 #define I2C_SCL_PORT PORTB
 #define I2C_SCL_PIN  PINB
 #define I2C_SCL_DIR  DDRB
-#define I2C_SCL		 PINB7
+#define I2C_SCL_MSK	 _BV(PINB7)      // ATMega4313
+#define I2C_SCL	     PINB7
+
+#define I2C_SCL_LOW  do {I2C_SCL_DIR |= I2C_SCL_MSK; } while (0)
+#define I2C_SCL_HIGH  do {I2C_SCL_DIR &= ~I2C_SCL_MSK; } while (0)
+
+#define I2C_SDA_LOW  do {I2C_SDA_DIR |= I2C_SDA_MSK; } while (0)
+#define I2C_SDA_HIGH  do {I2C_SDA_DIR &= ~I2C_SDA_MSK; } while (0)
 
 #endif /* HA_COMMON_XXX_H_ */
 #endif /* HA_DEV_LOGGIA */

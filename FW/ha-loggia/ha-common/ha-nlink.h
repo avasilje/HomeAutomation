@@ -68,12 +68,14 @@ typedef struct nlink_s {
 #define NODE_TYPE_LEDLIGHT  0x20
 #define NODE_TYPE_SWITCH    0x30
 #define NODE_TYPE_CTRLCON   0x40
+#define NODE_TYPE_PHTS      0x50
 
 #define NODE_ADDR_BC  0xFF
 #define HVAC_ADDR     0x60
 #define LEDLIGHT_ADDR 0x70
 #define SWITCH_ADDR   0x80
 #define CTRLCON_ADDR  0x90
+#define PHTS_ADDR     0xA0
 
 // CMD (RD_REQ/RD_RESP/WR_REQ/WR_RESP)
 //     RD_REQ  - cc_node -> remote or BC (aka discovery).
@@ -87,6 +89,7 @@ typedef struct nlink_s {
 
 extern void ha_nlink_init();
 extern void ha_nlink_node_send(node_t *node, uint8_t addr_to, uint8_t cmd);
+extern uint8_t ha_nlink_on_tx_default(uint8_t idx, uint8_t *buf);
 extern node_t* ha_nlink_node_register(uint8_t addr, uint8_t type, node_rx_cb_t on_rx_cb, node_tx_cb_t on_tx_cb);
 extern void ha_nlink_check_rx();
 extern void ha_nlink_check_tx();

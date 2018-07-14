@@ -115,6 +115,9 @@ int8_t g_ha_nlink_timer_cnt;
 int16_t g_ha_hvac_fsm_timer_cnt = 0;
 int16_t g_ha_hvac_fsm_timer = 0;
 
+uint8_t hvac_phts_conv_temperature(ha_phts_t *phts);
+uint8_t hvac_phts_conv_pressure(ha_phts_t *phts);
+
 void hvac_on_rx(uint8_t idx, const uint8_t *buf_in)
 {
     hvac_t *hvac = &g_hvac;
@@ -161,7 +164,7 @@ int main(void)
     ha_nlink_init();
 
     ha_hvac_init();
-	
+
     g_ha_hvac_fsm_timer_cnt = 0;
 
     sei();
@@ -178,7 +181,7 @@ int main(void)
 
         if (g_ha_hvac_fsm_timer) {
             g_ha_hvac_fsm_timer = 0;
-            ha_hvac_fsm();
+            ha_hvac_fsm();  // ~@10ms
         }
     }
 }
@@ -237,13 +240,12 @@ void ha_hvac_init()
     hvac->state_curr = HVAC_STATE_S1;
     hvac->state_timer = HVAC_TIMER_VALVE_CLOSE; // Assume valve is in wrong state
 
-   hvac->sensor.d1_poll_timeout = (10 / HVAC_TIMER_PERIOD_MS);
-   hvac->sensor.d2_poll_timeout = (10 / HVAC_TIMER_PERIOD_MS);
-   hvac->sensor.idle_timeout = HVAC_TIMER_SEC;	// poll sensors once per second
+    hvac->sensor.d1_poll_timeout = (10 / HVAC_TIMER_PERIOD_MS);
+    hvac->sensor.d2_poll_timeout = (10 / HVAC_TIMER_PERIOD_MS);
+    hvac->sensor.idle_timeout = HVAC_TIMER_SEC;	// poll sensors once per second
+    ha_phts_init(&hvac->sensor);
 
-    ha_phts_init(hvac->sensor);
-
-    node_t *node = ha_nlink_node_register(HVAC_ADDR, NODE_TYPE_HVAC, hvac_on_rx);
+    node_t *node = ha_nlink_node_register(HVAC_ADDR, NODE_TYPE_HVAC, hvac_on_rx, NULL);
     hvac->node = node;
 
 }
@@ -255,9 +257,10 @@ void ha_hvac_init()
  */
 static void hvac_heater_regulation(hvac_t *hvac) {
 
-    if (hvac->heater_ctrl_mval & HVAC_HEATER_CTRL_MODE_MASK) {
+    if ((hvac->heater_ctrl_mval & HVAC_HEATER_CTRL_MODE_MASK) == HVAC_HEATER_CTRL_MODE_TEMP) {
         // TODO: Hc = func(St)
-        hvac_heater_control(0);
+        // hvac_heater_control(0);
+        // Q: Is it really neccessary? Let CtrlCon to control temperature?
     } else {
         uint8_t val = hvac->heater_ctrl_mval & HVAC_HEATER_CTRL_VAL_MASK;
         if (hvac->heater_ctrl_curr != val) {
@@ -385,13 +388,57 @@ static void hvac_check_error() {
             break;
     }
 }
+
+void hvac_phts_fsm(hvac_t *hvac)
+{
+    ha_phts_t *phts = &hvac->sensor;
+    if ( (phts->state == PHTS_STATE_IDLE) &&
+         (phts->readings.read_cnt != hvac->sensor_prev_rd_cnt) ) {
+
+        hvac->sensor_prev_rd_cnt = phts->readings.read_cnt;
+
+        // New measurement available
+        hvac->sensor_temperature = hvac_phts_conv_temperature(phts);
+        hvac->sensor_pressure = hvac_phts_conv_pressure(phts);
+
+    } else if (phts->state < PHTS_STATE_PROM_RD && phts->state != hvac->sensor_prev_state) {
+        // RESET completed or init
+        // Initiate next reset or coefficient read
+
+    } else if ( (phts->state == PHTS_STATE_PROM_RD) &&
+                (phts->prom_rd_idx != hvac->sensor_prev_prom_rd_idx) ) {
+
+        uint8_t addr = phts->prom_rd_idx;
+        hvac->sensor_prev_prom_rd_idx = addr;
+
+        // New PROM coefficient read
+        hvac->sensor_pt_prom.raw8[addr + 0] = phts->pt_prom.raw8[addr + 0];
+        hvac->sensor_pt_prom.raw8[addr + 1] = phts->pt_prom.raw8[addr + 1];
+        // Initiate next coeff read or start measurements
+        // ...
+    }
+
+    { uint8_t rc;
+            rc = ha_phts_reset_pt(phts);
+            rc = ha_phts_reset_rh(phts);
+            rc = ha_phts_prom_rd(phts, 1);
+            rc = ha_phts_measurement_start(phts);
+            if (rc) return;
+    }
+
+    hvac->sensor_prev_state = phts->state;
+}
+
 /*
  * HVAC main logic executed @ 10ms
  */
 void ha_hvac_fsm() {
     hvac_t *hvac = &g_hvac;
 
-    ha_phts_poll(&hvac->sensor);
+    // ~@10ms
+    ha_phts_measurement_poll(&hvac->sensor);
+
+    hvac_phts_fsm(hvac);
 
     hvac_heater_regulation(hvac);
 
@@ -434,4 +481,28 @@ ISR(TIMER0_OVF_vect) {
         g_ha_hvac_fsm_timer_cnt = 0;
         g_ha_hvac_fsm_timer = 1;
     }
+}
+
+
+/************************************************************************/
+/* HVAC don't carry about negative temperature - because it is already  */
+/* colder than HVAC can compensate by heater                            */
+/************************************************************************/
+uint8_t hvac_phts_conv_temperature(ha_phts_t *phts)
+{
+    // Q: pressure sensor need temperature compensation, so is it worth to calculate u5q2 temperature
+    //    directly from adc reading or it is easier to reduce decimal uint16?
+    // Arithmetic
+    return (25 << 2) | (3);     // 25.75
+}
+
+/************************************************************************/
+/* Rough pressure - specific for HVAC control                           */
+/* Is used to detect motor spinning                                     */
+/************************************************************************/
+
+uint8_t hvac_phts_conv_pressure(ha_phts_t *phts)
+{
+    // Arithmetic
+    return 101;
 }

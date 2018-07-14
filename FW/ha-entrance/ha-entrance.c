@@ -22,11 +22,11 @@
 #include "ha-common.h"
 #include "ha-uart.h"
 #include "ha-nlink.h"
+#include "ha-i2c.h"
 #include "ha-node-switch.h"
 #include "ha-node-ctrlcon.h"
+#include "ha-node-phts.h"
 #include "ha-entrance.h"
-#include "ha-i2c.h"
-#include "ha-phts.h"
 
 HW_INFO gt_hw_info __attribute__ ((section (".act_const"))) = {0, 2, "AV HA Entrance"};
 PF_PVOID gpf_action_func;
@@ -34,9 +34,6 @@ PF_PVOID gpf_action_func;
 extern T_ACTION gta_action_table[];
 
 uint16_t gus_trap_line;
-
-ha_phts_t   g_ha_phts_sensor;
-uint8_t g_phts_poll_flag = 0;
 
 void action_default();
 
@@ -63,7 +60,7 @@ STATIC_ASSERT( (HA_UART_TX_BUFF_SIZE - UART_CC_HDR_SIZE) > NLINK_COMM_BUF_SIZE, 
 
 #define DISABLE_TIMER0    TIMSK &= ~(1<<TOIE0)            // Disable Overflow Interrupt
 #define ENABLE_TIMER0     TIMSK |= (1<<TOIE0)   // Enable Overflow Interrupt
-#define CNT_RELOAD       (0xFF - 125)         //
+#define CNT_RELOAD       (0xFF - 126)         //
 
 #define CNT_TCCRxB       2    // Prescaler value (2->1/8)
 
@@ -175,34 +172,21 @@ int main(void)
     MCUCR |= (2 << ISC00);
     ha_nlink_init();
 
-    // Set INT1 trigger to Rising Edge, Clear interrupt flag
-    MCUCR &= ~(_BV(ISC10) | _BV(ISC11));
-    MCUCR |= (3 << ISC10);
-
-    I2C_SCL_INT_PORT &= ~I2C_SCL_INT_MSK;
-    I2C_SCL_INT_DIR  &= ~I2C_SCL_INT_MSK;   // input no pull-up (external pull-up assumed)
-
-    // Enable TWI to enable spike filtering and BW limit
-    // ...
     ha_i2c_init();
 
-    ha_phts_init(&g_ha_phts_sensor);
-
+    ha_node_phts_init();
     ha_node_switch_init();
     ha_node_ctrlcon_init(); // Ctrlcon node must be initialized last because collects info about all other nodes
 
     sei();
 
     while(1) {
+        ha_i2c_on_idle();
         ha_uart_check_tx();
         ha_uart_check_rx();
         ha_nlink_check_rx();
         ha_nlink_check_tx();
-
-		if (g_phts_poll_flag) {
-			g_phts_poll_flag = 0;
-			ha_phts_poll(&g_ha_phts_sensor);
-		}
+        ha_node_phts_on_idle();
     }
     cli();
 
@@ -225,6 +209,17 @@ ISR(INT1_vect)
     ha_i2c_isr_on_scl_edge();
 }
 
+static void isr_sw_scl_edge_detection()
+{
+    static uint8_t prev = I2C_SCL_MSK;
+    uint8_t curr = I2C_SCL_PIN & I2C_SCL_MSK;
+
+    if (curr && !prev) {
+        ha_i2c_isr_on_scl_edge();
+    }
+    prev = curr;
+}
+
 ISR(TIMER0_OVF_vect) {
 
 #define TIMER_CNT_PERIOD 80   // 100Hz    10ms. Precision 125usec
@@ -234,6 +229,8 @@ ISR(TIMER0_OVF_vect) {
     TCNT0 = CNT_RELOAD;
 
     ha_i2c_isr_on_timer();
+
+    isr_sw_scl_edge_detection();
 
     // Update global PWM counter
     guc_timer_cnt ++;
@@ -250,7 +247,8 @@ ISR(TIMER0_OVF_vect) {
         ha_node_switch_on_timer();
 
 		ha_uart_on_timer();
-		g_phts_poll_flag = 1;
+
+        ha_node_phts_on_timer();
     }
 }
 
@@ -263,6 +261,7 @@ void action_default()
 	// Receive full message
 	uint8_t len = ha_uart.rx_buff[UART_CC_HDR_LEN];
 	while(ha_uart.rx_wr_idx < len);
+!!!!!!!!!!! debug this with -O2 !!!!!!!!!!
 }
 
 void action_signature()
@@ -337,7 +336,6 @@ void action_ctrlcon_get()
 
 void action_ctrlcon_set()
 {
-    return;
     // Command format
     // 0x41 0x86 0x22  0xLL    |
     // MARK      CMD   Length  |

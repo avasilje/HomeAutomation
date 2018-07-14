@@ -63,10 +63,12 @@ static void state_on_active_t2()
 
     switch (tr->state) {
 
-        case  I2C_TR_STATE_START:
-            break;                                              // T2_START invalid state
+        case I2C_TR_STATE_START:
+            I2C_SDA_LOW;
+            tr->timer = HA_I2C_TIMER_T1;
+            break;                                              // T2_START
 
-        case  I2C_TR_STATE_DATA:                                // T2_DATA -> T3_DATA ... T1_DATA   Set DATA_OUT bit
+        case I2C_TR_STATE_DATA:                                // T2_DATA -> T3_DATA ... T1_DATA   Set DATA_OUT bit
             if (tr->bit_idx == 0) {
                 tr->shift_reg = tr->data[tr->data_idx];
             }
@@ -76,19 +78,26 @@ static void state_on_active_t2()
             } else  {
                 I2C_SDA_LOW;
             }
+            tr->shift_reg <<= 1;
+            tr->timer = HA_I2C_TIMER_T3;
             break;
 
-        case  I2C_TR_STATE_ACK:                                 // T2_ACK -> T3_ACK ... T1_ACK     Set ACK_OUT bit
+        case I2C_TR_STATE_ACK:                                 // T2_ACK -> T3_ACK ... T1_ACK     Set ACK_OUT bit
             if (tr->ack[tr->data_idx]) {
                 I2C_SDA_HIGH;
             } else  {
                 I2C_SDA_LOW;
             }
+            tr->timer = HA_I2C_TIMER_T3;
             break;
 
-        case  I2C_TR_STATE_STOP:
+        case I2C_TR_STATE_STOP:
             I2C_SDA_LOW;                                        // T2_STOP -> T3_STOP     Set DATA LOW
+            tr->timer = HA_I2C_TIMER_T3;
             break;
+        default:
+            break;
+
     }
 }
 
@@ -97,8 +106,7 @@ static void state_on_active_t1()
     i2c_trans_t *tr = &g_i2c.trans;
 
     switch (tr->state) {
-        case  I2C_TR_STATE_START:                      // T1_START -> T2_DATA
-            tr->data_idx = 0;
+        case I2C_TR_STATE_START:                      // T1_START -> T2_DATA
             tr->bit_idx = 0;
 
             I2C_SCL_LOW;
@@ -106,48 +114,48 @@ static void state_on_active_t1()
             tr->state = I2C_TR_STATE_DATA;
             break;
 
-        case  I2C_TR_STATE_DATA:                        // T1_DATA -> T2_DATA
+        case I2C_TR_STATE_DATA:                        // T1_DATA -> T2_DATA
 
             // Save data bit
             if (I2C_SDA_PIN & I2C_SDA_MSK) {
                 tr->shift_reg |= 1;
             }
             I2C_SCL_LOW;
-
+            tr->bit_idx ++;
             if (tr->bit_idx == 8) {
                 tr->bit_idx = 0;
 
                 tr->data[tr->data_idx] = tr->shift_reg;
                 tr->state = I2C_TR_STATE_ACK;           // T1_DATA ->  T2_ACK
-            } else {
-                tr->shift_reg <<= 1;
             }
+
             break;
 
-        case  I2C_TR_STATE_ACK:
+        case I2C_TR_STATE_ACK:
             tr->ack[tr->data_idx] = !!(I2C_SDA_PIN & I2C_SDA_MSK);
             // TODO: Interrupt transaction on NACK ?
             // ...
 
             I2C_SCL_LOW;
-            tr->data_idx++;
             tr->bit_idx = 0;
 			// TODO: rework to REPEATED STOP/START transaction
-            if (tr->data_idx == tr->len) {
+            if (tr->stop_bit[tr->data_idx] == 1) {
                 tr->state = I2C_TR_STATE_STOP;          // T1_ACK ->  T2_STOP
             } else {
                 tr->state = I2C_TR_STATE_DATA;          // T1_ACK ->  T2_DATA
             }
+            tr->data_idx++;
             break;
 
-        case  I2C_TR_STATE_STOP:                        // T1_STOP -> finish
+        case I2C_TR_STATE_STOP:                        // T1_STOP -> finish
             I2C_SDA_HIGH;
             if (tr->data_idx == tr->len) {
-				tr->cb(tr);
+                tr->state = I2C_TR_STATE_FINISH;
 			} else {
-				// TODO: continue transaction through START condition 
+                tr->state = I2C_TR_STATE_START;         // T1_STOP -> T2_START
 			}
-
+            break;
+        default:
             break;
     }
 }
@@ -158,16 +166,15 @@ static void state_on_active()
 
     switch(tr->timer) {
         case HA_I2C_TIMER_T1:
-            state_on_active_t1();                   //
+            state_on_active_t1();                   //  SCL falling edge
             tr->timer = HA_I2C_TIMER_T2;
             break;
 
         case HA_I2C_TIMER_T2:
-            state_on_active_t2();                   //
-            tr->timer = HA_I2C_TIMER_T3;
+            state_on_active_t2();                   // SCL low mid-point
             break;
 
-        case HA_I2C_TIMER_T3:
+        case HA_I2C_TIMER_T3:                       // SCL Rising edge
             I2C_SCL_HIGH;
             tr->timer = HA_I2C_TIMER_EDGE;
             break;
@@ -201,8 +208,8 @@ void ha_i2c_isr_on_timer()
 
         case HA_I2C_STATE_ACTIVE:
             state_on_active();
-            if ( (tr->state == I2C_TR_STATE_STOP) &&
-                 (tr->timer == HA_I2C_TIMER_T2)) {
+            if ( tr->state == I2C_TR_STATE_FINISH &&
+                 tr->timer == HA_I2C_TIMER_T2) {
 
                 // Transaction completed.
                 // READY state will be processed in idle loop to avoid long task in ISR
@@ -212,11 +219,11 @@ void ha_i2c_isr_on_timer()
 
         case HA_I2C_STATE_IDLE:
             // Check transaction, initiate transfer if necessary
-            if (i2c->trans.data_idx != 0) {
-                I2C_SDA_LOW;
+            if (tr->len != 0) {
                 i2c->state = HA_I2C_STATE_ACTIVE;
-                i2c->trans.timer = HA_I2C_TIMER_T1;
-                i2c->trans.state = I2C_TR_STATE_START;
+                tr->timer = HA_I2C_TIMER_T2;
+                tr->state = I2C_TR_STATE_START;
+                tr->data_idx = 0;
             }
             break;
         case HA_I2C_STATE_ERR:
@@ -239,38 +246,48 @@ void ha_i2c_isr_on_scl_edge()
 }
 
 
-void ha_i2c_cmd(uint8_t addr, uint8_t cmd, i2c_tr_completed_cb_t completed_cb, void* cb_ctx, uint8_t cb_param)
+int8_t ha_i2c_cmd(uint8_t addr, uint8_t cmd, i2c_tr_completed_cb_t completed_cb, void* cb_ctx, uint8_t cb_param)
 {
     ha_i2c_t *i2c = &g_i2c;
     i2c_trans_t *tr = &g_i2c.trans;
 
 	if (i2c->state != HA_I2C_STATE_IDLE) {
-		completed_cb(NULL);
+		return -1;
 	}
 
-	tr->len = 2;
 	tr->data[0] = addr & (~0x01);
 	tr->data[1] = cmd;
 	tr->ack[0] = 1;
 	tr->ack[1] = 1;
+    tr->stop_bit[0] = 0;
+    tr->stop_bit[1] = 1;
 	tr->cb = completed_cb;
 	tr->cb_ctx = cb_ctx;
 	tr->cb_param = cb_param;
+	tr->len = 2;    // Initiates transaction
+    return 0;
 }
 
-void ha_i2c_read16(uint8_t addr, uint8_t cmd, i2c_tr_completed_cb_t completed_cb, void* cb_ctx, uint8_t cb_param)
+int8_t ha_i2c_read16(uint8_t addr, uint8_t cmd, i2c_tr_completed_cb_t completed_cb, void* cb_ctx, uint8_t cb_param)
 {
 	ha_i2c_t *i2c = &g_i2c;
 	i2c_trans_t *tr = &g_i2c.trans;
 
 	if (i2c->state != HA_I2C_STATE_IDLE) {
-		completed_cb(NULL);
+		return -1;
 	}
 
-	tr->len = 5;
 	tr->data[0] = addr;
 	tr->data[1] = cmd;
 	tr->data[2] = addr | 0x01;
+	tr->data[3] = 0xFF;
+	tr->data[4] = 0xFF;
+    tr->stop_bit[0] = 0;
+    tr->stop_bit[1] = 1;
+    tr->stop_bit[2] = 0;
+    tr->stop_bit[3] = 0;
+    tr->stop_bit[4] = 1;
+
 	tr->ack[0] = 1;
 	tr->ack[1] = 1;
 	tr->ack[2] = 1;
@@ -280,29 +297,56 @@ void ha_i2c_read16(uint8_t addr, uint8_t cmd, i2c_tr_completed_cb_t completed_cb
 	tr->cb = completed_cb;
 	tr->cb_ctx = cb_ctx;
 	tr->cb_param = cb_param;
+    tr->len = 5;    // Initiates transaction
+
+    return 0;
 }
 
-void ha_i2c_read24(uint8_t addr, uint8_t cmd, i2c_tr_completed_cb_t completed_cb, void* cb_ctx, uint8_t cb_param)
+int8_t ha_i2c_read24(uint8_t addr, uint8_t cmd, i2c_tr_completed_cb_t completed_cb, void* cb_ctx, uint8_t cb_param)
 {
 	ha_i2c_t *i2c = &g_i2c;
 	i2c_trans_t *tr = &g_i2c.trans;
 
 	if (i2c->state != HA_I2C_STATE_IDLE) {
-		completed_cb(NULL);
+		return -1;
 	}
 
-	tr->len = 6;
 	tr->data[0] = addr;				// WR
 	tr->data[1] = cmd;
 	tr->data[2] = addr | 0x01;		// RD
+	tr->data[3] = 0xFF;
+	tr->data[4] = 0xFF;
+	tr->data[5] = 0xFF;
+    tr->stop_bit[0] = 0;
+    tr->stop_bit[1] = 1;
+    tr->stop_bit[2] = 0;
+    tr->stop_bit[3] = 0;
+    tr->stop_bit[4] = 0;
+    tr->stop_bit[5] = 1;
+
 	tr->ack[0] = 1;
 	tr->ack[1] = 1;
 	tr->ack[2] = 1;
-	tr->ack[3] = 1;
-	tr->ack[4] = 1;
+	tr->ack[3] = 0;
+	tr->ack[4] = 0;
 	tr->ack[5] = 1;
 
 	tr->cb = completed_cb;
 	tr->cb_ctx = cb_ctx;
 	tr->cb_param = cb_param;
+    tr->len = 6;    // Initiates transaction
+    return 0;
+}
+
+void ha_i2c_on_idle()
+{
+    ha_i2c_t *i2c = &g_i2c;
+    i2c_trans_t *tr = &g_i2c.trans;
+
+    if (i2c->state == HA_I2C_STATE_READY) {
+        i2c->state = HA_I2C_STATE_IDLE;
+        tr->len = 0;
+        tr->cb(tr);
+    }
+
 }

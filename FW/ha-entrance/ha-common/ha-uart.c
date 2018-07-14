@@ -44,7 +44,7 @@ void ha_uart_resync()
 	volatile uint8_t dev_null;
 	while ( UCSRA & (1<<RXC) ) dev_null = UDR;
 	UNREFERENCED_PARAM(dev_null);
-	
+
 	ha_uart.rx_wr_idx = 0;
 	ha_uart.tx_rd_idx = 0;
 	ha_uart.tx_len = 0;
@@ -69,19 +69,19 @@ void ha_uart_check_tx()
 
 				ha_uart.tx_rd_idx = 0;
 				UCSRB |= _BV(UDRIE);
-			} else {
-				// Send "need sync command" if timeout expired
-				if (ha_uart.syncing_timer == 0) {
-					// Send sync command and start collecting data
-					ha_uart.syncing_timer = -1;
-					ha_uart.tx_buf[UART_CC_HDR_MARK0] = 0x41;
-					ha_uart.tx_buf[UART_CC_HDR_MARK1] = 0x86;
-					ha_uart.tx_buf[UART_CC_HDR_CMD  ] = 0x31;
-					ha_uart.tx_buf[UART_CC_HDR_LEN  ] = 0;
-					ha_uart.tx_len = UART_CC_HDR_SIZE;
-					ha_uart.tx_rd_idx = 0;
-					UCSRB |= _BV(UDRIE);
-				}
+            }
+		} else {
+			// Send "need sync command" if timeout expired
+			if (ha_uart.syncing_timer == 0) {
+				// Send sync command and start collecting data
+				ha_uart.syncing_timer = -1;
+				ha_uart.tx_buf[UART_CC_HDR_MARK0] = 0x41;
+				ha_uart.tx_buf[UART_CC_HDR_MARK1] = 0x86;
+				ha_uart.tx_buf[UART_CC_HDR_CMD  ] = 0x31;
+				ha_uart.tx_buf[UART_CC_HDR_LEN  ] = 0;
+				ha_uart.tx_len = UART_CC_HDR_SIZE;
+				ha_uart.tx_rd_idx = 0;
+				UCSRB |= _BV(UDRIE);
 			}
 		}
 	}
@@ -91,24 +91,25 @@ void ha_uart_check_rx()
 {
 	// Get number of bytes received (4 bytes at least)
 	if (ha_uart.syncing_timer <= 0 && ha_uart.rx_wr_idx >= 4) {
-		
+
 		// check is command valid
 		// MARK = "AV", read pointer must be set on buffer start
-		if (( ha_uart.rx_buff[UART_CC_HDR_MARK0] != 0x41) || 
+		if (( ha_uart.rx_buff[UART_CC_HDR_MARK0] != 0x41) ||
 			( ha_uart.rx_buff[UART_CC_HDR_MARK1] != 0x86)) {
 			ha_uart_resync();
+            return;
 		}
 
 		uint8_t msg_cmd = ha_uart.rx_buff[UART_CC_HDR_CMD];
-		
+
 		command_lookup(msg_cmd);
-		
+
 		// Clear RX buffer index in order to receive next message
 		ha_uart.rx_wr_idx = 0;
 	}
 }
 
-void ha_uart_on_timer() 
+void ha_uart_on_timer()
 {
 	if (ha_uart.syncing_timer > 0) {
 		ha_uart.syncing_timer--;
@@ -125,11 +126,13 @@ ISR(USART_RXC_vect) {
 	uc_data = UDR;
 
 	// Check Frame Error (FE0) and DATA overflow (DOR0)
-	if ( uc_status & (_BV(FE) | _BV(DOR)) )
+	if ( uc_status & (_BV(FE) | _BV(DOR)) ) {
 		ha_uart_resync();
+    }
 
-	if ( ha_uart.rx_wr_idx == HA_UART_RX_BUFF_SIZE )
+	if ( ha_uart.rx_wr_idx == HA_UART_RX_BUFF_SIZE ) {
 		ha_uart_resync();
+    }
 
 	if (ha_uart.syncing_timer <= 0) {
 		// Save data only if in sync or syncing

@@ -3,20 +3,19 @@
  *    1. Add phts I2C transaction
  *    2. Add result ready callback - will be processed upon transaction completed
  */
+#include <stdlib.h>
+#include <string.h>
 #include "ha-phts.h"
 #include "ha-i2c.h"
 
 // From PHT sensor data sheet
 //	Sensor type						I2C address (binary value)		I2C address (hex. value)
-//	Pressure and Temperature P&T	1110110							0x76
-//	Relative Humidity RH			1000000							0x40
+//	Pressure and Temperature P&T	1110110x						0x76
+//	Relative Humidity RH			1000000x						0x40
 
-#define PT_ADDR_RD	((0x76 << 1) + 1)
-#define PT_ADDR_WR	((0x76 << 1) + 0)
+#define PT_ADDR	((0x76 << 1) + 0)
 
-#define RH_ADDR_RD	((0x40 << 1) + 1)
-#define RH_ADDR_WR	((0x40 << 1) + 0)
-
+#define RH_ADDR	((0x40 << 1) + 0)
 
 #define PT_CMD_RESET				0x1E
 #define PT_CMD_CONVERT_D1_OSR_256	0x40
@@ -41,152 +40,127 @@
 #define  RH_CMD_MEASURE_NOHOLD	0xF5
 #define  RH_CMD_PROM_RD			0xA0
 
-uint32_t temperature = 0;
-uint32_t pressure = 0;
-uint8_t d1_dbg = PT_CMD_CONVERT_D1_OSR_4096;
-uint8_t d2_dbg = PT_CMD_CONVERT_D2_OSR_4096;
-#if 0
-static void ha_phts_pt_prom_crc(ha_phts_t *sensor)
+void _phts_on_measure(i2c_trans_t *tr)
 {
-    uint16_t *n_prom = sensor->pt_prom.raw16;
-
-    int cnt; // simple counter
-    uint16_t n_rem=0; // crc remainder
-    uint8_t n_bit;
-
-    n_prom[0]=((n_prom[0]) & 0x0FFF);           // CRC byte is replaced by 0
-    n_prom[7]=0;                                // Subsidiary value, set to 0
-    for (cnt = 0; cnt < 16; cnt++)              // operation is performed on bytes
-    {                                           // choose LSB or MSB
-        if (cnt %2 == 1) {
-            n_rem ^= n_prom[cnt>>1] & 0x00FF;
-        } else {
-            n_rem ^= n_prom[cnt>>1] >>8;
-        }
-
-        for (n_bit = 8; n_bit > 0; n_bit--) {
-            if (n_rem & 0x8000) {
-                n_rem = (n_rem << 1) ^ 0x3000;
-            } else {
-                n_rem = (n_rem << 1);
-            }
-        }
-    }
-    n_rem= (n_rem >> 12) & 0x000F; // final 4-bit remainder is CRC code
-    //return (n_rem ^ 0x00);
-}
-#endif 
-
-void ha_phts_state_init(i2c_trans_t *tr) {
-	
-	ha_phts_t *sensor = (ha_phts_t *)tr->cb_ctx;
-
-	// TODO: Check transaction error 
-	switch (tr->cb_param) {
-		case TR_PARAM_PT_RESET:
-			ha_i2c_cmd(PT_ADDR_WR, RH_CMD_RESET, ha_phts_state_init, sensor, TR_PARAM_RH_RESET);
-			break;
-
-		case TR_PARAM_RH_RESET:
-			sensor->prom_rd_idx = 0;
-			ha_i2c_read16(RH_ADDR_WR, PT_CMD_PROM_RD, ha_phts_state_init, sensor, TR_PARAM_PT_PROM);
-			break;
-
-		case TR_PARAM_PT_PROM:
-			sensor->pt_prom.raw8[sensor->prom_rd_idx + 0] = tr->data[3];
-			sensor->pt_prom.raw8[sensor->prom_rd_idx + 1] = tr->data[4];
-			sensor->prom_rd_idx += 2;
-
-			if (sensor->prom_rd_idx == (HA_PHTS_PT_PROM_SIZE << 1)) {
-				// PT PROM read finished - state to IDLE
-				sensor->state = PHTS_STATE_IDLE;
-				sensor->poll_timer = sensor->idle_timeout;
-			} else {
-				// Continue PT PROM reading
-				ha_i2c_read16(RH_ADDR_WR, PT_CMD_PROM_RD + sensor->prom_rd_idx, ha_phts_state_init, sensor, TR_PARAM_PT_PROM);
-			}
-			break;
-
-		}
-}
-
-void ha_phts_state_measure(i2c_trans_t *tr) {
-	
-	ha_phts_t *sensor = (ha_phts_t *)tr->cb_ctx;
+	ha_phts_t *phts = (ha_phts_t *)tr->cb_ctx;
 
 	// TODO: Check transaction error
 	switch (tr->cb_param) {
 		case TR_PARAM_PT_D1_START:
-			sensor->state = PHTS_STATE_PT_D1_POLL;
-			sensor->poll_timer = sensor->d1_poll_timeout;
+            phts->readings.read_cnt ++;
+			phts->state = PHTS_STATE_PT_D1_POLL;
+			phts->poll_timer = phts->d1_poll_timeout;
 			break;
 		case TR_PARAM_PT_D1_POLL:
-			sensor->pressure.raw8[0] = tr->data[3];
-			sensor->pressure.raw8[1] = tr->data[4];
+			phts->readings.pressure.raw8[0] = tr->data[4];
+			phts->readings.pressure.raw8[1] = tr->data[3];
 
-			sensor->state = PHTS_STATE_PT_D2_CONVERT;
-			sensor->poll_timer = 0;	// start in next poll cycle
+			phts->state = PHTS_STATE_PT_D2_CONVERT;
+			phts->poll_timer = 0;	// start in next poll cycle
 			break;
 
 		case TR_PARAM_PT_D2_START:
-			sensor->state = PHTS_STATE_PT_D2_POLL;
-			sensor->poll_timer = sensor->d2_poll_timeout;
+			phts->state = PHTS_STATE_PT_D2_POLL;
+			phts->poll_timer = phts->d2_poll_timeout;
 			break;
 
 		case TR_PARAM_PT_D2_POLL:
-			sensor->temperature.raw8[0] = tr->data[3];
-			sensor->temperature.raw8[1] = tr->data[4];
+			phts->readings.temperature.raw8[0] = tr->data[4];
+			phts->readings.temperature.raw8[1] = tr->data[3];
 
-			sensor->state = PHTS_STATE_IDLE;
-			sensor->poll_timer = sensor->idle_timeout;	
+			phts->state = PHTS_STATE_IDLE;
+			phts->poll_timer = phts->idle_timeout;
 			break;
 
 	} // End of state_measurement switch
 }
 
-void ha_phts_poll(ha_phts_t *sensor) {
+uint8_t ha_phts_measurement_poll(ha_phts_t *phts) {
 
-	if (sensor->poll_timer < 0) {
-		return;
+    int8_t rc = 0;
+
+	if (phts->poll_timer < 0) {
+		return rc;
 	}
 
-    if (sensor->poll_timer > 0 ) {
-        sensor->poll_timer --;
-        return;
+    if (phts->poll_timer > 0 ) {
+        phts->poll_timer --;
+        return rc;
     }
 
 	// Disable timer by default
-	sensor->poll_timer = -1;
+	phts->poll_timer = -1;
 
-	switch(sensor->state) {
-		case PHTS_STATE_INIT:
-			ha_i2c_cmd(PT_ADDR_WR, PT_CMD_RESET, ha_phts_state_init, sensor, TR_PARAM_PT_RESET);
-			break;
-
+	switch(phts->state) {
 		case PHTS_STATE_IDLE:
 			// Initiate measurement
-			ha_i2c_cmd(PT_ADDR_WR, PT_CMD_CONVERT_D1_OSR_8192, ha_phts_state_measure, sensor, TR_PARAM_PT_D1_START);
+			rc = ha_i2c_cmd(PT_ADDR, PT_CMD_CONVERT_D1_OSR_8192, _phts_on_measure, phts, TR_PARAM_PT_D1_START);
 			break;
 
-		case PHTS_STATE_PT_D1_POLL:	
-			ha_i2c_read24(RH_ADDR_WR, PT_CMD_ADC_RD, ha_phts_state_measure, sensor, TR_PARAM_PT_D1_POLL);
+		case PHTS_STATE_PT_D1_POLL:
+			rc = ha_i2c_read24(PT_ADDR, PT_CMD_ADC_RD, _phts_on_measure, phts, TR_PARAM_PT_D1_POLL);
 			break;
 
 		case PHTS_STATE_PT_D2_CONVERT:
-			ha_i2c_cmd(PT_ADDR_WR, PT_CMD_CONVERT_D2_OSR_8192, ha_phts_state_measure, sensor, TR_PARAM_PT_D2_START);
+			rc = ha_i2c_cmd(PT_ADDR, PT_CMD_CONVERT_D2_OSR_8192, _phts_on_measure, phts, TR_PARAM_PT_D2_START);
 			break;
 
 		case PHTS_STATE_PT_D2_POLL:
-			ha_i2c_read24(RH_ADDR_WR, PT_CMD_ADC_RD, ha_phts_state_measure, sensor, TR_PARAM_PT_D2_POLL);		// Switch poll back to IDLE
+			rc = ha_i2c_read24(PT_ADDR, PT_CMD_ADC_RD, _phts_on_measure, phts, TR_PARAM_PT_D2_POLL);		// Switch poll back to IDLE
 			break;
+	} // End of state Switch
 
-	}
-
+    if (rc < 0) {
+        phts->poll_timer = phts->idle_timeout;  // I2C not ready - repeat later
+    }
+    return rc;
 }
 
-void ha_phts_init(ha_phts_t *sensor) {
 
-	sensor->state = PHTS_STATE_INIT;
-	sensor->poll_timer = 0;
-
+void _phts_on_pt_reset(i2c_trans_t *tr)
+{
+	ha_phts_t *sensor = (ha_phts_t *)tr->cb_ctx;
+	sensor->state = PHTS_STATE_RESET_PT;
 }
+
+void _phts_on_rh_reset(i2c_trans_t *tr)
+{
+	ha_phts_t *phts = (ha_phts_t *)tr->cb_ctx;
+	phts->state = PHTS_STATE_RESET_RH;
+}
+
+void _phts_on_prom_rd(i2c_trans_t *tr)
+{
+	ha_phts_t *phts = (ha_phts_t *)tr->cb_ctx;
+
+   	phts->state = PHTS_STATE_PROM_RD;
+    phts->prom_rd_idx = tr->data[1] & 0x0F;
+    phts->pt_prom.raw8[phts->prom_rd_idx + 1] = tr->data[3];
+    phts->pt_prom.raw8[phts->prom_rd_idx + 0] = tr->data[4];
+}
+
+uint8_t ha_phts_reset_pt(ha_phts_t *phts) {
+    return ha_i2c_cmd(PT_ADDR, PT_CMD_RESET, _phts_on_pt_reset, phts, 0);
+}
+
+uint8_t ha_phts_reset_rh(ha_phts_t *phts) {
+    return ha_i2c_cmd(RH_ADDR, RH_CMD_RESET, _phts_on_rh_reset, phts, 0);
+}
+
+uint8_t ha_phts_prom_rd(ha_phts_t *phts, uint8_t rd_idx) {
+    return ha_i2c_read16(PT_ADDR, PT_CMD_PROM_RD + rd_idx, _phts_on_prom_rd, phts, 0);
+}
+
+uint8_t ha_phts_measurement_start(ha_phts_t *phts)
+{
+    phts->state = PHTS_STATE_IDLE;
+    phts->poll_timer = 0;
+    return 0;
+}
+
+void ha_phts_init(ha_phts_t *phts)
+{
+    memset((uint8_t*)phts, 0, sizeof(ha_phts_t));
+    phts->state = PHTS_STATE_INIT;
+}
+
