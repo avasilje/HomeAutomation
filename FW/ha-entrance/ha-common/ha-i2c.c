@@ -145,6 +145,9 @@ static void state_on_active_t1()
                 tr->state = I2C_TR_STATE_DATA;          // T1_ACK ->  T2_DATA
             }
             tr->data_idx++;
+            if (tr->data_idx > tr->len)  {
+                FATAL_TRAP(__LINE__);
+            }
             break;
 
         case I2C_TR_STATE_STOP:                        // T1_STOP -> finish
@@ -344,8 +347,8 @@ void ha_i2c_on_idle()
     i2c_trans_t *tr = &g_i2c.trans;
 
     if (i2c->state == HA_I2C_STATE_READY) {
-        i2c->state = HA_I2C_STATE_IDLE;
         tr->len = 0;
+        i2c->state = HA_I2C_STATE_IDLE;
         tr->cb(tr);
     }
 

@@ -45,22 +45,22 @@ typedef struct {
      (1 << IN_SW_2)|\
      (1 << IN_SW_3))
 
-#define OUT_SW0_0 PINB4
-#define OUT_SW0_1 PINB3
-#define OUT_SW0_2 PINB2
+#define OUT_LED0_0 PINB2
+#define OUT_LED0_1 PINB3
+#define OUT_LED0_2 PINB4
 
-#define OUT_SW0_0_MASK (1 << OUT_SW0_0)
-#define OUT_SW0_1_MASK (1 << OUT_SW0_1)
-#define OUT_SW0_2_MASK (1 << OUT_SW0_2)
+#define OUT_LED0_0_MASK (1 << OUT_LED0_0)
+#define OUT_LED0_1_MASK (1 << OUT_LED0_1)
+#define OUT_LED0_2_MASK (1 << OUT_LED0_2)
 
-#define OUT_SW0_MASK \
-    ((1 << OUT_SW0_0)|\
-     (1 << OUT_SW0_1)|\
-     (1 << OUT_SW0_2))
+#define OUT_LED0_MASK \
+    ((1 << OUT_LED0_0)|\
+     (1 << OUT_LED0_1)|\
+     (1 << OUT_LED0_2))
 
-#define OUT_SW1_3    PIND5
-#define OUT_SW1_3_MASK (1 << PIND5)
-#define OUT_SW1_MASK (OUT_SW1_3_MASK)
+#define OUT_LED1_3    PIND5
+#define OUT_LED1_3_MASK (1 << PIND5)
+#define OUT_LED1_MASK (OUT_LED1_3_MASK)
 
 #define ENABLE_FAST_PWM2 \
     TCCR2 = (1 << WGM20) |\

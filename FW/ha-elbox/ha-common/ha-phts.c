@@ -158,6 +158,13 @@ uint8_t ha_phts_measurement_start(ha_phts_t *phts)
     return 0;
 }
 
+uint8_t ha_phts_measurement_stop(ha_phts_t *phts)
+{
+    phts->state = PHTS_STATE_INIT;
+    phts->poll_timer = -1;
+    return 0;
+}
+
 void ha_phts_init(ha_phts_t *phts)
 {
     memset((uint8_t*)phts, 0, sizeof(ha_phts_t));

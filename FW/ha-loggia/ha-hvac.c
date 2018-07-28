@@ -118,6 +118,8 @@ int16_t g_ha_hvac_fsm_timer = 0;
 uint8_t hvac_phts_conv_temperature(ha_phts_t *phts);
 uint8_t hvac_phts_conv_pressure(ha_phts_t *phts);
 
+#define HVAC_SET_SWITCH(val) do { HVAC_SWITCH_PORT = (HVAC_SWITCH_PORT & ~HVAC_SWITCH_MASK) | val; } while(0)
+
 void hvac_on_rx(uint8_t idx, const uint8_t *buf_in)
 {
     hvac_t *hvac = &g_hvac;
@@ -131,8 +133,8 @@ void hvac_on_rx(uint8_t idx, const uint8_t *buf_in)
     }
 
     hvac->state_trgt = (buf_in[NLINK_HDR_OFF_DATA + HVAC_DATA_STATE] & HVAC_DATA_STATE_TRGT_MASK) >> 4;
-    hvac->heater_ctrl_mval = buf_in[NLINK_HDR_OFF_DATA + HVAC_DATA_HEATER_MVAL];
-
+    hvac->heater_ctrl_trgt = (buf_in[NLINK_HDR_OFF_DATA + HVAC_DATA_HEATER_CTRL] & HVAC_HEATER_CTRL_TRGT_MASK) >> HVAC_HEATER_CTRL_TRGT_POS;
+    hvac->heater_ctrl_mode = (buf_in[NLINK_HDR_OFF_DATA + HVAC_DATA_HEATER_CTRL] & HVAC_HEATER_CTRL_MODE_MASK) >> HVAC_HEATER_CTRL_MODE_POS;
 }
 
 int main(void)
@@ -206,22 +208,27 @@ void ha_hvac_node_update()
     node_t *node = g_hvac.node;
     hvac_t *hvac = &g_hvac;
 
-    node->tx_buf[NLINK_HDR_OFF_TYPE] = NODE_TYPE_HVAC;
-    node->tx_buf[NLINK_HDR_OFF_LEN] = HVAC_DATA_LAST;
-
     uint8_t val =
-        (hvac->state_curr & HVAC_DATA_STATE_CURR_MASK) |
-        (hvac->state_trgt & HVAC_DATA_STATE_TRGT_MASK);
+        ((hvac->state_curr << 0) & HVAC_DATA_STATE_CURR_MASK) |
+        ((hvac->state_trgt << 4) & HVAC_DATA_STATE_TRGT_MASK);
 
-    if (hvac->state_timer) val |= HVAC_DATA_STATE_STMR_MASK;
+//    if (hvac->state_timer) val |= HVAC_DATA_STATE_STMR_MASK;
     if (0) val |= HVAC_DATA_STATE_ALRM_MASK;
 
     node->tx_buf[NLINK_HDR_OFF_DATA + HVAC_DATA_STATE ] = val;
-    node->tx_buf[NLINK_HDR_OFF_DATA + HVAC_DATA_HEATER_MVAL] = hvac->heater_ctrl_mval;
-    node->tx_buf[NLINK_HDR_OFF_DATA + HVAC_DATA_HEATER_CURR] = hvac->heater_ctrl_curr;
+
+    node->tx_buf[NLINK_HDR_OFF_DATA + HVAC_DATA_HEATER_CTRL] =
+        ((hvac->heater_ctrl_curr << HVAC_HEATER_CTRL_CURR_POS) &  HVAC_HEATER_CTRL_CURR_MASK) |
+        ((hvac->heater_ctrl_trgt << HVAC_HEATER_CTRL_TRGT_POS) &  HVAC_HEATER_CTRL_TRGT_MASK) |
+        ((hvac->heater_ctrl_mode << HVAC_HEATER_CTRL_MODE_POS) &  HVAC_HEATER_CTRL_MODE_MASK);
+
+    uint8_t timer = (hvac->state_timer >> 8);
+    if (hvac->state_timer & 0xFF) timer += 1;
+    node->tx_buf[NLINK_HDR_OFF_DATA + HVAC_DATA_STATE_TIMER] = timer;
 
     // TODO: Fill Sensor data here
     // ...
+    ha_nlink_node_send(node, CTRLCON_ADDR, NLINK_CMD_INFO);
 }
 
 void ha_hvac_init()
@@ -230,11 +237,9 @@ void ha_hvac_init()
 
     HVAC_HEATER_CONTROL_DIR |= HVAC_HEATER_CONTROL_MASK;   // output
     hvac_heater_control(0);
-
-    HVAC_SWITCH_PORT &= ~HVAC_SWITCH_MASK;
     HVAC_SWITCH_DIR |= HVAC_SWITCH_MASK;
 
-    HVAC_SWITCH_PORT |= HVAC_SWITCH_STATE_S1;
+    HVAC_SET_SWITCH(HVAC_SWITCH_STATE_S1);
 
     hvac->state_trgt = HVAC_STATE_S1;
     hvac->state_curr = HVAC_STATE_S1;
@@ -248,6 +253,10 @@ void ha_hvac_init()
     node_t *node = ha_nlink_node_register(HVAC_ADDR, NODE_TYPE_HVAC, hvac_on_rx, NULL);
     hvac->node = node;
 
+    node->tx_buf[NLINK_HDR_OFF_TYPE] = NODE_TYPE_HVAC;
+    node->tx_buf[NLINK_HDR_OFF_LEN] = HVAC_DATA_LAST;
+
+    ha_hvac_node_update();
 }
 
 /*
@@ -257,12 +266,12 @@ void ha_hvac_init()
  */
 static void hvac_heater_regulation(hvac_t *hvac) {
 
-    if ((hvac->heater_ctrl_mval & HVAC_HEATER_CTRL_MODE_MASK) == HVAC_HEATER_CTRL_MODE_TEMP) {
+    if (hvac->heater_ctrl_mode == HVAC_HEATER_CTRL_MODE_AUTO) {
         // TODO: Hc = func(St)
         // hvac_heater_control(0);
         // Q: Is it really neccessary? Let CtrlCon to control temperature?
     } else {
-        uint8_t val = hvac->heater_ctrl_mval & HVAC_HEATER_CTRL_VAL_MASK;
+        uint8_t val = hvac->heater_ctrl_trgt;
         if (hvac->heater_ctrl_curr != val) {
             hvac_heater_control(val);
             hvac->heater_ctrl_curr = val;
@@ -295,7 +304,7 @@ static void hvac_on_s_plus(){
     switch(hvac->state_curr) {
         case HVAC_STATE_S1:
             // Open valve unconditionally
-            HVAC_SWITCH_PORT = HVAC_SWITCH_STATE_S2;
+            HVAC_SET_SWITCH(HVAC_SWITCH_STATE_S2);
             hvac->state_curr = HVAC_STATE_S2;
             hvac->state_timer = HVAC_TIMER_VALVE_OPEN;
             break;
@@ -305,7 +314,7 @@ static void hvac_on_s_plus(){
             if (hvac->state_timer > 0) {
                 break;
             }
-            HVAC_SWITCH_PORT = HVAC_SWITCH_STATE_S3_M1;
+            HVAC_SET_SWITCH(HVAC_SWITCH_STATE_S3_M1);
             hvac->state_curr = HVAC_STATE_S3;
             hvac->state_timer = HVAC_TIMER_MOTOR_START;
             break;
@@ -319,11 +328,12 @@ static void hvac_on_s_plus(){
             // The heater will be controlled in runtime as
             // function of IN/OUT temperature or user setting
             hvac_heater_control(0);
-            HVAC_SWITCH_PORT = HVAC_SWITCH_STATE_S4_M1;
+            HVAC_SET_SWITCH(HVAC_SWITCH_STATE_S4_M1);
             hvac->state_timer = HVAC_TIMER_MOTOR_START;
             break;
         case HVAC_STATE_S4:
             // prohibited
+            hvac->state_trgt = hvac->state_curr;
             break;
     }
 }
@@ -338,7 +348,7 @@ static void hvac_on_s_minus(){
             // while it takes effect to avoid spark on switch
             hvac_heater_control(0);
             wait_10ms();
-            HVAC_SWITCH_PORT = HVAC_SWITCH_STATE_S3_M1;
+            HVAC_SET_SWITCH(HVAC_SWITCH_STATE_S3_M1);
             hvac->state_curr = HVAC_STATE_S3;
             hvac->state_timer = HVAC_TIMER_HEATER_COOLDOWN; // Th timer
             break;
@@ -350,7 +360,7 @@ static void hvac_on_s_minus(){
             // Check outlet air temperature
             // if (outlet_air_still_very_hot)   // Heater switch malfunction
 
-            HVAC_SWITCH_PORT = HVAC_SWITCH_STATE_S2;
+            HVAC_SET_SWITCH(HVAC_SWITCH_STATE_S2);
             hvac->state_curr = HVAC_STATE_S2;
             break;
         case HVAC_STATE_S2:
@@ -359,7 +369,7 @@ static void hvac_on_s_minus(){
             // if (motor_still_runnig) ..       // Motor switch malfunction
             //
             hvac->state_curr = HVAC_STATE_S1;
-            HVAC_SWITCH_PORT = HVAC_SWITCH_STATE_S1;
+            HVAC_SET_SWITCH(HVAC_SWITCH_STATE_S1);
             hvac->state_timer = HVAC_TIMER_VALVE_CLOSE;
             break;
         case HVAC_STATE_S1:
@@ -367,8 +377,10 @@ static void hvac_on_s_minus(){
             break;
     }
 }
-
-static void hvac_check_error() {
+/*
+ * Return 0 - if no error; 1 - when sanything need to be reported to ctrl console
+ */
+static int hvac_check_error() {
     hvac_t *hvac = &g_hvac;
 
     switch(hvac->state_curr) {
@@ -387,6 +399,7 @@ static void hvac_check_error() {
             // Under/Over Temp2
             break;
     }
+    return 0;
 }
 
 void hvac_phts_fsm(hvac_t *hvac)
@@ -432,7 +445,10 @@ void hvac_phts_fsm(hvac_t *hvac)
 /*
  * HVAC main logic executed @ 10ms
  */
-void ha_hvac_fsm() {
+void ha_hvac_fsm()
+{
+
+    uint8_t node_changed = 0;
     hvac_t *hvac = &g_hvac;
 
     // ~@10ms
@@ -442,16 +458,30 @@ void ha_hvac_fsm() {
 
     hvac_heater_regulation(hvac);
 
-    if (hvac->state_timer > 0) hvac->state_timer --;
-
-    // Check transition
-    if (hvac->state_curr < hvac->state_trgt) {
-        hvac_on_s_plus();
-    } else if (hvac->state_curr > hvac->state_trgt) {
-        hvac_on_s_minus();
+    if (hvac->state_timer > 0) {
+        hvac->state_timer --;
+        node_changed |= (hvac->state_timer == 0);
     }
 
-    hvac_check_error();
+    // Check transition
+    if (hvac->state_curr != hvac->state_trgt) {
+        uint8_t prev_state = hvac->state_curr;
+        uint8_t prev_trgt = hvac->state_trgt;
+
+        if (hvac->state_curr < hvac->state_trgt) {
+            hvac_on_s_plus();
+        } else if (hvac->state_curr > hvac->state_trgt) {
+            hvac_on_s_minus();
+        }
+        node_changed |= (prev_state != hvac->state_curr);
+        node_changed |= (prev_trgt != hvac->state_trgt);
+    }
+
+    node_changed |= hvac_check_error();
+
+    if (node_changed) {
+        ha_hvac_node_update();
+    }
 }
 
 ISR(PCINT0_vect) {

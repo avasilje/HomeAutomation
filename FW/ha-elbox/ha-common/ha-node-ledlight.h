@@ -11,4 +11,7 @@
 #define LL_DATA_INTENSITY0  2
 #define LL_DATA_INTENSITY1  3
 #define LL_DATA_INTENSITY2  4
+#define LL_DATA_INTENSITY3  5
+#define LL_DATA_LEN         6
+
 

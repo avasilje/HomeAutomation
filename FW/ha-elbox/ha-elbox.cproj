@@ -42,12 +42,12 @@
       <ToolOptions>
         <InterfaceProperties>
           <IspClock>125000</IspClock>
-          <DebugWireClockDiv>8000</DebugWireClockDiv>
+          <DebugWireClockDiv>0</DebugWireClockDiv>
         </InterfaceProperties>
         <InterfaceName>debugWIRE</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.atmelice</ToolType>
-      <ToolNumber>J41800027559</ToolNumber>
+      <ToolNumber>J41800091993</ToolNumber>
       <ToolName>Atmel-ICE</ToolName>
     </com_atmel_avrdbg_tool_atmelice>
     <avrtoolinterface>debugWIRE</avrtoolinterface>

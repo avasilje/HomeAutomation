@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
 import com.av.ctrlconsoledbg.*
 import kotlinx.android.synthetic.main.ctrl_console_phts.*
 import org.greenrobot.eventbus.EventBus
@@ -17,7 +16,8 @@ import org.greenrobot.eventbus.ThreadMode
 class CtrlConsolePhtsFragment : Fragment() {
 
     private var mCtrlConsole: CtrlConsoleDbgActivity? = null
-    private var nodePhts: CcdNodePhts? = null
+    private var nodePhts: CcdNodePhts? = null   // Why to store local copy ???
+    var coeffNeedAll = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -65,15 +65,15 @@ class CtrlConsolePhtsFragment : Fragment() {
                         // Read single
                         _userInfo.state = CcdNodePhtsState.PROM_RD
                         _userInfo.coeffIdx = 2
-                        _nodePhts.coeffNeedAll = true
                         _nodePhts.userInfoChanges ++
+                        coeffNeedAll = false
                     }
                     phts_coef_read.id -> {
                         // Read all
                         _userInfo.state = CcdNodePhtsState.PROM_RD
                         _userInfo.coeffIdx = 0
-                        _nodePhts.coeffNeedAll = true
                         _nodePhts.userInfoChanges ++
+                        coeffNeedAll = true
                     }
                     phts_reset_pt.id -> {
                         _userInfo.state = CcdNodePhtsState.RESET_PT
@@ -84,7 +84,7 @@ class CtrlConsolePhtsFragment : Fragment() {
                         _nodePhts.userInfoChanges ++
                     }
                     phts_read.id -> {
-                        _userInfo.state = CcdNodePhtsState.READING
+                        _userInfo.state = CcdNodePhtsState.IDLE
                         _nodePhts.userInfoChanges ++
                     }
 
@@ -123,8 +123,22 @@ class CtrlConsolePhtsFragment : Fragment() {
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNodePhtsInfo(node: CcdNodePhts) {
-        nodePhts = node
+
+        nodePhts = node // TODO: double check -> nodePhts == node
         updatePhtsInfoUI()
+
+        if (node.info.state == CcdNodePhtsState.PROM_RD && coeffNeedAll) {
+            if (node.info.coeffIdx == PhtsCoef.values().size - 1) {
+                coeffNeedAll = false
+            } else {
+                // Read next
+                node.userInfo.state = CcdNodePhtsState.PROM_RD
+                node.userInfo.coeffIdx = node.info.coeffIdx + 1
+                node.userInfoChanges ++
+            }
+
+
+        }
     }
 
     fun updatePhtsInfoUI()
@@ -132,19 +146,20 @@ class CtrlConsolePhtsFragment : Fragment() {
         val _infoActual = nodePhts?.info?:return
 
         var s: String
-        s = "C1 PRESS SENS: ${_infoActual.coeffs[0]}"  ; phts_coeff_1.text = s
-        s = "C2 PRESS OFF: ${_infoActual.coeffs[1]}"   ; phts_coeff_2.text = s
-        s = "C3 TCS: ${_infoActual.coeffs[2]}"         ; phts_coeff_3.text = s
-        s = "C4 TCO: ${_infoActual.coeffs[3]}"         ; phts_coeff_4.text = s
-        s = "C5 REF TEMP: ${_infoActual.coeffs[4]}"    ; phts_coeff_5.text = s
-        s = "C6 TEMP SENS : ${_infoActual.coeffs[5]}"  ; phts_coeff_6.text = s
+        s = "C1 PRESS SENS: ${_infoActual.coeffs[1]}"  ; phts_coeff_1.text = s
+        s = "C2 PRESS OFF: ${_infoActual.coeffs[2]}"   ; phts_coeff_2.text = s
+        s = "C3 TCS: ${_infoActual.coeffs[3]}"         ; phts_coeff_3.text = s
+        s = "C4 TCO: ${_infoActual.coeffs[4]}"         ; phts_coeff_4.text = s
+        s = "C5 REF TEMP: ${_infoActual.coeffs[5]}"    ; phts_coeff_5.text = s
+        s = "C6 TEMP SENS : ${_infoActual.coeffs[6]}"  ; phts_coeff_6.text = s
 
         s = "State: ${_infoActual.state.name}" ; phts_state_actual.text     = s
         s = "Rd Cnt: ${_infoActual.rdCnt}"     ; phts_read_cnt_actual.text  = s
         s = "Coef Idx: ${_infoActual.coeffIdx}"; phts_coeff_idx_actual.text = s
 
+//        s = "Sensor (${_infoActual.rdCnt})"; phts_label.text = s
         s = "Temp: ${_infoActual.temperature}GradC" ; phts_temp_value.text = s
-        s = "Pressure: ${_infoActual.temperature}Pa"; phts_pressure_value.text = s
+        s = "Pressure: ${_infoActual.pressure}Pa"; phts_pressure_value.text = s
         s = "Humidity: ${_infoActual.humidity}%"    ; phts_humidity_value.text = s
 
         enableAll(true)

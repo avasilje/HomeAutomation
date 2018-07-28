@@ -3,6 +3,7 @@
 #include <avr/io.h>
 #include <avr/eeprom.h>
 #include <stdlib.h>
+#include <string.h>
 #include "ha-common.h"
 #include "ha-ledlight.h"
 #include "ha-ledlight_const.h"
@@ -30,6 +31,7 @@ uint8_t euc_leds_disabled_idx __attribute__ ((section (".config_param")));
 LED_INFO gta_leds[LEDS_NUM];
 
 uint8_t  guc_leds_disabled_idx;
+uint8_t  guc_leds_disabled_mask;
 uint8_t  guc_sw_event_mask;     //
 uint8_t  guc_curr_led_mode;     //
 uint8_t  guc_leds_steady;       // All LEDs are in steady state (flag)
@@ -58,26 +60,26 @@ void set_steady_state(uint8_t led_num, uint8_t val)
     // Val 1 ==> Off ==> output 0
     switch(led_num) {
         case 0:
-            // OUT_SW0_0 PINB2  ==> OC0A
-            PORTB = val ? (PORTB | OUT_SW0_0_MASK) : (PORTB & ~OUT_SW0_0_MASK);
+            // OUT_LED0_0 ==> OC0A (PINB2)
+            PORTB = val ? (PORTB | OUT_LED0_0_MASK) : (PORTB & ~OUT_LED0_0_MASK);
             TCCR0A &= ~((1 << COM0A1) | (1 << COM0A0));
             break;
 
         case 1:
-            // OUT_SW0_1 ==> OC1A
-            PORTB = val ? (PORTB | OUT_SW0_1_MASK) : (PORTB & ~OUT_SW0_1_MASK);
+            // OUT_LED0_1 ==> OC1A (PINB3)
+            PORTB = val ? (PORTB | OUT_LED0_1_MASK) : (PORTB & ~OUT_LED0_1_MASK);
             TCCR1A &= ~((1 << COM1A1) | (1 << COM1A0));
             break;
 
         case 2:
-            // OUT_SW0_2 ==> OC1B
-            PORTB = val ? (PORTB | OUT_SW0_2_MASK) : (PORTB & ~OUT_SW0_2_MASK);
+            // OUT_SW0_2 ==> OC1B (PINB4)
+            PORTB = val ? (PORTB | OUT_LED0_2_MASK) : (PORTB & ~OUT_LED0_2_MASK);
             TCCR1A &= ~((1 << COM1B1) | (1 << COM1B0));
             break;
 
         case 3:
-            // OUT_SW1_3 ==> OC0B
-            PORTD = val ? (PORTD | OUT_SW1_3_MASK) : (PORTD & ~OUT_SW1_3_MASK);
+            // OUT_SW1_3 ==> OC0B (PIND5)
+            PORTD = val ? (PORTD | OUT_LED1_3_MASK) : (PORTD & ~OUT_LED1_3_MASK);
             TCCR0A &= ~((1 << COM0B1) | (1 << COM0B0));
             break;
     }
@@ -130,11 +132,10 @@ void set_intensity (uint8_t led_num, uint8_t intensity_idx)
 
 void light_on(){
     uint8_t led_mask = 1;
-    uint8_t disabled_mask = guca_disable_roll_table[guc_leds_disabled_idx];
 
     for (uint8_t uc_i = 0; uc_i < LEDS_NUM; uc_i ++, led_mask <<= 1) {
         LED_INFO *led = &gta_leds[uc_i];
-        led->uc_target_intensity_idx =  led_mask & disabled_mask ? 0 : led->uc_on_intensity_idx;
+        led->uc_target_intensity_idx =  led_mask & guc_leds_disabled_mask ? 0 : led->uc_on_intensity_idx;
         led->uc_fade_timer = LED_FADEIN_PERIOD;
     }
 
@@ -159,7 +160,7 @@ void dimm_on(){
         if (gta_leds[uc_i].uc_on_intensity_idx == 0) {
             all_off ++;
         } else {
-            gta_leds[uc_i].uc_on_intensity_idx--
+            gta_leds[uc_i].uc_on_intensity_idx--;
         }
         gta_leds[uc_i].uc_fade_timer = LED_FADEOUT_PERIOD;
     }
@@ -174,13 +175,15 @@ void dimm_on(){
     g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY0] = gta_leds[0].uc_on_intensity_idx;
     g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY1] = gta_leds[1].uc_on_intensity_idx;
     g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY2] = gta_leds[2].uc_on_intensity_idx;
+    g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY3] = gta_leds[3].uc_on_intensity_idx;
     light_on();
 }
 
 void led_disable_roll(){
     guc_leds_disabled_idx++;
     if (guc_leds_disabled_idx == ROLL_ON_MASK_NUM) guc_leds_disabled_idx = 0;
-    g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_DIS_MASK ] = guc_leds_disabled_idx;
+    guc_leds_disabled_mask = guca_disable_roll_table[guc_leds_disabled_idx];
+    g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_DIS_MASK ] = guc_leds_disabled_mask;
     light_on();
 }
 
@@ -274,14 +277,18 @@ void ledlight_on_rx(uint8_t idx, const uint8_t *buf_in)
 {
     UNREFERENCED_PARAM(idx);
     uint8_t len = buf_in[NLINK_HDR_OFF_LEN];
-    !!!!!!!!! debug multi channel intensity from CCD !!!!!
+
     if (buf_in[NLINK_HDR_OFF_TYPE] == NODE_TYPE_LEDLIGHT) {
         // Direct LEDLIGHT state info. Typically received from user console
-        guc_curr_led_mode = g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_MODE];
-        guc_leds_disabled_idx = g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_DIS_MASK];
-        gta_leds[0].uc_on_intensity_idx = g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY0];
-        gta_leds[1].uc_on_intensity_idx = g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY1];
-        gta_leds[2].uc_on_intensity_idx = g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY2];
+        guc_curr_led_mode = buf_in[NLINK_HDR_OFF_DATA + LL_DATA_MODE];
+        guc_leds_disabled_mask = buf_in[NLINK_HDR_OFF_DATA + LL_DATA_DIS_MASK];
+        gta_leds[0].uc_on_intensity_idx = buf_in[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY0];
+        gta_leds[1].uc_on_intensity_idx = buf_in[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY1];
+        gta_leds[2].uc_on_intensity_idx = buf_in[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY2];
+        gta_leds[3].uc_on_intensity_idx = buf_in[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY3];
+
+        // Update node TX buffer to reflect changes in outgoing messages
+        memcpy(&g_ll_node->tx_buf[NLINK_HDR_OFF_DATA], &buf_in[NLINK_HDR_OFF_DATA], LL_DATA_LEN);
 
         if (guc_curr_led_mode == LED_MODE_ON) {
             light_on();
@@ -310,7 +317,7 @@ void ledlight_on_rx(uint8_t idx, const uint8_t *buf_in)
 
 void ha_ledlight_init()
 {
-    node_t *node = ha_nlink_node_register(LEDLIGHT_ADDR, NODE_TYPE_LEDLIGHT, ledlight_on_rx);
+    node_t *node = ha_nlink_node_register(LEDLIGHT_ADDR, NODE_TYPE_LEDLIGHT, ledlight_on_rx, NULL);
     g_ll_node = node;
 
     // Disable all event until light is in steady state after power on
@@ -321,18 +328,21 @@ void ha_ledlight_init()
     guc_leds_steady = 0;
 
     guc_leds_disabled_idx = 0;                      // All Enabled
+    guc_leds_disabled_mask = guca_disable_roll_table[guc_leds_disabled_idx];
     gta_leds[0].uc_on_intensity_idx = INTENSITIES_NUM - 1;     // Max;
     gta_leds[1].uc_on_intensity_idx = INTENSITIES_NUM - 1;     // Max;
     gta_leds[2].uc_on_intensity_idx = INTENSITIES_NUM - 1;     // Max;
+    gta_leds[3].uc_on_intensity_idx = INTENSITIES_NUM - 1;     // Max;
 
     node->tx_buf[NLINK_HDR_OFF_TYPE] = NODE_TYPE_LEDLIGHT;
-    node->tx_buf[NLINK_HDR_OFF_LEN] = 3;
-    // node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_MODE     ] = LED_MODE_OFF;
-    node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_DIS_MASK ] = guc_leds_disabled_idx;
+    node->tx_buf[NLINK_HDR_OFF_LEN] = LL_DATA_LEN;
+    // node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_MODE     ] = LED_MODE_OFF;     // Is set unconditionally on every packet send
+    node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_DIS_MASK ] = guc_leds_disabled_mask;
 
     g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY0] = gta_leds[0].uc_on_intensity_idx;
     g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY1] = gta_leds[1].uc_on_intensity_idx;
     g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY2] = gta_leds[2].uc_on_intensity_idx;
+    g_ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_INTENSITY3] = gta_leds[3].uc_on_intensity_idx;
 
     light_off();
 }
@@ -412,11 +422,11 @@ int main(void)
     DDRB = 0;
 
     // Out switches - output 0
-    DDRB |= OUT_SW0_MASK;
-    PORTB &= ~OUT_SW0_MASK;
+    DDRB |= OUT_LED0_MASK;
+    PORTB &= ~OUT_LED0_MASK;
 
-    DDRD |= OUT_SW1_MASK;
-    PORTD &= ~OUT_SW1_MASK;
+    DDRD |= OUT_LED1_MASK;
+    PORTD &= ~OUT_LED1_MASK;
 
     // Set timer 0 & 1 to 8-bit Fast PWM, no prescaler
     TCCR0A = (1 << WGM00) | (1 << WGM01);

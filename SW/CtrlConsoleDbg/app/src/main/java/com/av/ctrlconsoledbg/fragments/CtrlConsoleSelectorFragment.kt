@@ -77,7 +77,7 @@ class CtrlConsoleSelectorFragment : Fragment() {
             EventBus.getDefault().post(
                     CcdNodeInfoResp(
                             addr = 0x70,
-                            type = CcdNodeType.LEDLIGHT,
+                            v = CcdNodeType.LEDLIGHT,
                             data = byteArrayOf(
                                     1, // mode
                                     3, // disabled mask
@@ -91,12 +91,12 @@ class CtrlConsoleSelectorFragment : Fragment() {
             EventBus.getDefault().post(
                     CcdNodeInfoResp(
                             addr = 0x70,
-                            type = CcdNodeType.HVAC,
+                            v = CcdNodeType.HVAC,
                             data = byteArrayOf(test0, test1)))
 
 */
 
-            var test0: Byte = CcdNodePhtsState.INIT.ordinal.toByte()
+            var test0: Byte = CcdNodePhtsState.INIT.v.toByte()
             var test1: Byte = 0
             EventBus.getDefault().post(
                     CcdNodeInfoResp(

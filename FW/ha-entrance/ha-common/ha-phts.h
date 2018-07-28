@@ -24,7 +24,7 @@
 #define TR_PARAM_PT_D2_POLL  9
 
 typedef struct phts_s {
-   int8_t poll_timer;
+   int8_t poll_timer;       // -1 - poll timer stopped. Used during measurement
    int8_t state;
    int8_t prom_rd_idx;
 
@@ -43,6 +43,7 @@ uint8_t ha_phts_reset_pt(ha_phts_t *sensor);
 uint8_t ha_phts_reset_rh(ha_phts_t *sensor);
 uint8_t ha_phts_prom_rd(ha_phts_t *sensor, uint8_t rd_idx);
 uint8_t ha_phts_measurement_start(ha_phts_t *sensor);
+uint8_t ha_phts_measurement_stop(ha_phts_t *sensor);
 uint8_t ha_phts_measurement_poll(ha_phts_t *sensor);
 
 void ha_phts_init(ha_phts_t *sensor);

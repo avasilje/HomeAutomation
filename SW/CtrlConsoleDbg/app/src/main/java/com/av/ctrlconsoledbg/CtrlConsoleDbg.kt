@@ -3,8 +3,6 @@ package com.av.ctrlconsoledbg
 import android.bluetooth.BluetoothGattDescriptor
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.text.SpannableStringBuilder
 import android.util.Log
 import com.av.bleservice.AvBleService
 import com.av.bleservice.CcdBleDeviceDiscovered
@@ -14,7 +12,6 @@ import com.av.uart.AvUartTxMsg
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import kotlin.experimental.and
 
 data class CcdUartConnected(val dummy:Int = 0)
 data class CcdNodeInfoGet(val addr: Int = 0)
@@ -62,25 +59,27 @@ abstract class CcdNode(
         #define NLINK_HDR_OFF_LEN  4
         #define NLINK_HDR_OFF_DATA 5
          */
-        private const val CCD_NODE_INFO_FROM = 0
-        private const val CCD_NODE_INFO_TO   = 1
-        private const val CCD_NODE_INFO_CMD  = 2
-        private const val CCD_NODE_INFO_TYPE = 3
-        private const val CCD_NODE_INFO_LEN  = 4
-        private const val CCD_NODE_INFO_DATA = 5
+        const val CCD_NODE_INFO_FROM = 0
+        const val CCD_NODE_INFO_TO   = 1
+        const val CCD_NODE_INFO_CMD  = 2
+        const val CCD_NODE_INFO_TYPE = 3
+        const val CCD_NODE_INFO_LEN  = 4
+        const val CCD_NODE_INFO_DATA = 5
 
         /*
          * Called from AvUart thread
-         * Does sanity check and post message with specified note type
+         * Does sanity check and post message with specified note v
          */
         fun onRx(rxBuff: ByteArray) {
-            val nodeInfoLen = rxBuff[CCD_NODE_INFO_LEN].toInt()
-            val nodeInfoAddr = rxBuff[CCD_NODE_INFO_FROM].toInt()
 
             if (rxBuff.size < CCD_NODE_INFO_DATA) {
                 Log.e(TAG, "NODE_INFO: Corrupted")
                 return
             }
+
+            val nodeInfoLen = rxBuff[CCD_NODE_INFO_LEN].toInt()
+            val nodeInfoAddr = rxBuff[CCD_NODE_INFO_FROM].toInt()
+
             if (rxBuff.size != nodeInfoLen + CCD_NODE_INFO_DATA) {
                 Log.e(TAG, "NODE_INFO: Bad message length ${rxBuff.size}!=${nodeInfoLen + CCD_NODE_INFO_DATA}")
                 return
@@ -89,9 +88,9 @@ abstract class CcdNode(
                 Log.e(TAG, "NODE_INFO: Bad address")
             }
 
-            val nodeType = CcdNodeType.values().find { t -> t.type == rxBuff[CCD_NODE_INFO_TYPE].toInt() }
+            val nodeType = CcdNodeType.values().find { type -> type.v == rxBuff[CCD_NODE_INFO_TYPE].toInt() }
             if (nodeType == null) {
-                Log.d(TAG, "NODE_INFO: Bad type $nodeType")
+                Log.d(TAG, "NODE_INFO: Bad v $nodeType")
                 return
             }
             EventBus.getDefault().post(
@@ -103,13 +102,13 @@ abstract class CcdNode(
         }
     }
 }
-enum class CcdNodeType(val type: Int) {
+enum class CcdNodeType(val v: Int) {
     NONE(0x00),
     HVAC(0x10),
     LEDLIGHT(0x20),
     SWITCH(0x30),
-    PHTS(0x40),
-    CTRLCON(0x50)
+    CTRLCON(0x40),
+    PHTS(0x50)
 }
 
 class CtrlConsoleDbgActivity : AppCompatActivity() {
@@ -196,7 +195,7 @@ class CtrlConsoleDbgActivity : AppCompatActivity() {
                     node = CcdNodePhts(msg.addr, msg.data)
                 }
                 else -> {
-                    Log.d(TAG, "Unknow node type - ${msg.type}, from ${msg.addr}")
+                    Log.d(TAG, "Unknow node v - ${msg.type}, from ${msg.addr}")
                     return
                 }
             }
@@ -209,18 +208,20 @@ class CtrlConsoleDbgActivity : AppCompatActivity() {
         EventBus.getDefault().post(node)
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+//    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    /** Called from UART thread */
     fun onUartIdle() {
 
         val it = nodes.iterator()
         while (it.hasNext()) {
             val node = it.next().value
             when (node.type) {
-                CcdNodeType.LEDLIGHT,
-                CcdNodeType.SWITCH -> {
+                CcdNodeType.PHTS,
+                CcdNodeType.HVAC,
+                CcdNodeType.LEDLIGHT -> {
                     if (node.userInfoChangesLastTx != node.userInfoChanges) {
                         node.userInfoChangesLastTx = node.userInfoChanges
-                        uart.txMsgQueue.add( AvUartTxMsg(buff = node.pack()) )
+                        uart.txMsgQueue.add( AvUartTxMsg(data = node.pack(), cmd = AvUart.RX_BUFF_HDR_CMD_CTRLCON_SET) )
                         Log.d(TAG, "Node (${node.type}@${node.addr}) updated by userInfo")
                     }
                 }

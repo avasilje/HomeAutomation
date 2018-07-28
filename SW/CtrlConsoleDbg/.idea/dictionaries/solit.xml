@@ -2,7 +2,10 @@
   <dictionary name="solit">
     <words>
       <w>addr</w>
+      <w>coeff</w>
+      <w>coeffs</w>
       <w>hvac</w>
+      <w>phts</w>
     </words>
   </dictionary>
 </component>

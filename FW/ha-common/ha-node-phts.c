@@ -37,19 +37,25 @@ void phts_on_rx(uint8_t idx, const uint8_t *buf_in)
     }
 
     switch (buf_in[NLINK_HDR_OFF_DATA + PHTS_CMD_OFF]) {
-        case PHTS_CMD_RESET_PT:
+        case PHTS_STATE_RESET_PT:
+            prev_prom_rd_idx = -1;
             rc = ha_phts_reset_pt(phts);
             break;
-        case PHTS_CMD_RESET_RH:
+        case PHTS_STATE_RESET_RH:
+            prev_prom_rd_idx = -1;
             rc = ha_phts_reset_rh(phts);
             break;
-        case PHTS_CMD_PROM_RD:
+        case PHTS_STATE_PROM_RD:
 			rd_idx = buf_in[NLINK_HDR_OFF_DATA + PHTS_CMD_PROM_RD_IDX_OFF];
             rc = ha_phts_prom_rd(phts, rd_idx);
 			break;
-        case PHTS_CMD_MEASURE:
+        case PHTS_STATE_IDLE:
             rc = ha_phts_measurement_start(phts);
 			break;
+        case PHTS_STATE_INIT:
+            rc = ha_phts_measurement_stop(phts);
+			break;
+
     }
 
     if (rc) {
@@ -129,7 +135,7 @@ void ha_node_phts_on_idle() {
     if (len) {
         node->tx_buf[NLINK_HDR_OFF_DATA + PHTS_STATE] = phts->state;
         node->tx_buf[NLINK_HDR_OFF_LEN] = len;
-        ha_nlink_node_send(node, LEDLIGHT_ADDR, NLINK_CMD_INFO);
+        ha_nlink_node_send(node, PHTS_ADDR, NLINK_CMD_INFO);
     }
     prev_state = phts->state;
 

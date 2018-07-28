@@ -259,9 +259,10 @@ void action_default()
 	// MARK         Any CMD    Length     xxx
 
 	// Receive full message
-	uint8_t len = ha_uart.rx_buff[UART_CC_HDR_LEN];
+	uint8_t len = UART_CC_HDR_SIZE + ha_uart.rx_buff[UART_CC_HDR_LEN];
 	while(ha_uart.rx_wr_idx < len);
-!!!!!!!!!!! debug this with -O2 !!!!!!!!!!
+ //!!!!!!!!!!! debug this with -O2 !!!!!!!!!!
+ //!!! debug to often resync 1. reduce baudrate; try -02 !!!
 }
 
 void action_signature()
@@ -323,7 +324,7 @@ void action_ctrlcon_get()
         ha_uart_resync();
     }
 
-    // Check is message address is available, wait if not yet
+    // Check is message address already available, wait if not yet
     while(ha_uart.rx_wr_idx < UART_CC_HDR_SIZE + CC_ACTION_GET_SIZE);
 
     // Get node address
@@ -343,7 +344,7 @@ void action_ctrlcon_set()
 	// Receive full message
 	action_default();
 
-	ha_node_ctrlcon_on_rx_uart(&ha_uart.rx_buff[UART_CC_HDR_SIZE], ha_uart.rx_buff[UART_CC_HDR_LEN]);
+	ha_node_ctrlcon_on_rx_uart(&ha_uart.rx_buff[UART_CC_HDR_DATA], ha_uart.rx_buff[UART_CC_HDR_LEN]);
 
 }
 

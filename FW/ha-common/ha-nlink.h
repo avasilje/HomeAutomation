@@ -21,7 +21,7 @@ typedef struct node_s {
     // Registered values
     uint8_t addr;       // Node address
     uint8_t type;       // Node type
-    uint8_t rx_buf[NLINK_COMM_BUF_SIZE];
+    uint8_t rx_buf[NLINK_COMM_BUF_SIZE];    // ?? never used ??? Incomming nlink RX buffer dispatched directly to nodes internal structure by on_rx_cb()
     node_rx_cb_t on_rx_cb;
     node_tx_cb_t on_tx_cb;
 

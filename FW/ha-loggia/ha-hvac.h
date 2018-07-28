@@ -7,10 +7,10 @@
 #define HVAC_HEATER_CONTROL_DIR     DDRD
 #define HVAC_HEATER_CONTROL_MASK    _BV(PIND5)   // OC0B
 
-#define HVAC_SWITCH_VALVE   PINB4
-#define HVAC_SWITCH_MOTOR   PINB3
+#define HVAC_SWITCH_VALVE   PINB3
+#define HVAC_SWITCH_MOTOR   PINB2
 #define HVAC_SWITCH_MOTOR2  PINB2
-#define HVAC_SWITCH_HEATER  PINB1
+#define HVAC_SWITCH_HEATER  PINB4
 
 #define HVAC_SWITCH_MASK ( \
     _BV(HVAC_SWITCH_VALVE  ) |\
@@ -54,7 +54,8 @@
 
 #define HVAC_TIMER_PERIOD_MS	10
 #define HVAC_TIMER_SEC  (1000 / HVAC_TIMER_PERIOD_MS)
-#define HVAC_TIMER_VALVE_OPEN       (10 * HVAC_TIMER_SEC)  // TODO: TBD. Time while motor rotates valve from one state to another
+#define HVAC_TIMER_VALVE_OPEN       (15 * HVAC_TIMER_SEC)  // Full actuator running time = 150s (RDAB5-230). 50% should be enough to switch to next/prev state
+//#define HVAC_TIMER_VALVE_OPEN       (75 * HVAC_TIMER_SEC)  // Full actuator running time = 150s (RDAB5-230). 50% should be enough to switch to next/prev state
 #define HVAC_TIMER_VALVE_CLOSE      HVAC_TIMER_VALVE_OPEN
 
 #define HVAC_TIMER_MOTOR_START      (2  * HVAC_TIMER_SEC)  // Time
@@ -65,8 +66,9 @@ typedef struct hvac_s {
     uint8_t state_curr;
     uint16_t state_timer;
 
-    uint8_t heater_ctrl_mval;  // (MODE << 7)| Fixed value set by user or reg
-    uint8_t heater_ctrl_curr;  // Current PWM value set
+    uint8_t heater_ctrl_mode;   // Automatic or manual temperature control
+    uint8_t heater_ctrl_trgt;   // Fixed value set by user or reg
+    uint8_t heater_ctrl_curr;   // Current PWM value set
 
     node_t   *node;
     ha_phts_t   sensor;

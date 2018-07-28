@@ -54,10 +54,12 @@ class CtrlConsoleHvacFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         enableAll(false)
+        hvac_state_timer.visibility = View.INVISIBLE
+
         val heaterBarListener = object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar :SeekBar , progress : Int, fromUser : Boolean){
                 val _userInfo = nodeHvac?.userInfo?: return
-                _userInfo.heaterTarget = CcdNodeHvacHeaterCtrl.values()[progress]
+                _userInfo.heaterTarget = CcdNodeHvacHeaterCtrl.valueOf(progress)
                 hvac_heater_value.text = CcdNodeHvac.ctrlToString(_userInfo.heaterMode, _userInfo.heaterTarget)
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -95,6 +97,9 @@ class CtrlConsoleHvacFragment : Fragment() {
                     else -> return
                 }
                 refreshHvacUserInfoUI()
+                val _node = nodeHvac
+                if (_node != null) { _node.userInfoChanges++ }
+                nodeHvac?.userInfoChanges?.inc()
             }
         }
 
@@ -135,14 +140,17 @@ class CtrlConsoleHvacFragment : Fragment() {
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNodeHvacInfo(node: CcdNodeHvac) {
+        val isNew = (nodeHvac == null)
         nodeHvac = node
         updateHvacInfoUI()
+        if (isNew)
+            refreshHvacUserInfoUI()
     }
 
     fun updateHvacInfoUI()
     {
         val _infoActual = nodeHvac?.info?:return
-        when(_infoActual.stateTarget){
+        when(_infoActual.stateCurr){
             CcdNodeHvacState.S1 -> {
                 hvac_valve_state_actual.text = "Closed"
                 hvac_motor_state_actual.text = "Stopped"
@@ -166,8 +174,25 @@ class CtrlConsoleHvacFragment : Fragment() {
             }
         }
 
-        val stateStr = "${_infoActual.stateCurr.name} --> ${_infoActual.stateTarget.name}"
+
+        val stateStr: String
+
+        if (_infoActual.stateCurr.v < _infoActual.stateTarget.v) {
+            stateStr = "${_infoActual.stateCurr.name} --> ${_infoActual.stateTarget.name}"
+        } else if (_infoActual.stateCurr.v > _infoActual.stateTarget.v) {
+            stateStr = "${_infoActual.stateTarget.name} <-- ${_infoActual.stateCurr.name}"
+        } else {
+            stateStr = "${_infoActual.stateCurr.name}"
+        }
         hvac_state_actual.text = stateStr
+
+        if (_infoActual.stateTimer != 0) {
+            hvac_state_timer.visibility = View.VISIBLE
+            val s = "${(_infoActual.stateTimer * 256 /100)}sec"
+            hvac_state_timer.text = s
+        } else {
+            hvac_state_timer.visibility = View.INVISIBLE
+        }
 
         val s = "${_infoActual.heaterMode.name} - ${CcdNodeHvac.ctrlToString(_infoActual.heaterMode, _infoActual.heaterTarget)}"
         hvac_heater_actual.text = s
@@ -217,11 +242,13 @@ class CtrlConsoleHvacFragment : Fragment() {
         hvac_state_user.text = _userInfo.stateTarget.name
 
         hvac_heater_mode.isChecked = (_userInfo.heaterMode == CcdNodeHvacHeaterMode.AUTO)
-        hvac_heater_bar.progress = _userInfo.heaterTarget.ordinal
+        hvac_heater_bar.progress = _userInfo.heaterTarget.v
         hvac_heater_value.text = CcdNodeHvac.ctrlToString(_userInfo.heaterMode, _userInfo.heaterTarget)
     }
 
     fun enableAll(enabled: Boolean) {
+
+        val visibility = if (enabled) View.VISIBLE else View.INVISIBLE
 
         hvac_valve_icon.isEnabled   = enabled
         hvac_motor_icon.isEnabled   = enabled
@@ -229,7 +256,18 @@ class CtrlConsoleHvacFragment : Fragment() {
 
         hvac_heater_mode.isEnabled  = enabled
         hvac_heater_bar.isEnabled   = enabled
-        hvac_heater_state.isEnabled = enabled
+
+
+        hvac_valve_state.visibility = visibility
+        hvac_motor_state.visibility = visibility
+        hvac_heater_state.visibility = visibility
+
+        hvac_valve_state_actual.visibility = visibility
+        hvac_motor_state_actual.visibility = visibility
+        hvac_heater_state_actual.visibility = visibility
+        hvac_state_user.visibility = visibility
+        hvac_state_actual.visibility = visibility
+
     }
 
     companion object {

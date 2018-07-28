@@ -1,10 +1,18 @@
 package com.av.ctrlconsoledbg
 
 import android.util.Log
-import kotlin.experimental.and
+enum class PhtsCoef {
+    CRC,
+    C1_PRESSURE_SENSITIVITY,
+    C2_PRESSURE_OFFSET,
+    C3_PRESSURE_SENSITIVITY_TCOEF,
+    C4_PRESSURE_OFFSET_TCOEF,
+    C5_REF_TEMPERATURE,
+    C6_TEMPERATURE_TCOEF
+}
 
 data class NodePhtsInfo(
-    var coeffs: MutableList<Int> = MutableList(size = 6, init = { _ -> 0}),
+    var coeffs: MutableList<Int> = MutableList(size = PhtsCoef.values().size, init = { _ -> 0}),
     var rdCnt: Int = 0,
     var state: CcdNodePhtsState = CcdNodePhtsState.NONE,
     var coeffIdx: Int = -1,
@@ -17,7 +25,6 @@ class CcdNodePhts(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.PHTS) 
     // Parameters received from the Node
     var info: NodePhtsInfo
     var userInfo: NodePhtsInfo
-    var coeffNeedAll = false
     // var pollTimer: Int
     // var state
     // var coeffReadFsm
@@ -32,23 +39,37 @@ class CcdNodePhts(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.PHTS) 
 
     override fun pack(): ByteArray {
 
-        return when(userInfo.state) {
+        val data = when(userInfo.state) {
             CcdNodePhtsState.RESET_PT,
             CcdNodePhtsState.RESET_RH,
-            CcdNodePhtsState.READING -> {
-                byteArrayOf(userInfo.state.ordinal.toByte())
+            CcdNodePhtsState.IDLE -> {
+                byteArrayOf(userInfo.state.v.toByte())
             }
             CcdNodePhtsState.PROM_RD -> {
-                byteArrayOf(userInfo.state.ordinal.toByte(), userInfo.coeffIdx.toByte())
+                byteArrayOf(userInfo.state.v.toByte(), (userInfo.coeffIdx shl 1).toByte())
             }
             else -> byteArrayOf()
         }
+
+        val hdr = ByteArray(CCD_NODE_INFO_DATA)
+
+        hdr[CCD_NODE_INFO_FROM] = 0x90.toByte() // From CtrlCon
+        hdr[CCD_NODE_INFO_TO]   = addr.toByte()
+        hdr[CCD_NODE_INFO_CMD]  = 0
+        hdr[CCD_NODE_INFO_TYPE] = type.v.toByte()
+        hdr[CCD_NODE_INFO_LEN] = data.size.toByte()
+
+        return (hdr + data)
+
     }
 
     fun updateCoeff(data: ByteArray) {
 
-        val idx =  data[0].toInt()
-        val c = data[0].toInt().or(data[1].toInt() shl 8)
+        val idx =  data[0].toInt() ushr 1
+
+        val c = ((data[1].toInt() and 0xFF) shl 0) or
+                ((data[2].toInt() and 0xFF) shl 8)
+
         if (info.coeffs.indices.contains(idx)) {
             info.coeffs[idx] = c
         } else {
@@ -56,16 +77,24 @@ class CcdNodePhts(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.PHTS) 
         }
     }
 
+    fun calTemperature(adcT : Int) : Float {
+        // Check is coefficient are valid
+        // dT = D2 - TREF = D2 - C5 * 2^8
+        // TEMP = 20°C + dT *TEMPSENS = 2000 + dT *C6 / 2^23
+        val dT = adcT - info.coeffs[PhtsCoef.C5_REF_TEMPERATURE.ordinal]
+        val t = 2000 + dT / (1 shl 23)
+        return t.toFloat()/100
+    }
     fun updateReading(data: ByteArray) {
-        val rdCnt =  data[0].toInt()
-        val p = data[0].toInt().or(data[1].toInt() shl 8)
-        val t = data[0].toInt().or(data[1].toInt() shl 8)
-        val h = data[0].toInt().or(data[1].toInt() shl 8)
-
-// TODO: calculate values if coefficients are available
-        info.pressure       = p
-        info.temperature    = t
-        info.humidity       = h
+        info.rdCnt =  data[0].toInt()
+//        val p = (data[1].toInt() and 0xFF) or ((data[2].toInt() and 0xFF) shl 8)
+//        val adcT = (data[3].toInt() and 0xFF) or ((data[4].toInt() and 0xFF) shl 8)
+////        val h = (data[0].toInt() and 0xFF) or ((data[1].toInt() and 0xFF) shl 8)
+//!!!!!!!!!
+//        t = calTemperature(adcT)
+        info.pressure       = 0
+        info.temperature    = 1
+        info.humidity       = 0
 
         Log.e(TAG, "Reading (${info.rdCnt}): ${info.pressure}mBar, ${info.temperature}C, ${info.humidity}%")
     }
@@ -94,12 +123,12 @@ class CcdNodePhts(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.PHTS) 
                 }
                 updateCoeff(data.sliceArray(IntRange(1, 3)))
             }
-            CcdNodePhtsState.READING -> {
-                if (data.size != 8) {
-                    Log.e(TAG, "Bad READING len ${data.size}")
+            CcdNodePhtsState.IDLE -> {
+                if (data.size != 6) {
+                    Log.e(TAG, "Bad IDLE len ${data.size}")
                     return
                 }
-                updateReading(data.sliceArray(IntRange(1, 3)))
+                updateReading(data.sliceArray(IntRange(1, 5)))
             }
             else -> {
                 Log.e(TAG, "Unhandled state $state")
@@ -111,13 +140,13 @@ class CcdNodePhts(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.PHTS) 
     }
 }
 
-enum class CcdNodePhtsState(v: Int) {
-    NONE(0x00),
-    INIT(0x01),
-    RESET_PT(0x1E),
-    RESET_RH(0xFE),
-    PROM_RD(0xA0),
-    READING(0x1B),
+enum class CcdNodePhtsState(val v: Int) {
+    NONE(0),
+    INIT(1),
+    RESET_PT(2),
+    RESET_RH(3),
+    PROM_RD(4),
+    IDLE(5),    // aka MEASURE
 }
 
 

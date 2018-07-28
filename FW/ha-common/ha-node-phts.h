@@ -8,10 +8,11 @@
 #define PHTS_CMD_OFF                0       // Contains any of  PHTS_CMD_xxx
 #define PHTS_CMD_PROM_RD_IDX_OFF    1
 
-#define PHTS_CMD_RESET_PT       1
-#define PHTS_CMD_RESET_RH       2
-#define PHTS_CMD_PROM_RD        3
-#define PHTS_CMD_MEASURE        4
+#define PHTS_CMD_INIT           1
+#define PHTS_CMD_RESET_PT       2
+#define PHTS_CMD_RESET_RH       3
+#define PHTS_CMD_PROM_RD        4
+#define PHTS_CMD_MEASURE        5
 
 
 #define PHTS_STATE         0

@@ -2,10 +2,7 @@ package com.av.uart
 
 import android.content.Context
 import android.util.Log
-import com.av.ctrlconsoledbg.CcdNode
-import com.av.ctrlconsoledbg.CcdNodeInfoResp
-import com.av.ctrlconsoledbg.CcdNodeType
-import com.av.ctrlconsoledbg.CcdUartConnected
+import com.av.ctrlconsoledbg.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -14,8 +11,16 @@ import com.ftdi.j2xx.D2xxManager
 import com.ftdi.j2xx.FT_Device
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class AvUartTxMsg(var buff: ByteArray) {
+class AvUartTxMsg(data: ByteArray, cmd: Byte = AvUart.RX_BUFF_HDR_CMD_CTRLCON_SET) {
+
+    var buff = ByteArray(AvUart.RX_BUFF_HDR_OFF_DATA) + data.copyOf()
     var rdIdx = 0
+    init {
+        buff[AvUart.RX_BUFF_HDR_OFF_MARK0] = 0x41.toByte()
+        buff[AvUart.RX_BUFF_HDR_OFF_MARK1] = 0x86.toByte()
+        buff[AvUart.RX_BUFF_HDR_OFF_CMD] = cmd
+        buff[AvUart.RX_BUFF_HDR_OFF_LEN] = data.size.toByte()
+    }
 }
 
 class AvUart(val context: Context) {
@@ -138,7 +143,8 @@ class AvUart(val context: Context) {
     }
     private fun rxHdrIsValid() =
             ((rxHdr[RX_BUFF_HDR_OFF_MARK0] == 0x41.toByte()) &&
-             (rxHdr[RX_BUFF_HDR_OFF_MARK1] == 0x86.toByte()))
+             (rxHdr[RX_BUFF_HDR_OFF_MARK1] == 0x86.toByte()) &&
+             (rxHdr[RX_BUFF_HDR_OFF_CMD] != RX_BUFF_HDR_CMD_INVALID))
 
     private fun rxHdrReadSingle() : Boolean{
         val ba = ByteArray(1)
@@ -167,6 +173,8 @@ class AvUart(val context: Context) {
 
         if (rxBuff.size != buffLen){ // TODO: Q:? where buffer size is defined ?
             Log.e(TAG, "Bad packet length ${rxBuff.size} != ${buffLen}")
+            rxSynced = false
+            ftDev?.purge(1) // Purge RX
             return
         }
         when(rxHdr[RX_BUFF_HDR_OFF_CMD]){
@@ -174,7 +182,7 @@ class AvUart(val context: Context) {
                 CcdNode.onRx(rxBuff)
             }
             RX_BUFF_HDR_CMD_RESYNC -> {
-                txMsgQueue.add(AvUartTxMsg(buff = packSync()))
+                txMsgQueue.add(AvUartTxMsg(data = byteArrayOf(), cmd = RX_BUFF_HDR_CMD_RESYNC))
             }
             else -> {
                 Log.e(TAG, "Unknown message")
@@ -212,13 +220,13 @@ class AvUart(val context: Context) {
             // Read data
             val btr = rxHdr[RX_BUFF_HDR_OFF_LEN].toInt()
             if (dev.queueStatus >= btr) {
+                rxBuff = ByteArray(btr)
                 if (btr > 0 && dev.read(rxBuff, btr) != btr) {
                     rxSynced = false
                     Log.d(TAG, "Can't read Data from the device")
                 } else {
-                    // TODO: Q: Truncate buffer to btr?
                     rxBuffDispatch()
-                    rxHdr[RX_BUFF_HDR_OFF_LEN] = 0    // Invalidate packet
+                    rxHdr[RX_BUFF_HDR_OFF_CMD] = RX_BUFF_HDR_CMD_INVALID
                 }
             }
         }
@@ -229,7 +237,13 @@ class AvUart(val context: Context) {
         val dev = ftDev?:return
         if (!dev.isOpen) return
 
-        val msg = txMsgQueue.peek()
+        var msg = txMsgQueue.peek()
+
+        if (msg == null) {
+            (context as CtrlConsoleDbgActivity).onUartIdle()
+            msg = txMsgQueue.peek()
+        }
+
         if (msg != null) {
             val bytesWritten = dev.write(msg.buff)
             if (bytesWritten == msg.buff.size) {
@@ -241,15 +255,17 @@ class AvUart(val context: Context) {
     }
 
     companion object {
-        private const val TAG = "CcdUart"
-        private const val RX_BUFF_HDR_OFF_MARK0 = 0
-        private const val RX_BUFF_HDR_OFF_MARK1 = 1
-        private const val RX_BUFF_HDR_OFF_CMD   = 2
-        private const val RX_BUFF_HDR_OFF_LEN   = 3
-        private const val RX_BUFF_HDR_OFF_DATA  = 4
+        const val TAG = "CcdUart"
+        const val RX_BUFF_HDR_OFF_MARK0 = 0
+        const val RX_BUFF_HDR_OFF_MARK1 = 1
+        const val RX_BUFF_HDR_OFF_CMD   = 2
+        const val RX_BUFF_HDR_OFF_LEN   = 3
+        const val RX_BUFF_HDR_OFF_DATA  = 4
 
-        private const val RX_BUFF_HDR_CMD_CTRLCON_INFO  = 0x21.toByte()
-        private const val RX_BUFF_HDR_CMD_RESYNC  = 0x31.toByte()
+        const val RX_BUFF_HDR_CMD_INVALID  = 0x11.toByte()      // Is used to invalidate RxHdr buffer
+        const val RX_BUFF_HDR_CMD_CTRLCON_INFO  = 0x21.toByte()
+        const val RX_BUFF_HDR_CMD_CTRLCON_SET  = 0x22.toByte()
+        const val RX_BUFF_HDR_CMD_RESYNC  = 0x31.toByte()
     }
 }
 
