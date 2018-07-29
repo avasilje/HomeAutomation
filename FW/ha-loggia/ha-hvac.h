@@ -54,8 +54,10 @@
 
 #define HVAC_TIMER_PERIOD_MS	10
 #define HVAC_TIMER_SEC  (1000 / HVAC_TIMER_PERIOD_MS)
-#define HVAC_TIMER_VALVE_OPEN       (15 * HVAC_TIMER_SEC)  // Full actuator running time = 150s (RDAB5-230). 50% should be enough to switch to next/prev state
-//#define HVAC_TIMER_VALVE_OPEN       (75 * HVAC_TIMER_SEC)  // Full actuator running time = 150s (RDAB5-230). 50% should be enough to switch to next/prev state
+#define HVAC_TIMER_VALVE_GUARD      (5  * HVAC_TIMER_SEC)    // Is used as a guard time for valve open/close to save time during to fast state changes.
+                                                             // OPEN timer is set to (FULL_TIME - CURR_CLOSE_TIME) and vice versa
+
+#define HVAC_TIMER_VALVE_OPEN       (75 * HVAC_TIMER_SEC)    // Full actuator running time = 150s (RDAB5-230). 50% should be enough to switch to next/prev state
 #define HVAC_TIMER_VALVE_CLOSE      HVAC_TIMER_VALVE_OPEN
 
 #define HVAC_TIMER_MOTOR_START      (2  * HVAC_TIMER_SEC)  // Time
@@ -63,8 +65,11 @@
 
 typedef struct hvac_s {
     uint8_t state_trgt;
+    uint8_t state_trgt_prev;
+
     uint8_t state_curr;
-    uint16_t state_timer;
+    uint16_t state_timer_p;
+    uint16_t state_timer_m;
 
     uint8_t heater_ctrl_mode;   // Automatic or manual temperature control
     uint8_t heater_ctrl_trgt;   // Fixed value set by user or reg

@@ -345,14 +345,26 @@ void action_ctrlcon_set()
 	action_default();
 
 	ha_node_ctrlcon_on_rx_uart(&ha_uart.rx_buff[UART_CC_HDR_DATA], ha_uart.rx_buff[UART_CC_HDR_LEN]);
+}
 
+void action_ctrlcon_disc()
+{
+    // Command format
+    // 0x41 0x86 0x23  0xLL    |
+    // MARK      CMD   Length  |
+
+	// Receive full message
+	action_default();
+
+    ha_node_ctrlcon_discover();
 }
 
 T_ACTION gta_action_table[] __attribute__ ((section (".act_const"))) = {
     { "mark", 0x00, (void*)0xFEED        },    // Table signature
     { "sign", 0x11, action_signature     },
-    { "cc_g", 0x21, action_ctrlcon_get },
-    { "cc_s", 0x22, action_ctrlcon_set },
+    { "cc_g", 0x21, action_ctrlcon_get   },
+    { "cc_s", 0x22, action_ctrlcon_set   },
+    { "cc_d", 0x23, action_ctrlcon_disc  },
     { ""    , 0xFF, NULL                 }     // End of table
 };
 

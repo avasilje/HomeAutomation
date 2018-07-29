@@ -18,6 +18,7 @@ class CtrlConsoleHvacFragment : Fragment() {
 
     private var mCtrlConsole: CtrlConsoleDbgActivity? = null
     private var nodeHvac: CcdNodeHvac? = null
+    private var trackerStarted = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -58,19 +59,27 @@ class CtrlConsoleHvacFragment : Fragment() {
 
         val heaterBarListener = object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar :SeekBar , progress : Int, fromUser : Boolean){
-                val _userInfo = nodeHvac?.userInfo?: return
-                _userInfo.heaterTarget = CcdNodeHvacHeaterCtrl.valueOf(progress)
-                hvac_heater_value.text = CcdNodeHvac.ctrlToString(_userInfo.heaterMode, _userInfo.heaterTarget)
+                // Ignore seekbar update not from user touches
+                if (!trackerStarted) false
+
+                val _node = nodeHvac?:return
+                _node.userInfo.heaterTarget = CcdNodeHvacHeaterCtrl.valueOf(progress)
+                hvac_heater_value.text = CcdNodeHvac.ctrlToString(_node.userInfo.heaterMode, _node.userInfo.heaterTarget)
+
+                _node.userInfoChanges++
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                trackerStarted = true
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                trackerStarted = false
             }
         }
         val elementListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val _userInfo = nodeHvac?.userInfo?: return
+                val _node = nodeHvac?:return
+                val _userInfo = _node.userInfo
                 if (v == null) return
                 when(v.id) {      // how to get callers ID???
                     hvac_valve_icon.id -> {
@@ -97,9 +106,8 @@ class CtrlConsoleHvacFragment : Fragment() {
                     else -> return
                 }
                 refreshHvacUserInfoUI()
-                val _node = nodeHvac
-                if (_node != null) { _node.userInfoChanges++ }
-                nodeHvac?.userInfoChanges?.inc()
+
+                _node.userInfoChanges++
             }
         }
 
@@ -109,16 +117,19 @@ class CtrlConsoleHvacFragment : Fragment() {
 
         hvac_heater_bar.setOnSeekBarChangeListener (heaterBarListener)
 
-        hvac_heater_mode.setOnCheckedChangeListener { v, b ->
-            val _userInfo = nodeHvac?.userInfo
-            if (_userInfo != null) {
+        hvac_heater_mode.setOnCheckedChangeListener { _, b ->
+            val _node = nodeHvac
+            if (_node != null) {
+                val _userInfo = _node.userInfo
                 if (b) {
                     _userInfo.heaterMode = CcdNodeHvacHeaterMode.AUTO
                 } else {
                     _userInfo.heaterMode = CcdNodeHvacHeaterMode.MANUAL
                 }
                 hvac_heater_value.text = CcdNodeHvac.ctrlToString(_userInfo.heaterMode, _userInfo.heaterTarget)
+                _node.userInfoChanges++
             }
+
         }
 
         val it = mCtrlConsole!!.nodes.iterator()
@@ -152,12 +163,20 @@ class CtrlConsoleHvacFragment : Fragment() {
         val _infoActual = nodeHvac?.info?:return
         when(_infoActual.stateCurr){
             CcdNodeHvacState.S1 -> {
-                hvac_valve_state_actual.text = "Closed"
+                if (_infoActual.stateTimer == 0) {
+                    hvac_valve_state_actual.text = "Closed"
+                } else {
+                    hvac_valve_state_actual.text = "Closing..."
+                }
                 hvac_motor_state_actual.text = "Stopped"
                 hvac_heater_state_actual.text = "OFF"
             }
             CcdNodeHvacState.S2 -> {
-                hvac_valve_state_actual.text = "Opened"
+                if (_infoActual.stateTimer == 0) {
+                    hvac_valve_state_actual.text = "Opened"
+                } else {
+                    hvac_valve_state_actual.text = "Opening..."
+                }
                 hvac_motor_state_actual.text = "Stopped"
                 hvac_heater_state_actual.text = "OFF"
             }
@@ -165,7 +184,11 @@ class CtrlConsoleHvacFragment : Fragment() {
 
                 hvac_valve_state_actual.text = "Opened"
                 hvac_motor_state_actual.text = "Running"
-                hvac_heater_state_actual.text = "OFF"
+                if (_infoActual.stateTimer == 0) {
+                    hvac_heater_state_actual.text = "OFF"
+                } else {
+                    hvac_heater_state_actual.text = "Cooling..."
+                }
             }
             CcdNodeHvacState.S4 -> {
                 hvac_valve_state_actual.text = "Opened"

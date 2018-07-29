@@ -37,31 +37,23 @@ class CcdNodeLedLight(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.LE
         userInfo = info
     }
 
-    override fun pack(): ByteArray {
+    override fun pack(data: ByteArray?, dest: Int?): ByteArray {
         val disabledMask =
                 (if (userInfo.channels[0].disabled) 1 else 0) +
                 (if (userInfo.channels[1].disabled) 2 else 0) +
                 (if (userInfo.channels[2].disabled) 4 else 0) +
                 (if (userInfo.channels[3].disabled) 8 else 0)
 
-        val data = byteArrayOf(
+        val nodeData = byteArrayOf(
                 userInfo.mode.v.toByte(),
                 disabledMask.toByte(),
                 userInfo.channels[0].intensity.toByte(),
                 userInfo.channels[1].intensity.toByte(),
                 userInfo.channels[2].intensity.toByte(),
-                userInfo.channels[3].intensity.toByte()
-        )
+                userInfo.channels[3].intensity.toByte())
 
-        val hdr = ByteArray(CCD_NODE_INFO_DATA)
+        return super.pack(nodeData, dest)
 
-        hdr[CCD_NODE_INFO_FROM] = 0x90.toByte() // From CtrlCon
-        hdr[CCD_NODE_INFO_TO]   = addr.toByte()
-        hdr[CCD_NODE_INFO_CMD]  = 0
-        hdr[CCD_NODE_INFO_TYPE] = type.v.toByte()
-        hdr[CCD_NODE_INFO_LEN] = data.size.toByte()
-
-        return (hdr + data)
     }
 
     override fun update(data: ByteArray?) {

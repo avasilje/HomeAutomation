@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class AvUartTxMsg(data: ByteArray, cmd: Byte = AvUart.RX_BUFF_HDR_CMD_CTRLCON_SET) {
 
     var buff = ByteArray(AvUart.RX_BUFF_HDR_OFF_DATA) + data.copyOf()
-    var rdIdx = 0
     init {
         buff[AvUart.RX_BUFF_HDR_OFF_MARK0] = 0x41.toByte()
         buff[AvUart.RX_BUFF_HDR_OFF_MARK1] = 0x86.toByte()
@@ -264,7 +263,8 @@ class AvUart(val context: Context) {
 
         const val RX_BUFF_HDR_CMD_INVALID  = 0x11.toByte()      // Is used to invalidate RxHdr buffer
         const val RX_BUFF_HDR_CMD_CTRLCON_INFO  = 0x21.toByte()
-        const val RX_BUFF_HDR_CMD_CTRLCON_SET  = 0x22.toByte()
+        const val RX_BUFF_HDR_CMD_CTRLCON_SET   = 0x22.toByte()
+        const val RX_BUFF_HDR_CMD_CTRLCON_DISC  = 0x23.toByte()
         const val RX_BUFF_HDR_CMD_RESYNC  = 0x31.toByte()
     }
 }

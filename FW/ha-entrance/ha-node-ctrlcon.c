@@ -1,5 +1,9 @@
+// TODO:
+// FATAL_TRAP triggered in ctrlcon_on_rx_nlink()
+// NLINK packet fromAddr = 0x40 while expected 0x60
+
 /*
- * ha_ndoe_ctrlcon.c
+ * ha_node_ctrlcon.c
  *
  * Created: 5/1/2018 11:26:18 PM
  *  Author: Solit
@@ -114,6 +118,16 @@ void ha_node_ctrlcon_peer_set_rx(uint8_t remote_peer_addr)
     peer->peer_flags |= PEER_FLAG_RX_NLINK;
 }
 
+void ha_node_ctrlcon_discover()
+{
+    if (cc.cc_node == NULL)
+        return;
+
+    // Send discovery request to all nodes
+    // All remote peers should respond with CTRLCON_ADDR in destination
+    ha_nlink_node_send(cc.cc_node, NODE_ADDR_BC, NLINK_CMD_RD_REQ);
+    cc.cc_tx_flag |= CC_TX_FLAG_NODE;
+}
 /*
  * Process NODE info data received from console over UART
  * data header & format described by NLINK_HDR_OFF_xxx

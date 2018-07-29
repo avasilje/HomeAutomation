@@ -44,7 +44,17 @@ abstract class CcdNode(
         val type: CcdNodeType) {
 
     abstract fun update(data: ByteArray?)
-    abstract fun pack() : ByteArray
+
+    open fun pack(data: ByteArray? = null, dest: Int? = null) : ByteArray {
+        val hdr = ByteArray(CCD_NODE_INFO_DATA)
+
+        hdr[CCD_NODE_INFO_FROM] = 0x90.toByte() // From CtrlCon
+        hdr[CCD_NODE_INFO_TO]   = (dest?:addr).toByte()
+        hdr[CCD_NODE_INFO_CMD]  = 0
+        hdr[CCD_NODE_INFO_TYPE] = type.v.toByte()
+        hdr[CCD_NODE_INFO_LEN]  = data?.size?.toByte()?:0
+        return (hdr + (data?:byteArrayOf()))
+    }
 
     var userInfoChanges: Int = 0
     var userInfoChangesLastTx: Int = 0
@@ -115,6 +125,7 @@ class CtrlConsoleDbgActivity : AppCompatActivity() {
 
     private var mAvBleService: AvBleService? = null
 
+    var discoveryRequested = false
     var nodes: MutableMap<Int, CcdNode> = mutableMapOf()
     var uart = AvUart(this)
 
@@ -212,6 +223,12 @@ class CtrlConsoleDbgActivity : AppCompatActivity() {
     /** Called from UART thread */
     fun onUartIdle() {
 
+        if (discoveryRequested) {
+            discoveryRequested = false
+            uart.txMsgQueue.add( AvUartTxMsg(
+                    data = byteArrayOf(), cmd = AvUart.RX_BUFF_HDR_CMD_CTRLCON_DISC) )
+            return
+        }
         val it = nodes.iterator()
         while (it.hasNext()) {
             val node = it.next().value

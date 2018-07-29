@@ -36,24 +36,14 @@ class CcdNodeHvac(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.HVAC) 
         userInfo = info
     }
 
-    override fun pack(): ByteArray {
-        // Pack set only target state & heater control
+    override fun pack(data: ByteArray?, dest: Int?): ByteArray {
         val state = (userInfo.stateTarget.v shl 4).toByte()
         val heater =
-                ((userInfo.heaterMode.v shl 7) +
+                ((userInfo.heaterMode.v shl 7).or
                  (userInfo.heaterTarget.v shl 0)).toByte()
 
-        val data = byteArrayOf(state, heater, 0)
-
-        val hdr = ByteArray(CCD_NODE_INFO_DATA)
-
-        hdr[CCD_NODE_INFO_FROM] = 0x90.toByte() // From CtrlCon
-        hdr[CCD_NODE_INFO_TO]   = addr.toByte()
-        hdr[CCD_NODE_INFO_CMD]  = 0
-        hdr[CCD_NODE_INFO_TYPE] = type.v.toByte()
-        hdr[CCD_NODE_INFO_LEN] = data.size.toByte()
-
-        return (hdr + data)
+        val nodeData = byteArrayOf(state, heater, 0)
+        return super.pack(nodeData, dest)
     }
 
     override fun update(data: ByteArray?) {

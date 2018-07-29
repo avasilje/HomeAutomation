@@ -72,7 +72,8 @@ class CtrlConsoleSelectorFragment : Fragment() {
                     .commit()
         }
 
-        selector_butt_test.setOnClickListener { _ ->
+        selector_butt_discover.setOnClickListener { _ ->
+            mCtrlConsole?.discoveryRequested = true
 /*
             EventBus.getDefault().post(
                     CcdNodeInfoResp(
@@ -95,15 +96,6 @@ class CtrlConsoleSelectorFragment : Fragment() {
                             data = byteArrayOf(test0, test1)))
 
 */
-
-            var test0: Byte = CcdNodePhtsState.INIT.v.toByte()
-            var test1: Byte = 0
-            EventBus.getDefault().post(
-                    CcdNodeInfoResp(
-                            addr = 0x70,
-                            type = CcdNodeType.PHTS,
-                            data = byteArrayOf(test0, test1)))
-
         }
 
     }

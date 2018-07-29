@@ -37,9 +37,9 @@ class CcdNodePhts(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.PHTS) 
         userInfo = info
     }
 
-    override fun pack(): ByteArray {
+    override fun pack(data: ByteArray?, dest: Int?): ByteArray {
 
-        val data = when(userInfo.state) {
+        val nodeData = when(userInfo.state) {
             CcdNodePhtsState.RESET_PT,
             CcdNodePhtsState.RESET_RH,
             CcdNodePhtsState.IDLE -> {
@@ -50,17 +50,7 @@ class CcdNodePhts(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.PHTS) 
             }
             else -> byteArrayOf()
         }
-
-        val hdr = ByteArray(CCD_NODE_INFO_DATA)
-
-        hdr[CCD_NODE_INFO_FROM] = 0x90.toByte() // From CtrlCon
-        hdr[CCD_NODE_INFO_TO]   = addr.toByte()
-        hdr[CCD_NODE_INFO_CMD]  = 0
-        hdr[CCD_NODE_INFO_TYPE] = type.v.toByte()
-        hdr[CCD_NODE_INFO_LEN] = data.size.toByte()
-
-        return (hdr + data)
-
+        return super.pack(nodeData, dest)
     }
 
     fun updateCoeff(data: ByteArray) {
