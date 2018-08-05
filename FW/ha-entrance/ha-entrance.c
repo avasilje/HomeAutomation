@@ -146,6 +146,7 @@ void init_timer()
 int main(void)
 {
     OSCCAL = 0xAC;  // TODO: need to be stored in FLASH upon programming
+                    // Actual value written to entrance dev board 0xAA! Clarify
 
     init_gpio();
 

@@ -16,8 +16,8 @@ data class NodePhtsInfo(
     var rdCnt: Int = 0,
     var state: CcdNodePhtsState = CcdNodePhtsState.NONE,
     var coeffIdx: Int = -1,
-    var temperature: Int = 0,
-    var pressure: Int = 0,
+    var temperature: Long = 0,
+    var pressure: Long = 0,
     var humidity: Int = 0
 )
 
@@ -67,23 +67,45 @@ class CcdNodePhts(addr: Int, data: ByteArray) : CcdNode(addr, CcdNodeType.PHTS) 
         }
     }
 
-    fun calTemperature(adcT : Int) : Float {
+    fun calcTemperature(adcT : Long) : Long {
         // Check is coefficient are valid
-        // dT = D2 - TREF = D2 - C5 * 2^8
-        // TEMP = 20°C + dT *TEMPSENS = 2000 + dT *C6 / 2^23
-        val dT = adcT - info.coeffs[PhtsCoef.C5_REF_TEMPERATURE.ordinal]
-        val t = 2000 + dT / (1 shl 23)
-        return t.toFloat()/100
+        // ...
+
+        // dT = D2 - TREF = D2 - C5 * 2^8       (24bit)
+        // TEMP = 20°C + dT *TEMPSENS = 2000 + dT * C6 / 2^23
+        val dT = adcT  - info.coeffs[PhtsCoef.C5_REF_TEMPERATURE.ordinal]
+        val t = (dT * info.coeffs[PhtsCoef.C6_TEMPERATURE_TCOEF.ordinal]) shr 15
+        return t + 2000
     }
+
+    fun calcPressure(adcP : Long, adcT: Long) : Long {
+        // Check is coefficient are valid
+        // ...
+        // dT = D2 - TREF = D2 - C5 * 2^8
+        // OFF = OFFT1 + TCO* dT = C2 * 2^17 + (C4 * dT ) / 2^6
+        // SENS = SENST1 + TCS * dT = C1 * 2^16 + (C3 * dT ) / 2^7
+        // P = D1 * SENS - OFF = (D1 * SENS / 2^21 - OFF) / 2^15
+
+        val dT: Long = adcT - info.coeffs[PhtsCoef.C5_REF_TEMPERATURE.ordinal]
+
+        var off: Long = dT * info.coeffs[PhtsCoef.C4_PRESSURE_OFFSET_TCOEF.ordinal] * 4
+        off += info.coeffs[PhtsCoef.C2_PRESSURE_OFFSET.ordinal].toLong() shl 17
+
+        var sens: Long = dT * info.coeffs[PhtsCoef.C3_PRESSURE_SENSITIVITY_TCOEF.ordinal] * 2
+        sens += info.coeffs[PhtsCoef.C1_PRESSURE_SENSITIVITY.ordinal].toLong() shl 16
+
+        val p = ((adcP * (sens shr 13)) - off) shr 15
+        return p
+    }
+
     fun updateReading(data: ByteArray) {
         info.rdCnt =  data[0].toInt()
-//        val p = (data[1].toInt() and 0xFF) or ((data[2].toInt() and 0xFF) shl 8)
-//        val adcT = (data[3].toInt() and 0xFF) or ((data[4].toInt() and 0xFF) shl 8)
-////        val h = (data[0].toInt() and 0xFF) or ((data[1].toInt() and 0xFF) shl 8)
-//!!!!!!!!!
-//        t = calTemperature(adcT)
-        info.pressure       = 0
-        info.temperature    = 1
+        val adcT = ((data[1].toInt() and 0xFF) or ((data[2].toInt() and 0xFF) shl 8)).toLong()
+        val adcP = ((data[3].toInt() and 0xFF) or ((data[4].toInt() and 0xFF) shl 8)).toLong()
+        val adcH = (data[0].toInt() and 0xFF) or ((data[1].toInt() and 0xFF) shl 8)
+
+        info.pressure       = calcPressure(adcP, adcT)
+        info.temperature    = calcTemperature(adcT)
         info.humidity       = 0
 
         Log.e(TAG, "Reading (${info.rdCnt}): ${info.pressure}mBar, ${info.temperature}C, ${info.humidity}%")

@@ -26,7 +26,6 @@ void phts_on_rx(uint8_t idx, const uint8_t *buf_in)
     UNREFERENCED_PARAM(idx);
 
     // Reply with full answer - calibration coef + adc values
-    node_t *node = g_phts_nlink_node;
     ha_phts_t *phts = &g_ha_phts_sensor;
     uint8_t rc;
     uint8_t rd_idx;

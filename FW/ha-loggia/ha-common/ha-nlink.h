@@ -44,9 +44,9 @@ enum nlink_io_state_e {
 
 typedef struct ha_nlink_io_s {
     enum nlink_io_state_e state;
-    uint8_t is_rx_timer;
+    uint8_t is_rx_timer;                    // ISR - R/W
     uint8_t tx_buf[NLINK_COMM_BUF_SIZE];
-    uint8_t tx_rd;
+    uint8_t tx_rd;                          // ISR - R/W;  IDLE - W/O
     uint8_t tx_len;
     uint8_t tx_shift_reg;
 

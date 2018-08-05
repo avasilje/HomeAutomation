@@ -184,8 +184,10 @@ void ha_nlink_check_tx()
     // IO Idle timeout expired
     // Check pending transfer (in case of previous one failed)
     if (nlink.io.tx_len) {
-        nlink.io.tx_rd = 0;
-        ha_nlink_io_set_idle(); // Initiate transfer
+        cli();
+            nlink.io.tx_rd = 0;
+            ha_nlink_io_set_idle(); // Restart previous transfer
+        sei();
         return;
     }
     // Get data to transfer from nodes
@@ -210,11 +212,11 @@ void ha_nlink_check_tx()
             }
 
             // Initiate transfer
-			cli();
-				nlink.io.tx_len = tx_buf_len;
-				nlink.io.tx_rd = 0;
-			sei();
-			ha_nlink_io_set_idle();
+            cli();
+			    nlink.io.tx_len = tx_buf_len;
+			    nlink.io.tx_rd = 0;
+			    ha_nlink_io_set_idle();
+            sei();
 		}
     }
 }

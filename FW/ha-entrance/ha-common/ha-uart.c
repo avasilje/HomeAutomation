@@ -46,8 +46,10 @@ void ha_uart_resync()
 	UNREFERENCED_PARAM(dev_null);
 
 	ha_uart.rx_wr_idx = 0;
-	ha_uart.tx_rd_idx = 0;
-	ha_uart.tx_len = 0;
+    cli();
+	    ha_uart.tx_len = 0;
+	    ha_uart.tx_rd_idx = 0;
+    sei();
 	ha_uart.syncing_timer = HA_UART_SYNC_TIMEOUT;
 	ha_uart.resync_cnt++;
 }
@@ -65,9 +67,10 @@ void ha_uart_check_tx()
 				ha_uart.tx_buf[UART_CC_HDR_MARK1] = 0x86;
 				ha_uart.tx_buf[UART_CC_HDR_CMD  ] = 0x21;
 				ha_uart.tx_buf[UART_CC_HDR_LEN  ] = bytes_to_send;
-				ha_uart.tx_len = bytes_to_send + UART_CC_HDR_SIZE;
-
-				ha_uart.tx_rd_idx = 0;
+                cli();
+    				ha_uart.tx_len = bytes_to_send + UART_CC_HDR_SIZE;
+  	    		    ha_uart.tx_rd_idx = 0;
+                sei();
 				UCSRB |= _BV(UDRIE);
             }
 		} else {
@@ -79,8 +82,10 @@ void ha_uart_check_tx()
 				ha_uart.tx_buf[UART_CC_HDR_MARK1] = 0x86;
 				ha_uart.tx_buf[UART_CC_HDR_CMD  ] = 0x31;
 				ha_uart.tx_buf[UART_CC_HDR_LEN  ] = 0;
-				ha_uart.tx_len = UART_CC_HDR_SIZE;
-				ha_uart.tx_rd_idx = 0;
+                cli();
+				    ha_uart.tx_len = UART_CC_HDR_SIZE;
+				    ha_uart.tx_rd_idx = 0;
+                sei();
 				UCSRB |= _BV(UDRIE);
 			}
 		}
@@ -152,6 +157,10 @@ ISR(USART_UDRE_vect) {
 			// No more data - disable interrupt
 			UCSRB &= ~_BV(UDRIE);
 		}
+        if (ha_uart.tx_rd_idx > ha_uart.tx_len) {
+            FATAL_TRAP(__LINE__);
+        }
+
 		return;
 	}
 }
