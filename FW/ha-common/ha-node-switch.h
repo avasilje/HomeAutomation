@@ -14,3 +14,6 @@
 
 extern void ha_node_switch_init();
 extern void ha_node_switch_on_timer();
+extern void ha_node_switch_on_event(uint8_t uc_switch, uint8_t uc_event);
+
+

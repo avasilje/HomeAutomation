@@ -103,21 +103,10 @@
       (Path "Design Resources" "c:\myworks\homeautomation\hw\homelighting.dsn"
          "SCHEMATIC1")
       (Path "Outputs")
-      (Select "Design Resources"
-         "c:\myworks\homeautomation\hw\homelighting.dsn" "SCHEMATIC1" "PAGE1"))
+      (Select "Design Resources"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
       (Frame
         (Placement "44 0 1 160 1013 -8 -31 0 200 0 686"))
-      (Tab 0))
-    (Doc
-      (Type "COrSchematicDoc")
-      (Frame
-        (Placement "44 2 3 -1 -1 -8 -31 52 1630 52 732")
-        (Scroll "0 1167")
-        (Zoom "200")
-        (Occurrence "/"))
-      (Path "C:\MYWORKS\HOMEAUTOMATION\HW\HOMELIGHTING.DSN")
-      (Schematic "SCHEMATIC1")
-      (Page "PAGE1"))))
+      (Tab 0))))
