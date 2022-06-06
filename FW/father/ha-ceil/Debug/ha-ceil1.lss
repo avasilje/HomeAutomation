@@ -1,0 +1,3545 @@
+
+ha-ceil1.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000008  00803e00  0000149d  00001551  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         000013e0  00000000  00000000  000000b4  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       000000bd  000093e0  000013e0  00001494  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .bss          000000f1  00803e08  00803e08  00001559  2**0
+                  ALLOC
+  4 .comment      00000030  00000000  00000000  00001559  2**0
+                  CONTENTS, READONLY
+  5 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  0000158c  2**2
+                  CONTENTS, READONLY
+  6 .debug_aranges 000001f8  00000000  00000000  000015c8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_info   00005817  00000000  00000000  000017c0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_abbrev 0000238f  00000000  00000000  00006fd7  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_line   00001b5c  00000000  00000000  00009366  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_frame  0000051c  00000000  00000000  0000aec4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_str    00002187  00000000  00000000  0000b3e0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_loc    00001c1c  00000000  00000000  0000d567  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 13 .debug_ranges 000003b0  00000000  00000000  0000f183  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+       0:	19 c0       	rjmp	.+50     	; 0x34 <__ctors_end>
+       2:	33 c0       	rjmp	.+102    	; 0x6a <__bad_interrupt>
+       4:	32 c0       	rjmp	.+100    	; 0x6a <__bad_interrupt>
+       6:	31 c0       	rjmp	.+98     	; 0x6a <__bad_interrupt>
+       8:	30 c0       	rjmp	.+96     	; 0x6a <__bad_interrupt>
+       a:	8f c7       	rjmp	.+3870   	; 0xf2a <__vector_5>
+       c:	2e c0       	rjmp	.+92     	; 0x6a <__bad_interrupt>
+       e:	2d c0       	rjmp	.+90     	; 0x6a <__bad_interrupt>
+      10:	2c c0       	rjmp	.+88     	; 0x6a <__bad_interrupt>
+      12:	2b c0       	rjmp	.+86     	; 0x6a <__bad_interrupt>
+      14:	2a c0       	rjmp	.+84     	; 0x6a <__bad_interrupt>
+      16:	29 c0       	rjmp	.+82     	; 0x6a <__bad_interrupt>
+      18:	28 c0       	rjmp	.+80     	; 0x6a <__bad_interrupt>
+      1a:	ae c7       	rjmp	.+3932   	; 0xf78 <__vector_13>
+      1c:	26 c0       	rjmp	.+76     	; 0x6a <__bad_interrupt>
+      1e:	25 c0       	rjmp	.+74     	; 0x6a <__bad_interrupt>
+      20:	24 c0       	rjmp	.+72     	; 0x6a <__bad_interrupt>
+      22:	23 c0       	rjmp	.+70     	; 0x6a <__bad_interrupt>
+      24:	22 c0       	rjmp	.+68     	; 0x6a <__bad_interrupt>
+      26:	21 c0       	rjmp	.+66     	; 0x6a <__bad_interrupt>
+      28:	20 c0       	rjmp	.+64     	; 0x6a <__bad_interrupt>
+      2a:	1f c0       	rjmp	.+62     	; 0x6a <__bad_interrupt>
+      2c:	1e c0       	rjmp	.+60     	; 0x6a <__bad_interrupt>
+      2e:	1d c0       	rjmp	.+58     	; 0x6a <__bad_interrupt>
+      30:	1c c0       	rjmp	.+56     	; 0x6a <__bad_interrupt>
+      32:	1b c0       	rjmp	.+54     	; 0x6a <__bad_interrupt>
+
+00000034 <__ctors_end>:
+      34:	11 24       	eor	r1, r1
+      36:	1f be       	out	0x3f, r1	; 63
+      38:	cf ef       	ldi	r28, 0xFF	; 255
+      3a:	cd bf       	out	0x3d, r28	; 61
+      3c:	df e3       	ldi	r29, 0x3F	; 63
+      3e:	de bf       	out	0x3e, r29	; 62
+
+00000040 <__do_copy_data>:
+      40:	1e e3       	ldi	r17, 0x3E	; 62
+      42:	a0 e0       	ldi	r26, 0x00	; 0
+      44:	be e3       	ldi	r27, 0x3E	; 62
+      46:	ed e9       	ldi	r30, 0x9D	; 157
+      48:	f4 e1       	ldi	r31, 0x14	; 20
+      4a:	02 c0       	rjmp	.+4      	; 0x50 <__do_copy_data+0x10>
+      4c:	05 90       	lpm	r0, Z+
+      4e:	0d 92       	st	X+, r0
+      50:	a8 30       	cpi	r26, 0x08	; 8
+      52:	b1 07       	cpc	r27, r17
+      54:	d9 f7       	brne	.-10     	; 0x4c <__do_copy_data+0xc>
+
+00000056 <__do_clear_bss>:
+      56:	2e e3       	ldi	r18, 0x3E	; 62
+      58:	a8 e0       	ldi	r26, 0x08	; 8
+      5a:	be e3       	ldi	r27, 0x3E	; 62
+      5c:	01 c0       	rjmp	.+2      	; 0x60 <.do_clear_bss_start>
+
+0000005e <.do_clear_bss_loop>:
+      5e:	1d 92       	st	X+, r1
+
+00000060 <.do_clear_bss_start>:
+      60:	a9 3f       	cpi	r26, 0xF9	; 249
+      62:	b2 07       	cpc	r27, r18
+      64:	e1 f7       	brne	.-8      	; 0x5e <.do_clear_bss_loop>
+      66:	c5 d7       	rcall	.+3978   	; 0xff2 <main>
+      68:	b9 c9       	rjmp	.-3214   	; 0xfffff3dc <__eeprom_end+0xff7ef3dc>
+
+0000006a <__bad_interrupt>:
+      6a:	ca cf       	rjmp	.-108    	; 0x0 <__vectors>
+
+0000006c <FATAL_TRAP>:
+      6c:	80 93 18 3e 	sts	0x3E18, r24	; 0x803e18 <gus_trap_line>
+      70:	90 93 19 3e 	sts	0x3E19, r25	; 0x803e19 <gus_trap_line+0x1>
+      74:	ff cf       	rjmp	.-2      	; 0x74 <FATAL_TRAP+0x8>
+
+00000076 <ha_nlink_init>:
+      76:	ea e1       	ldi	r30, 0x1A	; 26
+      78:	fe e3       	ldi	r31, 0x3E	; 62
+      7a:	8b ed       	ldi	r24, 0xDB	; 219
+      7c:	df 01       	movw	r26, r30
+      7e:	1d 92       	st	X+, r1
+      80:	8a 95       	dec	r24
+      82:	e9 f7       	brne	.-6      	; 0x7e <ha_nlink_init+0x8>
+      84:	81 e0       	ldi	r24, 0x01	; 1
+      86:	85 a7       	std	Z+45, r24	; 0x2d
+      88:	82 e0       	ldi	r24, 0x02	; 2
+      8a:	80 93 73 3e 	sts	0x3E73, r24	; 0x803e73 <nlink+0x59>
+      8e:	83 e0       	ldi	r24, 0x03	; 3
+      90:	80 93 9f 3e 	sts	0x3E9F, r24	; 0x803e9f <nlink+0x85>
+      94:	53 d6       	rcall	.+3238   	; 0xd3c <ha_nlink_gpio_init>
+      96:	4c 98       	cbi	0x09, 4	; 9
+      98:	10 92 cb 3e 	sts	0x3ECB, r1	; 0x803ecb <nlink+0xb1>
+      9c:	80 e4       	ldi	r24, 0x40	; 64
+      9e:	80 93 f3 3e 	sts	0x3EF3, r24	; 0x803ef3 <nlink+0xd9>
+      a2:	10 92 f0 3e 	sts	0x3EF0, r1	; 0x803ef0 <nlink+0xd6>
+      a6:	8b e0       	ldi	r24, 0x0B	; 11
+      a8:	80 93 55 04 	sts	0x0455, r24	; 0x800455 <__TEXT_REGION_LENGTH__+0x700455>
+      ac:	80 e2       	ldi	r24, 0x20	; 32
+      ae:	8b b9       	out	0x0b, r24	; 11
+      b0:	10 92 00 3e 	sts	0x3E00, r1	; 0x803e00 <__data_start>
+      b4:	08 95       	ret
+
+000000b6 <ha_nlink_node_register>:
+      b6:	ef 92       	push	r14
+      b8:	ff 92       	push	r15
+      ba:	0f 93       	push	r16
+      bc:	1f 93       	push	r17
+      be:	aa e1       	ldi	r26, 0x1A	; 26
+      c0:	be e3       	ldi	r27, 0x3E	; 62
+      c2:	e0 e0       	ldi	r30, 0x00	; 0
+      c4:	f0 e0       	ldi	r31, 0x00	; 0
+      c6:	12 96       	adiw	r26, 0x02	; 2
+      c8:	9c 91       	ld	r25, X
+      ca:	12 97       	sbiw	r26, 0x02	; 2
+      cc:	99 23       	and	r25, r25
+      ce:	61 f0       	breq	.+24     	; 0xe8 <ha_nlink_node_register+0x32>
+      d0:	31 96       	adiw	r30, 0x01	; 1
+      d2:	9c 96       	adiw	r26, 0x2c	; 44
+      d4:	e4 30       	cpi	r30, 0x04	; 4
+      d6:	f1 05       	cpc	r31, r1
+      d8:	b1 f7       	brne	.-20     	; 0xc6 <ha_nlink_node_register+0x10>
+      da:	80 e0       	ldi	r24, 0x00	; 0
+      dc:	90 e0       	ldi	r25, 0x00	; 0
+      de:	1f 91       	pop	r17
+      e0:	0f 91       	pop	r16
+      e2:	ff 90       	pop	r15
+      e4:	ef 90       	pop	r14
+      e6:	08 95       	ret
+      e8:	9c e2       	ldi	r25, 0x2C	; 44
+      ea:	9e 9f       	mul	r25, r30
+      ec:	d0 01       	movw	r26, r0
+      ee:	9f 9f       	mul	r25, r31
+      f0:	b0 0d       	add	r27, r0
+      f2:	11 24       	eor	r1, r1
+      f4:	fd 01       	movw	r30, r26
+      f6:	e6 5e       	subi	r30, 0xE6	; 230
+      f8:	f1 4c       	sbci	r31, 0xC1	; 193
+      fa:	82 83       	std	Z+2, r24	; 0x02
+      fc:	63 83       	std	Z+3, r22	; 0x03
+      fe:	44 8b       	std	Z+20, r20	; 0x14
+     100:	55 8b       	std	Z+21, r21	; 0x15
+     102:	26 8b       	std	Z+22, r18	; 0x16
+     104:	37 8b       	std	Z+23, r19	; 0x17
+     106:	00 8f       	std	Z+24, r16	; 0x18
+     108:	11 8f       	std	Z+25, r17	; 0x19
+     10a:	e2 8e       	std	Z+26, r14	; 0x1a
+     10c:	f3 8e       	std	Z+27, r15	; 0x1b
+     10e:	cd 01       	movw	r24, r26
+     110:	85 5e       	subi	r24, 0xE5	; 229
+     112:	91 4c       	sbci	r25, 0xC1	; 193
+     114:	1f 91       	pop	r17
+     116:	0f 91       	pop	r16
+     118:	ff 90       	pop	r15
+     11a:	ef 90       	pop	r14
+     11c:	08 95       	ret
+
+0000011e <nlink_node_on_rx>:
+     11e:	cf 92       	push	r12
+     120:	df 92       	push	r13
+     122:	ef 92       	push	r14
+     124:	ff 92       	push	r15
+     126:	0f 93       	push	r16
+     128:	1f 93       	push	r17
+     12a:	cf 93       	push	r28
+     12c:	df 93       	push	r29
+     12e:	7c 01       	movw	r14, r24
+     130:	fc 01       	movw	r30, r24
+     132:	11 81       	ldd	r17, Z+1	; 0x01
+     134:	00 81       	ld	r16, Z
+     136:	ca e1       	ldi	r28, 0x1A	; 26
+     138:	de e3       	ldi	r29, 0x3E	; 62
+     13a:	d1 2c       	mov	r13, r1
+     13c:	82 e0       	ldi	r24, 0x02	; 2
+     13e:	c8 2e       	mov	r12, r24
+     140:	8a 81       	ldd	r24, Y+2	; 0x02
+     142:	88 23       	and	r24, r24
+     144:	71 f0       	breq	.+28     	; 0x162 <nlink_node_on_rx+0x44>
+     146:	08 17       	cp	r16, r24
+     148:	39 f0       	breq	.+14     	; 0x158 <nlink_node_on_rx+0x3a>
+     14a:	18 17       	cp	r17, r24
+     14c:	a1 f0       	breq	.+40     	; 0x176 <nlink_node_on_rx+0x58>
+     14e:	9b 81       	ldd	r25, Y+3	; 0x03
+     150:	90 34       	cpi	r25, 0x40	; 64
+     152:	89 f0       	breq	.+34     	; 0x176 <nlink_node_on_rx+0x58>
+     154:	1f 3f       	cpi	r17, 0xFF	; 255
+     156:	79 f0       	breq	.+30     	; 0x176 <nlink_node_on_rx+0x58>
+     158:	ac 96       	adiw	r28, 0x2c	; 44
+     15a:	fe e3       	ldi	r31, 0x3E	; 62
+     15c:	ca 3c       	cpi	r28, 0xCA	; 202
+     15e:	df 07       	cpc	r29, r31
+     160:	79 f7       	brne	.-34     	; 0x140 <nlink_node_on_rx+0x22>
+     162:	8d 2d       	mov	r24, r13
+     164:	df 91       	pop	r29
+     166:	cf 91       	pop	r28
+     168:	1f 91       	pop	r17
+     16a:	0f 91       	pop	r16
+     16c:	ff 90       	pop	r15
+     16e:	ef 90       	pop	r14
+     170:	df 90       	pop	r13
+     172:	cf 90       	pop	r12
+     174:	08 95       	ret
+     176:	91 e0       	ldi	r25, 0x01	; 1
+     178:	18 13       	cpse	r17, r24
+     17a:	90 e0       	ldi	r25, 0x00	; 0
+     17c:	d9 2a       	or	r13, r25
+     17e:	f7 01       	movw	r30, r14
+     180:	92 81       	ldd	r25, Z+2	; 0x02
+     182:	91 30       	cpi	r25, 0x01	; 1
+     184:	29 f4       	brne	.+10     	; 0x190 <nlink_node_on_rx+0x72>
+     186:	8c 8f       	std	Y+28, r24	; 0x1c
+     188:	0d 8f       	std	Y+29, r16	; 0x1d
+     18a:	ce 8e       	std	Y+30, r12	; 0x1e
+     18c:	9c a7       	std	Y+44, r25	; 0x2c
+     18e:	e4 cf       	rjmp	.-56     	; 0x158 <nlink_node_on_rx+0x3a>
+     190:	ec 89       	ldd	r30, Y+20	; 0x14
+     192:	fd 89       	ldd	r31, Y+21	; 0x15
+     194:	b7 01       	movw	r22, r14
+     196:	8e 89       	ldd	r24, Y+22	; 0x16
+     198:	9f 89       	ldd	r25, Y+23	; 0x17
+     19a:	09 95       	icall
+     19c:	dd cf       	rjmp	.-70     	; 0x158 <nlink_node_on_rx+0x3a>
+
+0000019e <ha_nlink_node_send>:
+     19e:	fc 01       	movw	r30, r24
+     1a0:	81 81       	ldd	r24, Z+1	; 0x01
+     1a2:	83 8f       	std	Z+27, r24	; 0x1b
+     1a4:	64 8f       	std	Z+28, r22	; 0x1c
+     1a6:	45 8f       	std	Z+29, r20	; 0x1d
+     1a8:	81 e0       	ldi	r24, 0x01	; 1
+     1aa:	83 a7       	std	Z+43, r24	; 0x2b
+     1ac:	08 95       	ret
+
+000001ae <ha_nlink_check_rx>:
+     1ae:	cf 93       	push	r28
+     1b0:	df 93       	push	r29
+     1b2:	cd b7       	in	r28, 0x3d	; 61
+     1b4:	de b7       	in	r29, 0x3e	; 62
+     1b6:	60 97       	sbiw	r28, 0x10	; 16
+     1b8:	cd bf       	out	0x3d, r28	; 61
+     1ba:	de bf       	out	0x3e, r29	; 62
+     1bc:	80 91 cb 3e 	lds	r24, 0x3ECB	; 0x803ecb <nlink+0xb1>
+     1c0:	81 30       	cpi	r24, 0x01	; 1
+     1c2:	31 f0       	breq	.+12     	; 0x1d0 <ha_nlink_check_rx+0x22>
+     1c4:	60 96       	adiw	r28, 0x10	; 16
+     1c6:	cd bf       	out	0x3d, r28	; 61
+     1c8:	de bf       	out	0x3e, r29	; 62
+     1ca:	df 91       	pop	r29
+     1cc:	cf 91       	pop	r28
+     1ce:	08 95       	ret
+     1d0:	80 91 f4 3e 	lds	r24, 0x3EF4	; 0x803ef4 <nlink+0xda>
+     1d4:	88 23       	and	r24, r24
+     1d6:	b1 f3       	breq	.-20     	; 0x1c4 <ha_nlink_check_rx+0x16>
+     1d8:	40 91 f0 3e 	lds	r20, 0x3EF0	; 0x803ef0 <nlink+0xd6>
+     1dc:	45 30       	cpi	r20, 0x05	; 5
+     1de:	90 f3       	brcs	.-28     	; 0x1c4 <ha_nlink_check_rx+0x16>
+     1e0:	50 e0       	ldi	r21, 0x00	; 0
+     1e2:	20 91 e4 3e 	lds	r18, 0x3EE4	; 0x803ee4 <nlink+0xca>
+     1e6:	30 e0       	ldi	r19, 0x00	; 0
+     1e8:	2b 5f       	subi	r18, 0xFB	; 251
+     1ea:	3f 4f       	sbci	r19, 0xFF	; 255
+     1ec:	42 17       	cp	r20, r18
+     1ee:	53 07       	cpc	r21, r19
+     1f0:	91 f0       	breq	.+36     	; 0x216 <ha_nlink_check_rx+0x68>
+     1f2:	8a 30       	cpi	r24, 0x0A	; 10
+     1f4:	39 f7       	brne	.-50     	; 0x1c4 <ha_nlink_check_rx+0x16>
+     1f6:	4c 98       	cbi	0x09, 4	; 9
+     1f8:	10 92 cb 3e 	sts	0x3ECB, r1	; 0x803ecb <nlink+0xb1>
+     1fc:	80 e4       	ldi	r24, 0x40	; 64
+     1fe:	80 93 f3 3e 	sts	0x3EF3, r24	; 0x803ef3 <nlink+0xd9>
+     202:	10 92 f0 3e 	sts	0x3EF0, r1	; 0x803ef0 <nlink+0xd6>
+     206:	8b e0       	ldi	r24, 0x0B	; 11
+     208:	80 93 55 04 	sts	0x0455, r24	; 0x800455 <__TEXT_REGION_LENGTH__+0x700455>
+     20c:	80 e2       	ldi	r24, 0x20	; 32
+     20e:	8b b9       	out	0x0b, r24	; 11
+     210:	10 92 00 3e 	sts	0x3E00, r1	; 0x803e00 <__data_start>
+     214:	d7 cf       	rjmp	.-82     	; 0x1c4 <ha_nlink_check_rx+0x16>
+     216:	60 ee       	ldi	r22, 0xE0	; 224
+     218:	7e e3       	ldi	r23, 0x3E	; 62
+     21a:	ce 01       	movw	r24, r28
+     21c:	01 96       	adiw	r24, 0x01	; 1
+     21e:	ce d8       	rcall	.-3684   	; 0xfffff3bc <__eeprom_end+0xff7ef3bc>
+     220:	10 92 f0 3e 	sts	0x3EF0, r1	; 0x803ef0 <nlink+0xd6>
+     224:	ce 01       	movw	r24, r28
+     226:	01 96       	adiw	r24, 0x01	; 1
+     228:	7a df       	rcall	.-268    	; 0x11e <nlink_node_on_rx>
+     22a:	cc cf       	rjmp	.-104    	; 0x1c4 <ha_nlink_check_rx+0x16>
+
+0000022c <ha_nlink_check_tx>:
+     22c:	ef 92       	push	r14
+     22e:	ff 92       	push	r15
+     230:	0f 93       	push	r16
+     232:	1f 93       	push	r17
+     234:	cf 93       	push	r28
+     236:	df 93       	push	r29
+     238:	80 91 cb 3e 	lds	r24, 0x3ECB	; 0x803ecb <nlink+0xb1>
+     23c:	81 30       	cpi	r24, 0x01	; 1
+     23e:	39 f0       	breq	.+14     	; 0x24e <ha_nlink_check_tx+0x22>
+     240:	df 91       	pop	r29
+     242:	cf 91       	pop	r28
+     244:	1f 91       	pop	r17
+     246:	0f 91       	pop	r16
+     248:	ff 90       	pop	r15
+     24a:	ef 90       	pop	r14
+     24c:	08 95       	ret
+     24e:	90 91 f4 3e 	lds	r25, 0x3EF4	; 0x803ef4 <nlink+0xda>
+     252:	9a 30       	cpi	r25, 0x0A	; 10
+     254:	a9 f7       	brne	.-22     	; 0x240 <ha_nlink_check_tx+0x14>
+     256:	90 91 de 3e 	lds	r25, 0x3EDE	; 0x803ede <nlink+0xc4>
+     25a:	91 11       	cpse	r25, r1
+     25c:	1c c0       	rjmp	.+56     	; 0x296 <ha_nlink_check_tx+0x6a>
+     25e:	ca e1       	ldi	r28, 0x1A	; 26
+     260:	de e3       	ldi	r29, 0x3E	; 62
+     262:	ee 24       	eor	r14, r14
+     264:	e3 94       	inc	r14
+     266:	8b e0       	ldi	r24, 0x0B	; 11
+     268:	f8 2e       	mov	r15, r24
+     26a:	00 e2       	ldi	r16, 0x20	; 32
+     26c:	8c a5       	ldd	r24, Y+44	; 0x2c
+     26e:	88 23       	and	r24, r24
+     270:	61 f0       	breq	.+24     	; 0x28a <ha_nlink_check_tx+0x5e>
+     272:	e8 8d       	ldd	r30, Y+24	; 0x18
+     274:	f9 8d       	ldd	r31, Y+25	; 0x19
+     276:	30 97       	sbiw	r30, 0x00	; 0
+     278:	99 f1       	breq	.+102    	; 0x2e0 <ha_nlink_check_tx+0xb4>
+     27a:	6d ec       	ldi	r22, 0xCD	; 205
+     27c:	7e e3       	ldi	r23, 0x3E	; 62
+     27e:	8a 8d       	ldd	r24, Y+26	; 0x1a
+     280:	9b 8d       	ldd	r25, Y+27	; 0x1b
+     282:	09 95       	icall
+     284:	18 2f       	mov	r17, r24
+     286:	11 11       	cpse	r17, r1
+     288:	16 c0       	rjmp	.+44     	; 0x2b6 <ha_nlink_check_tx+0x8a>
+     28a:	ac 96       	adiw	r28, 0x2c	; 44
+     28c:	8e e3       	ldi	r24, 0x3E	; 62
+     28e:	ca 3c       	cpi	r28, 0xCA	; 202
+     290:	d8 07       	cpc	r29, r24
+     292:	61 f7       	brne	.-40     	; 0x26c <ha_nlink_check_tx+0x40>
+     294:	d5 cf       	rjmp	.-86     	; 0x240 <ha_nlink_check_tx+0x14>
+     296:	f8 94       	cli
+     298:	10 92 dd 3e 	sts	0x3EDD, r1	; 0x803edd <nlink+0xc3>
+     29c:	80 93 cb 3e 	sts	0x3ECB, r24	; 0x803ecb <nlink+0xb1>
+     2a0:	10 92 f4 3e 	sts	0x3EF4, r1	; 0x803ef4 <nlink+0xda>
+     2a4:	8b e0       	ldi	r24, 0x0B	; 11
+     2a6:	80 93 55 04 	sts	0x0455, r24	; 0x800455 <__TEXT_REGION_LENGTH__+0x700455>
+     2aa:	80 e2       	ldi	r24, 0x20	; 32
+     2ac:	8b b9       	out	0x0b, r24	; 11
+     2ae:	10 92 00 3e 	sts	0x3E00, r1	; 0x803e00 <__data_start>
+     2b2:	78 94       	sei
+     2b4:	c5 cf       	rjmp	.-118    	; 0x240 <ha_nlink_check_tx+0x14>
+     2b6:	8d ec       	ldi	r24, 0xCD	; 205
+     2b8:	9e e3       	ldi	r25, 0x3E	; 62
+     2ba:	31 df       	rcall	.-414    	; 0x11e <nlink_node_on_rx>
+     2bc:	81 11       	cpse	r24, r1
+     2be:	c0 cf       	rjmp	.-128    	; 0x240 <ha_nlink_check_tx+0x14>
+     2c0:	f8 94       	cli
+     2c2:	10 93 de 3e 	sts	0x3EDE, r17	; 0x803ede <nlink+0xc4>
+     2c6:	10 92 dd 3e 	sts	0x3EDD, r1	; 0x803edd <nlink+0xc3>
+     2ca:	e0 92 cb 3e 	sts	0x3ECB, r14	; 0x803ecb <nlink+0xb1>
+     2ce:	10 92 f4 3e 	sts	0x3EF4, r1	; 0x803ef4 <nlink+0xda>
+     2d2:	f0 92 55 04 	sts	0x0455, r15	; 0x800455 <__TEXT_REGION_LENGTH__+0x700455>
+     2d6:	0b b9       	out	0x0b, r16	; 11
+     2d8:	10 92 00 3e 	sts	0x3E00, r1	; 0x803e00 <__data_start>
+     2dc:	78 94       	sei
+     2de:	d5 cf       	rjmp	.-86     	; 0x28a <ha_nlink_check_tx+0x5e>
+     2e0:	1c a6       	std	Y+44, r1	; 0x2c
+     2e2:	18 a1       	ldd	r17, Y+32	; 0x20
+     2e4:	1b 5f       	subi	r17, 0xFB	; 251
+     2e6:	41 2f       	mov	r20, r17
+     2e8:	50 e0       	ldi	r21, 0x00	; 0
+     2ea:	be 01       	movw	r22, r28
+     2ec:	64 5e       	subi	r22, 0xE4	; 228
+     2ee:	7f 4f       	sbci	r23, 0xFF	; 255
+     2f0:	8d ec       	ldi	r24, 0xCD	; 205
+     2f2:	9e e3       	ldi	r25, 0x3E	; 62
+     2f4:	63 d8       	rcall	.-3898   	; 0xfffff3bc <__eeprom_end+0xff7ef3bc>
+     2f6:	c7 cf       	rjmp	.-114    	; 0x286 <ha_nlink_check_tx+0x5a>
+
+000002f8 <isr_nlink_io_on_timer>:
+     2f8:	80 91 cc 3e 	lds	r24, 0x3ECC	; 0x803ecc <nlink+0xb2>
+     2fc:	81 11       	cpse	r24, r1
+     2fe:	24 c0       	rjmp	.+72     	; 0x348 <isr_nlink_io_on_timer+0x50>
+     300:	4b 98       	cbi	0x09, 3	; 9
+     302:	90 91 de 3e 	lds	r25, 0x3EDE	; 0x803ede <nlink+0xc4>
+     306:	99 23       	and	r25, r25
+     308:	c9 f0       	breq	.+50     	; 0x33c <isr_nlink_io_on_timer+0x44>
+     30a:	20 91 cb 3e 	lds	r18, 0x3ECB	; 0x803ecb <nlink+0xb1>
+     30e:	21 30       	cpi	r18, 0x01	; 1
+     310:	09 f4       	brne	.+2      	; 0x314 <isr_nlink_io_on_timer+0x1c>
+     312:	6e c0       	rjmp	.+220    	; 0x3f0 <isr_nlink_io_on_timer+0xf8>
+     314:	98 f0       	brcs	.+38     	; 0x33c <isr_nlink_io_on_timer+0x44>
+     316:	22 30       	cpi	r18, 0x02	; 2
+     318:	09 f0       	breq	.+2      	; 0x31c <isr_nlink_io_on_timer+0x24>
+     31a:	64 c0       	rjmp	.+200    	; 0x3e4 <isr_nlink_io_on_timer+0xec>
+     31c:	90 91 f2 3e 	lds	r25, 0x3EF2	; 0x803ef2 <nlink+0xd8>
+     320:	99 23       	and	r25, r25
+     322:	09 f4       	brne	.+2      	; 0x326 <isr_nlink_io_on_timer+0x2e>
+     324:	9b c0       	rjmp	.+310    	; 0x45c <__LOCK_REGION_LENGTH__+0x5c>
+     326:	99 30       	cpi	r25, 0x09	; 9
+     328:	09 f4       	brne	.+2      	; 0x32c <isr_nlink_io_on_timer+0x34>
+     32a:	94 c0       	rjmp	.+296    	; 0x454 <__LOCK_REGION_LENGTH__+0x54>
+     32c:	90 91 df 3e 	lds	r25, 0x3EDF	; 0x803edf <nlink+0xc5>
+     330:	90 fd       	sbrc	r25, 0
+     332:	92 c0       	rjmp	.+292    	; 0x458 <__LOCK_REGION_LENGTH__+0x58>
+     334:	4c 9a       	sbi	0x09, 4	; 9
+     336:	96 95       	lsr	r25
+     338:	90 93 df 3e 	sts	0x3EDF, r25	; 0x803edf <nlink+0xc5>
+     33c:	91 e0       	ldi	r25, 0x01	; 1
+     33e:	81 11       	cpse	r24, r1
+     340:	90 e0       	ldi	r25, 0x00	; 0
+     342:	90 93 cc 3e 	sts	0x3ECC, r25	; 0x803ecc <nlink+0xb2>
+     346:	08 95       	ret
+     348:	4b 9a       	sbi	0x09, 3	; 9
+     34a:	90 91 cb 3e 	lds	r25, 0x3ECB	; 0x803ecb <nlink+0xb1>
+     34e:	91 30       	cpi	r25, 0x01	; 1
+     350:	09 f4       	brne	.+2      	; 0x354 <isr_nlink_io_on_timer+0x5c>
+     352:	40 c0       	rjmp	.+128    	; 0x3d4 <isr_nlink_io_on_timer+0xdc>
+     354:	18 f1       	brcs	.+70     	; 0x39c <isr_nlink_io_on_timer+0xa4>
+     356:	92 30       	cpi	r25, 0x02	; 2
+     358:	b9 f5       	brne	.+110    	; 0x3c8 <isr_nlink_io_on_timer+0xd0>
+     35a:	9a b1       	in	r25, 0x0a	; 10
+     35c:	90 72       	andi	r25, 0x20	; 32
+     35e:	20 91 f2 3e 	lds	r18, 0x3EF2	; 0x803ef2 <nlink+0xd8>
+     362:	31 e0       	ldi	r19, 0x01	; 1
+     364:	32 0f       	add	r19, r18
+     366:	30 93 f2 3e 	sts	0x3EF2, r19	; 0x803ef2 <nlink+0xd8>
+     36a:	22 23       	and	r18, r18
+     36c:	09 f4       	brne	.+2      	; 0x370 <isr_nlink_io_on_timer+0x78>
+     36e:	56 c0       	rjmp	.+172    	; 0x41c <__LOCK_REGION_LENGTH__+0x1c>
+     370:	29 30       	cpi	r18, 0x09	; 9
+     372:	09 f4       	brne	.+2      	; 0x376 <isr_nlink_io_on_timer+0x7e>
+     374:	76 c0       	rjmp	.+236    	; 0x462 <__LOCK_REGION_LENGTH__+0x62>
+     376:	20 91 f1 3e 	lds	r18, 0x3EF1	; 0x803ef1 <nlink+0xd7>
+     37a:	42 2f       	mov	r20, r18
+     37c:	46 95       	lsr	r20
+     37e:	21 e0       	ldi	r18, 0x01	; 1
+     380:	30 e0       	ldi	r19, 0x00	; 0
+     382:	91 11       	cpse	r25, r1
+     384:	02 c0       	rjmp	.+4      	; 0x38a <isr_nlink_io_on_timer+0x92>
+     386:	20 e0       	ldi	r18, 0x00	; 0
+     388:	30 e0       	ldi	r19, 0x00	; 0
+     38a:	36 95       	lsr	r19
+     38c:	32 2f       	mov	r19, r18
+     38e:	22 27       	eor	r18, r18
+     390:	37 95       	ror	r19
+     392:	27 95       	ror	r18
+     394:	24 2b       	or	r18, r20
+     396:	20 93 f1 3e 	sts	0x3EF1, r18	; 0x803ef1 <nlink+0xd7>
+     39a:	d0 cf       	rjmp	.-96     	; 0x33c <isr_nlink_io_on_timer+0x44>
+     39c:	55 9b       	sbis	0x0a, 5	; 10
+     39e:	3a c0       	rjmp	.+116    	; 0x414 <__LOCK_REGION_LENGTH__+0x14>
+     3a0:	90 91 f3 3e 	lds	r25, 0x3EF3	; 0x803ef3 <nlink+0xd9>
+     3a4:	91 50       	subi	r25, 0x01	; 1
+     3a6:	90 93 f3 3e 	sts	0x3EF3, r25	; 0x803ef3 <nlink+0xd9>
+     3aa:	91 11       	cpse	r25, r1
+     3ac:	c7 cf       	rjmp	.-114    	; 0x33c <isr_nlink_io_on_timer+0x44>
+     3ae:	91 e0       	ldi	r25, 0x01	; 1
+     3b0:	90 93 cb 3e 	sts	0x3ECB, r25	; 0x803ecb <nlink+0xb1>
+     3b4:	10 92 f4 3e 	sts	0x3EF4, r1	; 0x803ef4 <nlink+0xda>
+     3b8:	9b e0       	ldi	r25, 0x0B	; 11
+     3ba:	90 93 55 04 	sts	0x0455, r25	; 0x800455 <__TEXT_REGION_LENGTH__+0x700455>
+     3be:	90 e2       	ldi	r25, 0x20	; 32
+     3c0:	9b b9       	out	0x0b, r25	; 11
+     3c2:	10 92 00 3e 	sts	0x3E00, r1	; 0x803e00 <__data_start>
+     3c6:	ba cf       	rjmp	.-140    	; 0x33c <isr_nlink_io_on_timer+0x44>
+     3c8:	8a e4       	ldi	r24, 0x4A	; 74
+     3ca:	91 e0       	ldi	r25, 0x01	; 1
+     3cc:	4f de       	rcall	.-866    	; 0x6c <FATAL_TRAP>
+     3ce:	80 91 cc 3e 	lds	r24, 0x3ECC	; 0x803ecc <nlink+0xb2>
+     3d2:	b4 cf       	rjmp	.-152    	; 0x33c <isr_nlink_io_on_timer+0x44>
+     3d4:	90 91 f4 3e 	lds	r25, 0x3EF4	; 0x803ef4 <nlink+0xda>
+     3d8:	9a 30       	cpi	r25, 0x0A	; 10
+     3da:	60 f5       	brcc	.+88     	; 0x434 <__LOCK_REGION_LENGTH__+0x34>
+     3dc:	9f 5f       	subi	r25, 0xFF	; 255
+     3de:	90 93 f4 3e 	sts	0x3EF4, r25	; 0x803ef4 <nlink+0xda>
+     3e2:	ac cf       	rjmp	.-168    	; 0x33c <isr_nlink_io_on_timer+0x44>
+     3e4:	82 e3       	ldi	r24, 0x32	; 50
+     3e6:	91 e0       	ldi	r25, 0x01	; 1
+     3e8:	41 de       	rcall	.-894    	; 0x6c <FATAL_TRAP>
+     3ea:	80 91 cc 3e 	lds	r24, 0x3ECC	; 0x803ecc <nlink+0xb2>
+     3ee:	a6 cf       	rjmp	.-180    	; 0x33c <isr_nlink_io_on_timer+0x44>
+     3f0:	e0 91 dd 3e 	lds	r30, 0x3EDD	; 0x803edd <nlink+0xc3>
+     3f4:	e9 17       	cp	r30, r25
+     3f6:	10 f1       	brcs	.+68     	; 0x43c <__LOCK_REGION_LENGTH__+0x3c>
+     3f8:	9e 13       	cpse	r25, r30
+     3fa:	a0 cf       	rjmp	.-192    	; 0x33c <isr_nlink_io_on_timer+0x44>
+     3fc:	20 91 e0 3e 	lds	r18, 0x3EE0	; 0x803ee0 <nlink+0xc6>
+     400:	90 91 cd 3e 	lds	r25, 0x3ECD	; 0x803ecd <nlink+0xb3>
+     404:	29 17       	cp	r18, r25
+     406:	f1 f1       	breq	.+124    	; 0x484 <__LOCK_REGION_LENGTH__+0x84>
+     408:	9f ef       	ldi	r25, 0xFF	; 255
+     40a:	90 93 dd 3e 	sts	0x3EDD, r25	; 0x803edd <nlink+0xc3>
+     40e:	10 92 f0 3e 	sts	0x3EF0, r1	; 0x803ef0 <nlink+0xd6>
+     412:	94 cf       	rjmp	.-216    	; 0x33c <isr_nlink_io_on_timer+0x44>
+     414:	9f e3       	ldi	r25, 0x3F	; 63
+     416:	90 93 f3 3e 	sts	0x3EF3, r25	; 0x803ef3 <nlink+0xd9>
+     41a:	90 cf       	rjmp	.-224    	; 0x33c <isr_nlink_io_on_timer+0x44>
+     41c:	99 23       	and	r25, r25
+     41e:	09 f4       	brne	.+2      	; 0x422 <__LOCK_REGION_LENGTH__+0x22>
+     420:	8d cf       	rjmp	.-230    	; 0x33c <isr_nlink_io_on_timer+0x44>
+     422:	4c 98       	cbi	0x09, 4	; 9
+     424:	10 92 cb 3e 	sts	0x3ECB, r1	; 0x803ecb <nlink+0xb1>
+     428:	90 e4       	ldi	r25, 0x40	; 64
+     42a:	90 93 f3 3e 	sts	0x3EF3, r25	; 0x803ef3 <nlink+0xd9>
+     42e:	10 92 f0 3e 	sts	0x3EF0, r1	; 0x803ef0 <nlink+0xd6>
+     432:	c2 cf       	rjmp	.-124    	; 0x3b8 <isr_nlink_io_on_timer+0xc0>
+     434:	9f ef       	ldi	r25, 0xFF	; 255
+     436:	90 93 00 3e 	sts	0x3E00, r25	; 0x803e00 <__data_start>
+     43a:	80 cf       	rjmp	.-256    	; 0x33c <isr_nlink_io_on_timer+0x44>
+     43c:	91 e0       	ldi	r25, 0x01	; 1
+     43e:	9e 0f       	add	r25, r30
+     440:	90 93 dd 3e 	sts	0x3EDD, r25	; 0x803edd <nlink+0xc3>
+     444:	f0 e0       	ldi	r31, 0x00	; 0
+     446:	e3 53       	subi	r30, 0x33	; 51
+     448:	f1 4c       	sbci	r31, 0xC1	; 193
+     44a:	90 81       	ld	r25, Z
+     44c:	90 93 df 3e 	sts	0x3EDF, r25	; 0x803edf <nlink+0xc5>
+     450:	4c 9a       	sbi	0x09, 4	; 9
+     452:	74 cf       	rjmp	.-280    	; 0x33c <isr_nlink_io_on_timer+0x44>
+     454:	90 91 df 3e 	lds	r25, 0x3EDF	; 0x803edf <nlink+0xc5>
+     458:	4c 98       	cbi	0x09, 4	; 9
+     45a:	6d cf       	rjmp	.-294    	; 0x336 <isr_nlink_io_on_timer+0x3e>
+     45c:	90 91 df 3e 	lds	r25, 0x3EDF	; 0x803edf <nlink+0xc5>
+     460:	6a cf       	rjmp	.-300    	; 0x336 <isr_nlink_io_on_timer+0x3e>
+     462:	99 23       	and	r25, r25
+     464:	f1 f2       	breq	.-68     	; 0x422 <__LOCK_REGION_LENGTH__+0x22>
+     466:	e0 91 f0 3e 	lds	r30, 0x3EF0	; 0x803ef0 <nlink+0xd6>
+     46a:	e0 31       	cpi	r30, 0x10	; 16
+     46c:	d1 f2       	breq	.-76     	; 0x422 <__LOCK_REGION_LENGTH__+0x22>
+     46e:	91 e0       	ldi	r25, 0x01	; 1
+     470:	9e 0f       	add	r25, r30
+     472:	90 93 f0 3e 	sts	0x3EF0, r25	; 0x803ef0 <nlink+0xd6>
+     476:	f0 e0       	ldi	r31, 0x00	; 0
+     478:	e0 52       	subi	r30, 0x20	; 32
+     47a:	f1 4c       	sbci	r31, 0xC1	; 193
+     47c:	90 91 f1 3e 	lds	r25, 0x3EF1	; 0x803ef1 <nlink+0xd7>
+     480:	90 83       	st	Z, r25
+     482:	95 cf       	rjmp	.-214    	; 0x3ae <isr_nlink_io_on_timer+0xb6>
+     484:	20 91 e1 3e 	lds	r18, 0x3EE1	; 0x803ee1 <nlink+0xc7>
+     488:	90 91 ce 3e 	lds	r25, 0x3ECE	; 0x803ece <nlink+0xb4>
+     48c:	29 13       	cpse	r18, r25
+     48e:	bc cf       	rjmp	.-136    	; 0x408 <__LOCK_REGION_LENGTH__+0x8>
+     490:	10 92 dd 3e 	sts	0x3EDD, r1	; 0x803edd <nlink+0xc3>
+     494:	10 92 de 3e 	sts	0x3EDE, r1	; 0x803ede <nlink+0xc4>
+     498:	ba cf       	rjmp	.-140    	; 0x40e <__LOCK_REGION_LENGTH__+0xe>
+
+0000049a <isr_nlink_io_on_start_edge>:
+     49a:	80 91 cb 3e 	lds	r24, 0x3ECB	; 0x803ecb <nlink+0xb1>
+     49e:	88 23       	and	r24, r24
+     4a0:	79 f0       	breq	.+30     	; 0x4c0 <isr_nlink_io_on_start_edge+0x26>
+     4a2:	10 92 55 04 	sts	0x0455, r1	; 0x800455 <__TEXT_REGION_LENGTH__+0x700455>
+     4a6:	80 e2       	ldi	r24, 0x20	; 32
+     4a8:	8b b9       	out	0x0b, r24	; 11
+     4aa:	81 e0       	ldi	r24, 0x01	; 1
+     4ac:	80 93 cc 3e 	sts	0x3ECC, r24	; 0x803ecc <nlink+0xb2>
+     4b0:	10 92 f2 3e 	sts	0x3EF2, r1	; 0x803ef2 <nlink+0xd8>
+     4b4:	82 e0       	ldi	r24, 0x02	; 2
+     4b6:	80 93 cb 3e 	sts	0x3ECB, r24	; 0x803ecb <nlink+0xb1>
+     4ba:	10 92 00 3e 	sts	0x3E00, r1	; 0x803e00 <__data_start>
+     4be:	08 95       	ret
+     4c0:	80 e4       	ldi	r24, 0x40	; 64
+     4c2:	80 93 f3 3e 	sts	0x3EF3, r24	; 0x803ef3 <nlink+0xd9>
+     4c6:	08 95       	ret
+
+000004c8 <ha_node_ledlight_on_param>:
+}
+
+void ha_node_ledlight_on (ha_node_ll_info_t *ll)
+{
+    // Set intensity to current on_intensity_idx
+    ha_node_ledlight_on_param(ll, INTENSITIES_NUM);
+     4c8:	0f 93       	push	r16
+     4ca:	1f 93       	push	r17
+     4cc:	cf 93       	push	r28
+     4ce:	df 93       	push	r29
+     4d0:	dc 01       	movw	r26, r24
+     4d2:	16 96       	adiw	r26, 0x06	; 6
+     4d4:	0d 91       	ld	r16, X+
+     4d6:	1c 91       	ld	r17, X
+     4d8:	17 97       	sbiw	r26, 0x07	; 7
+     4da:	1b 96       	adiw	r26, 0x0b	; 11
+     4dc:	8c 91       	ld	r24, X
+     4de:	1b 97       	sbiw	r26, 0x0b	; 11
+     4e0:	88 23       	and	r24, r24
+     4e2:	39 f1       	breq	.+78     	; 0x532 <ha_node_ledlight_on_param+0x6a>
+     4e4:	90 e0       	ldi	r25, 0x00	; 0
+     4e6:	41 e0       	ldi	r20, 0x01	; 1
+     4e8:	0f c0       	rjmp	.+30     	; 0x508 <ha_node_ledlight_on_param+0x40>
+     4ea:	23 2f       	mov	r18, r19
+     4ec:	21 83       	std	Z+1, r18	; 0x01
+     4ee:	12 96       	adiw	r26, 0x02	; 2
+     4f0:	cd 91       	ld	r28, X+
+     4f2:	dc 91       	ld	r29, X
+     4f4:	13 97       	sbiw	r26, 0x03	; 3
+     4f6:	29 81       	ldd	r18, Y+1	; 0x01
+     4f8:	24 83       	std	Z+4, r18	; 0x04
+     4fa:	9f 5f       	subi	r25, 0xFF	; 255
+     4fc:	44 0f       	add	r20, r20
+     4fe:	1b 96       	adiw	r26, 0x0b	; 11
+     500:	2c 91       	ld	r18, X
+     502:	1b 97       	sbiw	r26, 0x0b	; 11
+     504:	92 17       	cp	r25, r18
+     506:	a8 f4       	brcc	.+42     	; 0x532 <ha_node_ledlight_on_param+0x6a>
+     508:	1c 96       	adiw	r26, 0x0c	; 12
+     50a:	ed 91       	ld	r30, X+
+     50c:	fc 91       	ld	r31, X
+     50e:	1d 97       	sbiw	r26, 0x0d	; 13
+     510:	86 e0       	ldi	r24, 0x06	; 6
+     512:	98 9f       	mul	r25, r24
+     514:	e0 0d       	add	r30, r0
+     516:	f1 1d       	adc	r31, r1
+     518:	11 24       	eor	r1, r1
+     51a:	63 31       	cpi	r22, 0x13	; 19
+     51c:	41 f0       	breq	.+16     	; 0x52e <ha_node_ledlight_on_param+0x66>
+     51e:	36 2f       	mov	r19, r22
+     520:	19 96       	adiw	r26, 0x09	; 9
+     522:	2c 91       	ld	r18, X
+     524:	19 97       	sbiw	r26, 0x09	; 9
+     526:	24 23       	and	r18, r20
+     528:	01 f3       	breq	.-64     	; 0x4ea <ha_node_ledlight_on_param+0x22>
+     52a:	20 e0       	ldi	r18, 0x00	; 0
+     52c:	df cf       	rjmp	.-66     	; 0x4ec <ha_node_ledlight_on_param+0x24>
+     52e:	32 81       	ldd	r19, Z+2	; 0x02
+     530:	f7 cf       	rjmp	.-18     	; 0x520 <ha_node_ledlight_on_param+0x58>
+     532:	82 e0       	ldi	r24, 0x02	; 2
+     534:	f8 01       	movw	r30, r16
+     536:	80 a3       	std	Z+32, r24	; 0x20
+     538:	43 e0       	ldi	r20, 0x03	; 3
+     53a:	6f ef       	ldi	r22, 0xFF	; 255
+     53c:	c8 01       	movw	r24, r16
+     53e:	df 91       	pop	r29
+     540:	cf 91       	pop	r28
+     542:	1f 91       	pop	r17
+     544:	0f 91       	pop	r16
+     546:	2b ce       	rjmp	.-938    	; 0x19e <ha_nlink_node_send>
+
+00000548 <ha_node_ledlight_off>:
+}
+
+void ha_node_ledlight_off (ha_node_ll_info_t *ll)
+{
+     548:	0f 93       	push	r16
+     54a:	1f 93       	push	r17
+     54c:	cf 93       	push	r28
+     54e:	df 93       	push	r29
+     550:	dc 01       	movw	r26, r24
+    node_t *ll_node = ll->node;
+     552:	16 96       	adiw	r26, 0x06	; 6
+     554:	0d 91       	ld	r16, X+
+     556:	1c 91       	ld	r17, X
+     558:	17 97       	sbiw	r26, 0x07	; 7
+    for (uint8_t i = 0; i < ll->leds_num; i ++) {
+     55a:	1b 96       	adiw	r26, 0x0b	; 11
+     55c:	8c 91       	ld	r24, X
+     55e:	1b 97       	sbiw	r26, 0x0b	; 11
+     560:	88 23       	and	r24, r24
+     562:	b9 f0       	breq	.+46     	; 0x592 <ha_node_ledlight_off+0x4a>
+     564:	90 e0       	ldi	r25, 0x00	; 0
+        led_info_t *led = &ll->leds[i];
+     566:	1c 96       	adiw	r26, 0x0c	; 12
+     568:	ed 91       	ld	r30, X+
+     56a:	fc 91       	ld	r31, X
+     56c:	1d 97       	sbiw	r26, 0x0d	; 13
+     56e:	86 e0       	ldi	r24, 0x06	; 6
+     570:	98 9f       	mul	r25, r24
+     572:	e0 0d       	add	r30, r0
+     574:	f1 1d       	adc	r31, r1
+     576:	11 24       	eor	r1, r1
+        led->uc_target_intensity_idx = 0;
+     578:	11 82       	std	Z+1, r1	; 0x01
+        led->uc_fade_timer = ll->cfg->fadeout_period;
+     57a:	12 96       	adiw	r26, 0x02	; 2
+     57c:	cd 91       	ld	r28, X+
+     57e:	dc 91       	ld	r29, X
+     580:	13 97       	sbiw	r26, 0x03	; 3
+     582:	2a 81       	ldd	r18, Y+2	; 0x02
+     584:	24 83       	std	Z+4, r18	; 0x04
+}
+
+void ha_node_ledlight_off (ha_node_ll_info_t *ll)
+{
+    node_t *ll_node = ll->node;
+    for (uint8_t i = 0; i < ll->leds_num; i ++) {
+     586:	9f 5f       	subi	r25, 0xFF	; 255
+     588:	1b 96       	adiw	r26, 0x0b	; 11
+     58a:	2c 91       	ld	r18, X
+     58c:	1b 97       	sbiw	r26, 0x0b	; 11
+     58e:	92 17       	cp	r25, r18
+     590:	50 f3       	brcs	.-44     	; 0x566 <ha_node_ledlight_off+0x1e>
+        led_info_t *led = &ll->leds[i];
+        led->uc_target_intensity_idx = 0;
+        led->uc_fade_timer = ll->cfg->fadeout_period;
+    }
+    ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_OFF_MODE] = LED_MODE_OFF;        // mode is not OFF yet, but will be soon
+     592:	83 e0       	ldi	r24, 0x03	; 3
+     594:	f8 01       	movw	r30, r16
+     596:	80 a3       	std	Z+32, r24	; 0x20
+    ha_nlink_node_send(ll_node, NODE_ADDR_BC, NLINK_CMD_INFO);
+     598:	43 e0       	ldi	r20, 0x03	; 3
+     59a:	6f ef       	ldi	r22, 0xFF	; 255
+     59c:	c8 01       	movw	r24, r16
+}
+     59e:	df 91       	pop	r29
+     5a0:	cf 91       	pop	r28
+     5a2:	1f 91       	pop	r17
+     5a4:	0f 91       	pop	r16
+        led_info_t *led = &ll->leds[i];
+        led->uc_target_intensity_idx = 0;
+        led->uc_fade_timer = ll->cfg->fadeout_period;
+    }
+    ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_OFF_MODE] = LED_MODE_OFF;        // mode is not OFF yet, but will be soon
+    ha_nlink_node_send(ll_node, NODE_ADDR_BC, NLINK_CMD_INFO);
+     5a6:	fb cd       	rjmp	.-1034   	; 0x19e <ha_nlink_node_send>
+
+000005a8 <ha_node_ledlight_dimm>:
+/*
+ * If dimm_idx == dimms_num then roll over dimm table,
+ * otherwise set dimm_idx to the specified value
+ */
+void ha_node_ledlight_dimm (ha_node_ll_info_t *ll, uint8_t dimm_idx)
+{
+     5a8:	cf 93       	push	r28
+     5aa:	df 93       	push	r29
+     5ac:	fc 01       	movw	r30, r24
+    node_t *ll_node = ll->node;
+     5ae:	26 81       	ldd	r18, Z+6	; 0x06
+     5b0:	37 81       	ldd	r19, Z+7	; 0x07
+
+    uint8_t all_off = 0;
+    for (uint8_t i = 0; i < ll->leds_num; i ++) {
+     5b2:	83 85       	ldd	r24, Z+11	; 0x0b
+     5b4:	88 23       	and	r24, r24
+     5b6:	09 f4       	brne	.+2      	; 0x5ba <ha_node_ledlight_dimm+0x12>
+     5b8:	4c c0       	rjmp	.+152    	; 0x652 <ha_node_ledlight_dimm+0xaa>
+     5ba:	80 e0       	ldi	r24, 0x00	; 0
+     5bc:	40 e0       	ldi	r20, 0x00	; 0
+     5be:	18 c0       	rjmp	.+48     	; 0x5f0 <ha_node_ledlight_dimm+0x48>
+                all_off ++;
+            } else {
+                led->uc_dimm_idx--;
+            }
+        } else {
+            led->uc_dimm_idx = dimm_idx;
+     5c0:	13 96       	adiw	r26, 0x03	; 3
+     5c2:	6c 93       	st	X, r22
+     5c4:	13 97       	sbiw	r26, 0x03	; 3
+     5c6:	c2 81       	ldd	r28, Z+2	; 0x02
+     5c8:	d3 81       	ldd	r29, Z+3	; 0x03
+     5ca:	96 2f       	mov	r25, r22
+        }
+        
+        led->uc_on_intensity_idx = ll->cfg->dimms[led->uc_dimm_idx];
+     5cc:	0f 80       	ldd	r0, Y+7	; 0x07
+     5ce:	d8 85       	ldd	r29, Y+8	; 0x08
+     5d0:	c0 2d       	mov	r28, r0
+     5d2:	c9 0f       	add	r28, r25
+     5d4:	d1 1d       	adc	r29, r1
+     5d6:	98 81       	ld	r25, Y
+     5d8:	12 96       	adiw	r26, 0x02	; 2
+     5da:	9c 93       	st	X, r25
+     5dc:	12 97       	sbiw	r26, 0x02	; 2
+        led->uc_fade_timer = ll->cfg->fadeout_period;
+     5de:	c2 81       	ldd	r28, Z+2	; 0x02
+     5e0:	d3 81       	ldd	r29, Z+3	; 0x03
+     5e2:	9a 81       	ldd	r25, Y+2	; 0x02
+     5e4:	14 96       	adiw	r26, 0x04	; 4
+     5e6:	9c 93       	st	X, r25
+void ha_node_ledlight_dimm (ha_node_ll_info_t *ll, uint8_t dimm_idx)
+{
+    node_t *ll_node = ll->node;
+
+    uint8_t all_off = 0;
+    for (uint8_t i = 0; i < ll->leds_num; i ++) {
+     5e8:	8f 5f       	subi	r24, 0xFF	; 255
+     5ea:	93 85       	ldd	r25, Z+11	; 0x0b
+     5ec:	89 17       	cp	r24, r25
+     5ee:	d0 f4       	brcc	.+52     	; 0x624 <ha_node_ledlight_dimm+0x7c>
+        led_info_t *led = &ll->leds[i];
+     5f0:	a4 85       	ldd	r26, Z+12	; 0x0c
+     5f2:	b5 85       	ldd	r27, Z+13	; 0x0d
+     5f4:	96 e0       	ldi	r25, 0x06	; 6
+     5f6:	89 9f       	mul	r24, r25
+     5f8:	a0 0d       	add	r26, r0
+     5fa:	b1 1d       	adc	r27, r1
+     5fc:	11 24       	eor	r1, r1
+        if (dimm_idx == ll->cfg->dimms_num) {
+     5fe:	c2 81       	ldd	r28, Z+2	; 0x02
+     600:	d3 81       	ldd	r29, Z+3	; 0x03
+     602:	9e 81       	ldd	r25, Y+6	; 0x06
+     604:	96 13       	cpse	r25, r22
+     606:	dc cf       	rjmp	.-72     	; 0x5c0 <ha_node_ledlight_dimm+0x18>
+            // Rollover dimm table
+            if (led->uc_dimm_idx == 0) {
+     608:	13 96       	adiw	r26, 0x03	; 3
+     60a:	9c 91       	ld	r25, X
+     60c:	13 97       	sbiw	r26, 0x03	; 3
+     60e:	91 11       	cpse	r25, r1
+     610:	02 c0       	rjmp	.+4      	; 0x616 <ha_node_ledlight_dimm+0x6e>
+                all_off ++;
+     612:	4f 5f       	subi	r20, 0xFF	; 255
+     614:	db cf       	rjmp	.-74     	; 0x5cc <ha_node_ledlight_dimm+0x24>
+            } else {
+                led->uc_dimm_idx--;
+     616:	91 50       	subi	r25, 0x01	; 1
+     618:	13 96       	adiw	r26, 0x03	; 3
+     61a:	9c 93       	st	X, r25
+     61c:	13 97       	sbiw	r26, 0x03	; 3
+     61e:	c2 81       	ldd	r28, Z+2	; 0x02
+     620:	d3 81       	ldd	r29, Z+3	; 0x03
+     622:	d4 cf       	rjmp	.-88     	; 0x5cc <ha_node_ledlight_dimm+0x24>
+        led->uc_on_intensity_idx = ll->cfg->dimms[led->uc_dimm_idx];
+        led->uc_fade_timer = ll->cfg->fadeout_period;
+    }
+
+    // Wrap around intensity only when LED are OFF
+    if (all_off == ll->leds_num) {
+     624:	49 17       	cp	r20, r25
+     626:	d1 f0       	breq	.+52     	; 0x65c <ha_node_ledlight_dimm+0xb4>
+            led->uc_on_intensity_idx = ll->cfg->dimms[led->uc_dimm_idx];
+        }
+    }
+
+    // Update NLINK buffer
+    for (uint8_t i = 0; i < ll->leds_num; i ++) {
+     628:	99 23       	and	r25, r25
+     62a:	99 f0       	breq	.+38     	; 0x652 <ha_node_ledlight_dimm+0xaa>
+     62c:	80 e0       	ldi	r24, 0x00	; 0
+        led_info_t *led = &ll->leds[i];
+        ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_OFF_INTENSITY0 + i] = led->uc_on_intensity_idx;
+     62e:	a4 85       	ldd	r26, Z+12	; 0x0c
+     630:	b5 85       	ldd	r27, Z+13	; 0x0d
+     632:	96 e0       	ldi	r25, 0x06	; 6
+     634:	89 9f       	mul	r24, r25
+     636:	a0 0d       	add	r26, r0
+     638:	b1 1d       	adc	r27, r1
+     63a:	11 24       	eor	r1, r1
+     63c:	12 96       	adiw	r26, 0x02	; 2
+     63e:	9c 91       	ld	r25, X
+     640:	d9 01       	movw	r26, r18
+     642:	a8 0f       	add	r26, r24
+     644:	b1 1d       	adc	r27, r1
+     646:	92 96       	adiw	r26, 0x22	; 34
+     648:	9c 93       	st	X, r25
+            led->uc_on_intensity_idx = ll->cfg->dimms[led->uc_dimm_idx];
+        }
+    }
+
+    // Update NLINK buffer
+    for (uint8_t i = 0; i < ll->leds_num; i ++) {
+     64a:	8f 5f       	subi	r24, 0xFF	; 255
+     64c:	93 85       	ldd	r25, Z+11	; 0x0b
+     64e:	89 17       	cp	r24, r25
+     650:	70 f3       	brcs	.-36     	; 0x62e <ha_node_ledlight_dimm+0x86>
+}
+
+void ha_node_ledlight_on (ha_node_ll_info_t *ll)
+{
+    // Set intensity to current on_intensity_idx
+    ha_node_ledlight_on_param(ll, INTENSITIES_NUM);
+     652:	63 e1       	ldi	r22, 0x13	; 19
+     654:	cf 01       	movw	r24, r30
+    for (uint8_t i = 0; i < ll->leds_num; i ++) {
+        led_info_t *led = &ll->leds[i];
+        ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_OFF_INTENSITY0 + i] = led->uc_on_intensity_idx;
+    }
+    ha_node_ledlight_on(ll);
+}
+     656:	df 91       	pop	r29
+     658:	cf 91       	pop	r28
+}
+
+void ha_node_ledlight_on (ha_node_ll_info_t *ll)
+{
+    // Set intensity to current on_intensity_idx
+    ha_node_ledlight_on_param(ll, INTENSITIES_NUM);
+     65a:	36 cf       	rjmp	.-404    	; 0x4c8 <ha_node_ledlight_on_param>
+        led->uc_fade_timer = ll->cfg->fadeout_period;
+    }
+
+    // Wrap around intensity only when LED are OFF
+    if (all_off == ll->leds_num) {
+        for (uint8_t i = 0; i < ll->leds_num; i ++) {
+     65c:	44 23       	and	r20, r20
+     65e:	c9 f3       	breq	.-14     	; 0x652 <ha_node_ledlight_dimm+0xaa>
+     660:	40 e0       	ldi	r20, 0x00	; 0
+            led_info_t *led = &ll->leds[i];
+     662:	a4 85       	ldd	r26, Z+12	; 0x0c
+     664:	b5 85       	ldd	r27, Z+13	; 0x0d
+     666:	86 e0       	ldi	r24, 0x06	; 6
+     668:	48 9f       	mul	r20, r24
+     66a:	a0 0d       	add	r26, r0
+     66c:	b1 1d       	adc	r27, r1
+     66e:	11 24       	eor	r1, r1
+            led->uc_dimm_idx = ll->cfg->dimms_num - 1;
+     670:	c2 81       	ldd	r28, Z+2	; 0x02
+     672:	d3 81       	ldd	r29, Z+3	; 0x03
+     674:	8e 81       	ldd	r24, Y+6	; 0x06
+     676:	81 50       	subi	r24, 0x01	; 1
+     678:	13 96       	adiw	r26, 0x03	; 3
+     67a:	8c 93       	st	X, r24
+     67c:	13 97       	sbiw	r26, 0x03	; 3
+            led->uc_on_intensity_idx = ll->cfg->dimms[led->uc_dimm_idx];
+     67e:	c2 81       	ldd	r28, Z+2	; 0x02
+     680:	d3 81       	ldd	r29, Z+3	; 0x03
+     682:	0f 80       	ldd	r0, Y+7	; 0x07
+     684:	d8 85       	ldd	r29, Y+8	; 0x08
+     686:	c0 2d       	mov	r28, r0
+     688:	c8 0f       	add	r28, r24
+     68a:	d1 1d       	adc	r29, r1
+     68c:	88 81       	ld	r24, Y
+     68e:	12 96       	adiw	r26, 0x02	; 2
+     690:	8c 93       	st	X, r24
+        led->uc_fade_timer = ll->cfg->fadeout_period;
+    }
+
+    // Wrap around intensity only when LED are OFF
+    if (all_off == ll->leds_num) {
+        for (uint8_t i = 0; i < ll->leds_num; i ++) {
+     692:	4f 5f       	subi	r20, 0xFF	; 255
+     694:	93 85       	ldd	r25, Z+11	; 0x0b
+     696:	49 17       	cp	r20, r25
+     698:	20 f3       	brcs	.-56     	; 0x662 <ha_node_ledlight_dimm+0xba>
+     69a:	c6 cf       	rjmp	.-116    	; 0x628 <ha_node_ledlight_dimm+0x80>
+
+0000069c <ha_node_ledlight_roll>:
+    }
+    ha_node_ledlight_on(ll);
+}
+
+void ha_node_ledlight_roll(ha_node_ll_info_t *ll)
+{
+     69c:	cf 93       	push	r28
+     69e:	df 93       	push	r29
+     6a0:	dc 01       	movw	r26, r24
+    node_t *ll_node = ll->node;
+
+    if (ll->cfg->disable_masks == NULL || ll->cfg->disable_masks_num == 0)
+     6a2:	12 96       	adiw	r26, 0x02	; 2
+     6a4:	cd 91       	ld	r28, X+
+     6a6:	dc 91       	ld	r29, X
+     6a8:	13 97       	sbiw	r26, 0x03	; 3
+     6aa:	8a 85       	ldd	r24, Y+10	; 0x0a
+     6ac:	9b 85       	ldd	r25, Y+11	; 0x0b
+     6ae:	89 2b       	or	r24, r25
+     6b0:	11 f1       	breq	.+68     	; 0x6f6 <ha_node_ledlight_roll+0x5a>
+     6b2:	89 85       	ldd	r24, Y+9	; 0x09
+     6b4:	88 23       	and	r24, r24
+     6b6:	f9 f0       	breq	.+62     	; 0x6f6 <ha_node_ledlight_roll+0x5a>
+    ha_node_ledlight_on(ll);
+}
+
+void ha_node_ledlight_roll(ha_node_ll_info_t *ll)
+{
+    node_t *ll_node = ll->node;
+     6b8:	16 96       	adiw	r26, 0x06	; 6
+     6ba:	4d 91       	ld	r20, X+
+     6bc:	5c 91       	ld	r21, X
+     6be:	17 97       	sbiw	r26, 0x07	; 7
+
+    if (ll->cfg->disable_masks == NULL || ll->cfg->disable_masks_num == 0)
+        return;
+
+    ll->disabled_idx++;
+     6c0:	18 96       	adiw	r26, 0x08	; 8
+     6c2:	ec 91       	ld	r30, X
+     6c4:	18 97       	sbiw	r26, 0x08	; 8
+     6c6:	ef 5f       	subi	r30, 0xFF	; 255
+     6c8:	18 96       	adiw	r26, 0x08	; 8
+     6ca:	ec 93       	st	X, r30
+     6cc:	18 97       	sbiw	r26, 0x08	; 8
+    if (ll->disabled_idx == ll->cfg->disable_masks_num) ll->disabled_idx = 0;
+     6ce:	89 85       	ldd	r24, Y+9	; 0x09
+     6d0:	e8 17       	cp	r30, r24
+     6d2:	a1 f0       	breq	.+40     	; 0x6fc <ha_node_ledlight_roll+0x60>
+     6d4:	2e 2f       	mov	r18, r30
+     6d6:	30 e0       	ldi	r19, 0x00	; 0
+    ll->disabled_mask = ll->cfg->disable_masks[ll->disabled_idx];
+     6d8:	ea 85       	ldd	r30, Y+10	; 0x0a
+     6da:	fb 85       	ldd	r31, Y+11	; 0x0b
+     6dc:	e2 0f       	add	r30, r18
+     6de:	f3 1f       	adc	r31, r19
+     6e0:	80 81       	ld	r24, Z
+     6e2:	19 96       	adiw	r26, 0x09	; 9
+     6e4:	8c 93       	st	X, r24
+     6e6:	19 97       	sbiw	r26, 0x09	; 9
+    ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_OFF_DIS_MASK ] = ll->disabled_mask;
+     6e8:	fa 01       	movw	r30, r20
+     6ea:	81 a3       	std	Z+33, r24	; 0x21
+}
+
+void ha_node_ledlight_on (ha_node_ll_info_t *ll)
+{
+    // Set intensity to current on_intensity_idx
+    ha_node_ledlight_on_param(ll, INTENSITIES_NUM);
+     6ec:	63 e1       	ldi	r22, 0x13	; 19
+     6ee:	cd 01       	movw	r24, r26
+    ll->disabled_idx++;
+    if (ll->disabled_idx == ll->cfg->disable_masks_num) ll->disabled_idx = 0;
+    ll->disabled_mask = ll->cfg->disable_masks[ll->disabled_idx];
+    ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_OFF_DIS_MASK ] = ll->disabled_mask;
+    ha_node_ledlight_on(ll);
+}
+     6f0:	df 91       	pop	r29
+     6f2:	cf 91       	pop	r28
+}
+
+void ha_node_ledlight_on (ha_node_ll_info_t *ll)
+{
+    // Set intensity to current on_intensity_idx
+    ha_node_ledlight_on_param(ll, INTENSITIES_NUM);
+     6f4:	e9 ce       	rjmp	.-558    	; 0x4c8 <ha_node_ledlight_on_param>
+    ll->disabled_idx++;
+    if (ll->disabled_idx == ll->cfg->disable_masks_num) ll->disabled_idx = 0;
+    ll->disabled_mask = ll->cfg->disable_masks[ll->disabled_idx];
+    ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_OFF_DIS_MASK ] = ll->disabled_mask;
+    ha_node_ledlight_on(ll);
+}
+     6f6:	df 91       	pop	r29
+     6f8:	cf 91       	pop	r28
+     6fa:	08 95       	ret
+
+    if (ll->cfg->disable_masks == NULL || ll->cfg->disable_masks_num == 0)
+        return;
+
+    ll->disabled_idx++;
+    if (ll->disabled_idx == ll->cfg->disable_masks_num) ll->disabled_idx = 0;
+     6fc:	18 96       	adiw	r26, 0x08	; 8
+     6fe:	1c 92       	st	X, r1
+     700:	18 97       	sbiw	r26, 0x08	; 8
+     702:	20 e0       	ldi	r18, 0x00	; 0
+     704:	30 e0       	ldi	r19, 0x00	; 0
+     706:	e8 cf       	rjmp	.-48     	; 0x6d8 <ha_node_ledlight_roll+0x3c>
+
+00000708 <sw_behavior_control>:
+    ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_OFF_DIS_MASK ] = ll->disabled_mask;
+    ha_node_ledlight_on(ll);
+}
+
+void sw_behavior_control(ha_node_ll_info_t *ll, uint8_t addr_from, uint8_t sw_param)
+{
+     708:	cf 92       	push	r12
+     70a:	df 92       	push	r13
+     70c:	ef 92       	push	r14
+     70e:	ff 92       	push	r15
+     710:	0f 93       	push	r16
+     712:	1f 93       	push	r17
+     714:	cf 93       	push	r28
+     716:	df 93       	push	r29
+     718:	fc 01       	movw	r30, r24
+    // Traverse over action table and check all entries of type SWITCH
+    for( const ha_node_ll_evt_action_t *evt_act = ll->evt_actions; 
+     71a:	c0 81       	ld	r28, Z
+     71c:	d1 81       	ldd	r29, Z+1	; 0x01
+         evt_act->act_type != LL_ACT_TYPE_NONE;
+     71e:	9b 81       	ldd	r25, Y+3	; 0x03
+}
+
+void sw_behavior_control(ha_node_ll_info_t *ll, uint8_t addr_from, uint8_t sw_param)
+{
+    // Traverse over action table and check all entries of type SWITCH
+    for( const ha_node_ll_evt_action_t *evt_act = ll->evt_actions; 
+     720:	99 23       	and	r25, r25
+     722:	39 f1       	breq	.+78     	; 0x772 <sw_behavior_control+0x6a>
+     724:	04 2f       	mov	r16, r20
+     726:	16 2f       	mov	r17, r22
+     728:	7f 01       	movw	r14, r30
+            case LL_ACT_TYPE_TOGGLE: 
+                if (ll->led_mode == LED_MODE_ON) {
+                    ll->led_mode = LED_MODE_OFF_TRANS;
+                    ha_node_ledlight_off(ll);
+                } else if (ll->led_mode == LED_MODE_OFF) {
+                    ll->led_mode = LED_MODE_ON_TRANS;
+     72a:	84 e0       	ldi	r24, 0x04	; 4
+     72c:	d8 2e       	mov	r13, r24
+//        uint8_t sw_event = sw_param & 0x0F;
+//        uint8_t sw_num = sw_param >> 4;
+        switch(evt_act->act_type) {
+            case LL_ACT_TYPE_TOGGLE: 
+                if (ll->led_mode == LED_MODE_ON) {
+                    ll->led_mode = LED_MODE_OFF_TRANS;
+     72e:	25 e0       	ldi	r18, 0x05	; 5
+     730:	c2 2e       	mov	r12, r18
+     732:	04 c0       	rjmp	.+8      	; 0x73c <sw_behavior_control+0x34>
+void sw_behavior_control(ha_node_ll_info_t *ll, uint8_t addr_from, uint8_t sw_param)
+{
+    // Traverse over action table and check all entries of type SWITCH
+    for( const ha_node_ll_evt_action_t *evt_act = ll->evt_actions; 
+         evt_act->act_type != LL_ACT_TYPE_NONE;
+         evt_act++ ) {
+     734:	25 96       	adiw	r28, 0x05	; 5
+
+void sw_behavior_control(ha_node_ll_info_t *ll, uint8_t addr_from, uint8_t sw_param)
+{
+    // Traverse over action table and check all entries of type SWITCH
+    for( const ha_node_ll_evt_action_t *evt_act = ll->evt_actions; 
+         evt_act->act_type != LL_ACT_TYPE_NONE;
+     736:	9b 81       	ldd	r25, Y+3	; 0x03
+}
+
+void sw_behavior_control(ha_node_ll_info_t *ll, uint8_t addr_from, uint8_t sw_param)
+{
+    // Traverse over action table and check all entries of type SWITCH
+    for( const ha_node_ll_evt_action_t *evt_act = ll->evt_actions; 
+     738:	99 23       	and	r25, r25
+     73a:	d9 f0       	breq	.+54     	; 0x772 <sw_behavior_control+0x6a>
+         evt_act->act_type != LL_ACT_TYPE_NONE;
+         evt_act++ ) {
+
+        if (evt_act->evt_type != NODE_TYPE_SWITCH)
+     73c:	28 81       	ld	r18, Y
+     73e:	20 33       	cpi	r18, 0x30	; 48
+     740:	c9 f7       	brne	.-14     	; 0x734 <sw_behavior_control+0x2c>
+            continue;
+
+        if (evt_act->evt_addr != addr_from && evt_act->evt_addr != NODE_ADDR_BC)
+     742:	29 81       	ldd	r18, Y+1	; 0x01
+     744:	21 17       	cp	r18, r17
+     746:	11 f0       	breq	.+4      	; 0x74c <sw_behavior_control+0x44>
+     748:	2f 3f       	cpi	r18, 0xFF	; 255
+     74a:	a1 f7       	brne	.-24     	; 0x734 <sw_behavior_control+0x2c>
+            continue;
+
+        if (evt_act->evt_param != sw_param) 
+     74c:	8a 81       	ldd	r24, Y+2	; 0x02
+     74e:	80 13       	cpse	r24, r16
+     750:	f1 cf       	rjmp	.-30     	; 0x734 <sw_behavior_control+0x2c>
+            continue;
+
+//        uint8_t sw_event = sw_param & 0x0F;
+//        uint8_t sw_num = sw_param >> 4;
+        switch(evt_act->act_type) {
+     752:	93 30       	cpi	r25, 0x03	; 3
+     754:	f9 f0       	breq	.+62     	; 0x794 <sw_behavior_control+0x8c>
+     756:	b0 f0       	brcs	.+44     	; 0x784 <sw_behavior_control+0x7c>
+     758:	95 30       	cpi	r25, 0x05	; 5
+     75a:	41 f1       	breq	.+80     	; 0x7ac <sw_behavior_control+0xa4>
+     75c:	96 30       	cpi	r25, 0x06	; 6
+     75e:	51 f7       	brne	.-44     	; 0x734 <sw_behavior_control+0x2c>
+                    ll->led_mode = LED_MODE_ON_TRANS;
+                    ha_node_ledlight_on(ll);
+                }
+                break;
+            case LL_ACT_TYPE_ROLLDIMM:
+                if (ll->led_mode == LED_MODE_ON) {
+     760:	f7 01       	movw	r30, r14
+     762:	82 85       	ldd	r24, Z+10	; 0x0a
+     764:	82 30       	cpi	r24, 0x02	; 2
+     766:	61 f1       	breq	.+88     	; 0x7c0 <sw_behavior_control+0xb8>
+                    ha_node_ledlight_dimm(ll, 0);
+                } else if (ll->led_mode == LED_MODE_OFF) {
+     768:	83 30       	cpi	r24, 0x03	; 3
+     76a:	21 f7       	brne	.-56     	; 0x734 <sw_behavior_control+0x2c>
+                    ha_node_ledlight_roll(ll);
+     76c:	c7 01       	movw	r24, r14
+     76e:	96 df       	rcall	.-212    	; 0x69c <ha_node_ledlight_roll>
+     770:	e1 cf       	rjmp	.-62     	; 0x734 <sw_behavior_control+0x2c>
+            break;
+        }
+
+    } // End of action table traverse loop
+    
+}
+     772:	df 91       	pop	r29
+     774:	cf 91       	pop	r28
+     776:	1f 91       	pop	r17
+     778:	0f 91       	pop	r16
+     77a:	ff 90       	pop	r15
+     77c:	ef 90       	pop	r14
+     77e:	df 90       	pop	r13
+     780:	cf 90       	pop	r12
+     782:	08 95       	ret
+        if (evt_act->evt_param != sw_param) 
+            continue;
+
+//        uint8_t sw_event = sw_param & 0x0F;
+//        uint8_t sw_num = sw_param >> 4;
+        switch(evt_act->act_type) {
+     784:	91 30       	cpi	r25, 0x01	; 1
+     786:	b1 f6       	brne	.-84     	; 0x734 <sw_behavior_control+0x2c>
+                break;
+            case LL_ACT_TYPE_DIMM:
+                ll->led_mode = LED_MODE_ON_TRANS;
+                ha_node_ledlight_dimm(ll, evt_act->act_param);
+            case LL_ACT_TYPE_ON:
+                ll->led_mode = LED_MODE_ON_TRANS;
+     788:	f7 01       	movw	r30, r14
+     78a:	d2 86       	std	Z+10, r13	; 0x0a
+                ha_node_ledlight_on_param(ll, evt_act->act_param);
+     78c:	6c 81       	ldd	r22, Y+4	; 0x04
+     78e:	c7 01       	movw	r24, r14
+     790:	9b de       	rcall	.-714    	; 0x4c8 <ha_node_ledlight_on_param>
+            break;
+     792:	d0 cf       	rjmp	.-96     	; 0x734 <sw_behavior_control+0x2c>
+
+//        uint8_t sw_event = sw_param & 0x0F;
+//        uint8_t sw_num = sw_param >> 4;
+        switch(evt_act->act_type) {
+            case LL_ACT_TYPE_TOGGLE: 
+                if (ll->led_mode == LED_MODE_ON) {
+     794:	f7 01       	movw	r30, r14
+     796:	82 85       	ldd	r24, Z+10	; 0x0a
+     798:	82 30       	cpi	r24, 0x02	; 2
+     79a:	71 f0       	breq	.+28     	; 0x7b8 <sw_behavior_control+0xb0>
+                    ll->led_mode = LED_MODE_OFF_TRANS;
+                    ha_node_ledlight_off(ll);
+                } else if (ll->led_mode == LED_MODE_OFF) {
+     79c:	83 30       	cpi	r24, 0x03	; 3
+     79e:	51 f6       	brne	.-108    	; 0x734 <sw_behavior_control+0x2c>
+                    ll->led_mode = LED_MODE_ON_TRANS;
+     7a0:	f7 01       	movw	r30, r14
+     7a2:	d2 86       	std	Z+10, r13	; 0x0a
+}
+
+void ha_node_ledlight_on (ha_node_ll_info_t *ll)
+{
+    // Set intensity to current on_intensity_idx
+    ha_node_ledlight_on_param(ll, INTENSITIES_NUM);
+     7a4:	63 e1       	ldi	r22, 0x13	; 19
+     7a6:	c7 01       	movw	r24, r14
+     7a8:	8f de       	rcall	.-738    	; 0x4c8 <ha_node_ledlight_on_param>
+     7aa:	c4 cf       	rjmp	.-120    	; 0x734 <sw_behavior_control+0x2c>
+                } else if (ll->led_mode == LED_MODE_OFF) {
+                    ha_node_ledlight_roll(ll);
+                }
+                break;
+            case LL_ACT_TYPE_DIMM:
+                ll->led_mode = LED_MODE_ON_TRANS;
+     7ac:	f7 01       	movw	r30, r14
+     7ae:	d2 86       	std	Z+10, r13	; 0x0a
+                ha_node_ledlight_dimm(ll, evt_act->act_param);
+     7b0:	6c 81       	ldd	r22, Y+4	; 0x04
+     7b2:	c7 01       	movw	r24, r14
+     7b4:	f9 de       	rcall	.-526    	; 0x5a8 <ha_node_ledlight_dimm>
+     7b6:	e8 cf       	rjmp	.-48     	; 0x788 <sw_behavior_control+0x80>
+//        uint8_t sw_event = sw_param & 0x0F;
+//        uint8_t sw_num = sw_param >> 4;
+        switch(evt_act->act_type) {
+            case LL_ACT_TYPE_TOGGLE: 
+                if (ll->led_mode == LED_MODE_ON) {
+                    ll->led_mode = LED_MODE_OFF_TRANS;
+     7b8:	c2 86       	std	Z+10, r12	; 0x0a
+                    ha_node_ledlight_off(ll);
+     7ba:	c7 01       	movw	r24, r14
+     7bc:	c5 de       	rcall	.-630    	; 0x548 <ha_node_ledlight_off>
+     7be:	ba cf       	rjmp	.-140    	; 0x734 <sw_behavior_control+0x2c>
+                    ha_node_ledlight_on(ll);
+                }
+                break;
+            case LL_ACT_TYPE_ROLLDIMM:
+                if (ll->led_mode == LED_MODE_ON) {
+                    ha_node_ledlight_dimm(ll, 0);
+     7c0:	60 e0       	ldi	r22, 0x00	; 0
+     7c2:	c7 01       	movw	r24, r14
+     7c4:	f1 de       	rcall	.-542    	; 0x5a8 <ha_node_ledlight_dimm>
+     7c6:	b6 cf       	rjmp	.-148    	; 0x734 <sw_behavior_control+0x2c>
+
+000007c8 <ledlight_on_rx>:
+    } // End of action table traverse loop
+    
+}
+
+void ledlight_on_rx (void *ctx, const uint8_t *buf_in)
+{
+     7c8:	df 92       	push	r13
+     7ca:	ef 92       	push	r14
+     7cc:	ff 92       	push	r15
+     7ce:	0f 93       	push	r16
+     7d0:	1f 93       	push	r17
+     7d2:	cf 93       	push	r28
+     7d4:	df 93       	push	r29
+     7d6:	8c 01       	movw	r16, r24
+    int i;
+
+    uint8_t addr_from = buf_in[NLINK_HDR_OFF_FROM];
+    uint8_t len = buf_in[NLINK_HDR_OFF_LEN];
+
+    if (buf_in[NLINK_HDR_OFF_TYPE] == NODE_TYPE_LEDLIGHT) {
+     7d8:	fb 01       	movw	r30, r22
+     7da:	83 81       	ldd	r24, Z+3	; 0x03
+     7dc:	80 32       	cpi	r24, 0x20	; 32
+     7de:	41 f1       	breq	.+80     	; 0x830 <ledlight_on_rx+0x68>
+            ha_node_ledlight_on(ll_node);
+        } else if (ll_node->led_mode == LED_MODE_OFF) {
+            ha_node_ledlight_off(ll_node);
+        }
+
+    } else if (buf_in[NLINK_HDR_OFF_TYPE] == NODE_TYPE_SWITCH) {
+     7e0:	80 33       	cpi	r24, 0x30	; 48
+     7e2:	41 f0       	breq	.+16     	; 0x7f4 <ledlight_on_rx+0x2c>
+    } else {
+        // Unexpected event type
+        return;
+    }
+
+}
+     7e4:	df 91       	pop	r29
+     7e6:	cf 91       	pop	r28
+     7e8:	1f 91       	pop	r17
+     7ea:	0f 91       	pop	r16
+     7ec:	ff 90       	pop	r15
+     7ee:	ef 90       	pop	r14
+     7f0:	df 90       	pop	r13
+     7f2:	08 95       	ret
+    ha_node_ll_info_t *ll_node = (ha_node_ll_info_t *)ctx;
+    node_t *node = ll_node->node;
+    int i;
+
+    uint8_t addr_from = buf_in[NLINK_HDR_OFF_FROM];
+    uint8_t len = buf_in[NLINK_HDR_OFF_LEN];
+     7f4:	fb 01       	movw	r30, r22
+     7f6:	84 81       	ldd	r24, Z+4	; 0x04
+        }
+
+    } else if (buf_in[NLINK_HDR_OFF_TYPE] == NODE_TYPE_SWITCH) {
+
+        // Switch event
+        for (uint8_t i = 0; i < len; i++) {
+     7f8:	88 23       	and	r24, r24
+     7fa:	a1 f3       	breq	.-24     	; 0x7e4 <ledlight_on_rx+0x1c>
+{
+    ha_node_ll_info_t *ll_node = (ha_node_ll_info_t *)ctx;
+    node_t *node = ll_node->node;
+    int i;
+
+    uint8_t addr_from = buf_in[NLINK_HDR_OFF_FROM];
+     7fc:	d0 80       	ld	r13, Z
+     7fe:	eb 01       	movw	r28, r22
+     800:	25 96       	adiw	r28, 0x05	; 5
+     802:	81 50       	subi	r24, 0x01	; 1
+     804:	e8 2e       	mov	r14, r24
+     806:	f1 2c       	mov	r15, r1
+     808:	f6 e0       	ldi	r31, 0x06	; 6
+     80a:	ef 0e       	add	r14, r31
+     80c:	f1 1c       	adc	r15, r1
+     80e:	e6 0e       	add	r14, r22
+     810:	f7 1e       	adc	r15, r23
+
+    } else if (buf_in[NLINK_HDR_OFF_TYPE] == NODE_TYPE_SWITCH) {
+
+        // Switch event
+        for (uint8_t i = 0; i < len; i++) {
+            uint8_t sw_param = buf_in[NLINK_HDR_OFF_DATA + i];
+     812:	49 91       	ld	r20, Y+
+            sw_behavior_control(ll_node, addr_from, sw_param);
+     814:	6d 2d       	mov	r22, r13
+     816:	c8 01       	movw	r24, r16
+     818:	77 df       	rcall	.-274    	; 0x708 <sw_behavior_control>
+        }
+
+    } else if (buf_in[NLINK_HDR_OFF_TYPE] == NODE_TYPE_SWITCH) {
+
+        // Switch event
+        for (uint8_t i = 0; i < len; i++) {
+     81a:	ce 15       	cp	r28, r14
+     81c:	df 05       	cpc	r29, r15
+     81e:	c9 f7       	brne	.-14     	; 0x812 <ledlight_on_rx+0x4a>
+    } else {
+        // Unexpected event type
+        return;
+    }
+
+}
+     820:	df 91       	pop	r29
+     822:	cf 91       	pop	r28
+     824:	1f 91       	pop	r17
+     826:	0f 91       	pop	r16
+     828:	ff 90       	pop	r15
+     82a:	ef 90       	pop	r14
+     82c:	df 90       	pop	r13
+     82e:	08 95       	ret
+}
+
+void ledlight_on_rx (void *ctx, const uint8_t *buf_in)
+{
+    ha_node_ll_info_t *ll_node = (ha_node_ll_info_t *)ctx;
+    node_t *node = ll_node->node;
+     830:	f8 01       	movw	r30, r16
+     832:	e6 80       	ldd	r14, Z+6	; 0x06
+     834:	f7 80       	ldd	r15, Z+7	; 0x07
+    uint8_t len = buf_in[NLINK_HDR_OFF_LEN];
+
+    if (buf_in[NLINK_HDR_OFF_TYPE] == NODE_TYPE_LEDLIGHT) {
+        // Direct LEDLIGHT state info. Typically received from user console
+        // Address must be specified explicitly
+        if (buf_in[NLINK_HDR_OFF_TO] != ll_node->node->addr) {
+     836:	fb 01       	movw	r30, r22
+     838:	91 81       	ldd	r25, Z+1	; 0x01
+     83a:	f7 01       	movw	r30, r14
+     83c:	81 81       	ldd	r24, Z+1	; 0x01
+     83e:	98 13       	cpse	r25, r24
+     840:	d1 cf       	rjmp	.-94     	; 0x7e4 <ledlight_on_rx+0x1c>
+            return;
+        }
+
+        ll_node->led_mode = buf_in[NLINK_HDR_OFF_DATA + LL_DATA_OFF_MODE];
+     842:	fb 01       	movw	r30, r22
+     844:	85 81       	ldd	r24, Z+5	; 0x05
+     846:	f8 01       	movw	r30, r16
+     848:	82 87       	std	Z+10, r24	; 0x0a
+        ll_node->disabled_mask = buf_in[NLINK_HDR_OFF_DATA + LL_DATA_OFF_DIS_MASK];
+     84a:	fb 01       	movw	r30, r22
+     84c:	86 81       	ldd	r24, Z+6	; 0x06
+     84e:	f8 01       	movw	r30, r16
+     850:	81 87       	std	Z+9, r24	; 0x09
+        for (i = 0; i < ll_node->leds_num; i++) {
+     852:	43 85       	ldd	r20, Z+11	; 0x0b
+     854:	44 23       	and	r20, r20
+     856:	c1 f0       	breq	.+48     	; 0x888 <ledlight_on_rx+0xc0>
+     858:	eb 01       	movw	r28, r22
+     85a:	27 96       	adiw	r28, 0x07	; 7
+     85c:	a0 e0       	ldi	r26, 0x00	; 0
+     85e:	b0 e0       	ldi	r27, 0x00	; 0
+     860:	20 e0       	ldi	r18, 0x00	; 0
+     862:	30 e0       	ldi	r19, 0x00	; 0
+            ll_node->leds[i].uc_on_intensity_idx = buf_in[NLINK_HDR_OFF_DATA + LL_DATA_OFF_INTENSITY0 + i];
+     864:	49 91       	ld	r20, Y+
+     866:	f8 01       	movw	r30, r16
+     868:	84 85       	ldd	r24, Z+12	; 0x0c
+     86a:	95 85       	ldd	r25, Z+13	; 0x0d
+     86c:	fc 01       	movw	r30, r24
+     86e:	ea 0f       	add	r30, r26
+     870:	fb 1f       	adc	r31, r27
+     872:	42 83       	std	Z+2, r20	; 0x02
+            return;
+        }
+
+        ll_node->led_mode = buf_in[NLINK_HDR_OFF_DATA + LL_DATA_OFF_MODE];
+        ll_node->disabled_mask = buf_in[NLINK_HDR_OFF_DATA + LL_DATA_OFF_DIS_MASK];
+        for (i = 0; i < ll_node->leds_num; i++) {
+     874:	2f 5f       	subi	r18, 0xFF	; 255
+     876:	3f 4f       	sbci	r19, 0xFF	; 255
+     878:	f8 01       	movw	r30, r16
+     87a:	43 85       	ldd	r20, Z+11	; 0x0b
+     87c:	16 96       	adiw	r26, 0x06	; 6
+     87e:	e4 2f       	mov	r30, r20
+     880:	f0 e0       	ldi	r31, 0x00	; 0
+     882:	2e 17       	cp	r18, r30
+     884:	3f 07       	cpc	r19, r31
+     886:	74 f3       	brlt	.-36     	; 0x864 <ledlight_on_rx+0x9c>
+            ll_node->leds[i].uc_on_intensity_idx = buf_in[NLINK_HDR_OFF_DATA + LL_DATA_OFF_INTENSITY0 + i];
+        }
+
+        // Update node TX buffer to reflect changes in outgoing messages
+        uint8_t ll_data_len = LL_DATA_OFF_INTENSITY0 + ll_node->leds_num;
+        memcpy(&node->tx_buf[NLINK_HDR_OFF_DATA], &buf_in[NLINK_HDR_OFF_DATA], ll_data_len);
+     888:	4e 5f       	subi	r20, 0xFE	; 254
+     88a:	50 e0       	ldi	r21, 0x00	; 0
+     88c:	6b 5f       	subi	r22, 0xFB	; 251
+     88e:	7f 4f       	sbci	r23, 0xFF	; 255
+     890:	c7 01       	movw	r24, r14
+     892:	80 96       	adiw	r24, 0x20	; 32
+     894:	93 d5       	rcall	.+2854   	; 0x13bc <memcpy>
+
+        if (ll_node->led_mode == LED_MODE_ON) {
+     896:	f8 01       	movw	r30, r16
+     898:	82 85       	ldd	r24, Z+10	; 0x0a
+     89a:	82 30       	cpi	r24, 0x02	; 2
+     89c:	61 f0       	breq	.+24     	; 0x8b6 <ledlight_on_rx+0xee>
+            ha_node_ledlight_on(ll_node);
+        } else if (ll_node->led_mode == LED_MODE_OFF) {
+     89e:	83 30       	cpi	r24, 0x03	; 3
+     8a0:	09 f0       	breq	.+2      	; 0x8a4 <ledlight_on_rx+0xdc>
+     8a2:	a0 cf       	rjmp	.-192    	; 0x7e4 <ledlight_on_rx+0x1c>
+            ha_node_ledlight_off(ll_node);
+     8a4:	c8 01       	movw	r24, r16
+    } else {
+        // Unexpected event type
+        return;
+    }
+
+}
+     8a6:	df 91       	pop	r29
+     8a8:	cf 91       	pop	r28
+     8aa:	1f 91       	pop	r17
+     8ac:	0f 91       	pop	r16
+     8ae:	ff 90       	pop	r15
+     8b0:	ef 90       	pop	r14
+     8b2:	df 90       	pop	r13
+        memcpy(&node->tx_buf[NLINK_HDR_OFF_DATA], &buf_in[NLINK_HDR_OFF_DATA], ll_data_len);
+
+        if (ll_node->led_mode == LED_MODE_ON) {
+            ha_node_ledlight_on(ll_node);
+        } else if (ll_node->led_mode == LED_MODE_OFF) {
+            ha_node_ledlight_off(ll_node);
+     8b4:	49 ce       	rjmp	.-878    	; 0x548 <ha_node_ledlight_off>
+}
+
+void ha_node_ledlight_on (ha_node_ll_info_t *ll)
+{
+    // Set intensity to current on_intensity_idx
+    ha_node_ledlight_on_param(ll, INTENSITIES_NUM);
+     8b6:	63 e1       	ldi	r22, 0x13	; 19
+     8b8:	c8 01       	movw	r24, r16
+    } else {
+        // Unexpected event type
+        return;
+    }
+
+}
+     8ba:	df 91       	pop	r29
+     8bc:	cf 91       	pop	r28
+     8be:	1f 91       	pop	r17
+     8c0:	0f 91       	pop	r16
+     8c2:	ff 90       	pop	r15
+     8c4:	ef 90       	pop	r14
+     8c6:	df 90       	pop	r13
+}
+
+void ha_node_ledlight_on (ha_node_ll_info_t *ll)
+{
+    // Set intensity to current on_intensity_idx
+    ha_node_ledlight_on_param(ll, INTENSITIES_NUM);
+     8c8:	ff cd       	rjmp	.-1026   	; 0x4c8 <ha_node_ledlight_on_param>
+
+000008ca <ha_node_ledlight_create>:
+    }
+
+}
+
+ha_node_ll_info_t *ha_node_ledlight_create (const ha_node_ll_cfg_t *cfg, const ha_node_ll_evt_action_t *cfg_evt_actions)
+{
+     8ca:	bf 92       	push	r11
+     8cc:	cf 92       	push	r12
+     8ce:	df 92       	push	r13
+     8d0:	ef 92       	push	r14
+     8d2:	ff 92       	push	r15
+     8d4:	0f 93       	push	r16
+     8d6:	1f 93       	push	r17
+     8d8:	cf 93       	push	r28
+     8da:	df 93       	push	r29
+     8dc:	6c 01       	movw	r12, r24
+     8de:	7b 01       	movw	r14, r22
+    int i;
+    led_info_t *leds = (led_info_t*)calloc(cfg->leds_num, sizeof(led_info_t));
+     8e0:	dc 01       	movw	r26, r24
+     8e2:	13 96       	adiw	r26, 0x03	; 3
+     8e4:	bc 90       	ld	r11, X
+     8e6:	66 e0       	ldi	r22, 0x06	; 6
+     8e8:	70 e0       	ldi	r23, 0x00	; 0
+     8ea:	8b 2d       	mov	r24, r11
+     8ec:	90 e0       	ldi	r25, 0x00	; 0
+     8ee:	2b d4       	rcall	.+2134   	; 0x1146 <calloc>
+     8f0:	8c 01       	movw	r16, r24
+    ha_node_ll_info_t *ll_node = (ha_node_ll_info_t*)calloc(1, sizeof(ha_node_ll_info_t));
+     8f2:	6e e0       	ldi	r22, 0x0E	; 14
+     8f4:	70 e0       	ldi	r23, 0x00	; 0
+     8f6:	81 e0       	ldi	r24, 0x01	; 1
+     8f8:	90 e0       	ldi	r25, 0x00	; 0
+     8fa:	25 d4       	rcall	.+2122   	; 0x1146 <calloc>
+     8fc:	ec 01       	movw	r28, r24
+    node_t *node;
+
+    // Check configuration
+    for( const ha_node_ll_evt_action_t *evt_act = cfg_evt_actions; 
+         evt_act->act_type != LL_ACT_TYPE_NONE;
+     8fe:	f7 01       	movw	r30, r14
+     900:	83 81       	ldd	r24, Z+3	; 0x03
+    led_info_t *leds = (led_info_t*)calloc(cfg->leds_num, sizeof(led_info_t));
+    ha_node_ll_info_t *ll_node = (ha_node_ll_info_t*)calloc(1, sizeof(ha_node_ll_info_t));
+    node_t *node;
+
+    // Check configuration
+    for( const ha_node_ll_evt_action_t *evt_act = cfg_evt_actions; 
+     902:	81 11       	cpse	r24, r1
+     904:	0d c0       	rjmp	.+26     	; 0x920 <ha_node_ledlight_create+0x56>
+     906:	14 c0       	rjmp	.+40     	; 0x930 <ha_node_ledlight_create+0x66>
+         evt_act->act_type != LL_ACT_TYPE_NONE;
+         evt_act++ ) {
+
+        switch (evt_act->act_type) {
+     908:	85 30       	cpi	r24, 0x05	; 5
+     90a:	31 f4       	brne	.+12     	; 0x918 <ha_node_ledlight_create+0x4e>
+            case LL_ACT_TYPE_DIMM:
+                if (evt_act->act_param > cfg->dimms_num) return NULL;
+     90c:	94 81       	ldd	r25, Z+4	; 0x04
+     90e:	d6 01       	movw	r26, r12
+     910:	16 96       	adiw	r26, 0x06	; 6
+     912:	8c 91       	ld	r24, X
+     914:	89 17       	cp	r24, r25
+     916:	48 f0       	brcs	.+18     	; 0x92a <ha_node_ledlight_create+0x60>
+    node_t *node;
+
+    // Check configuration
+    for( const ha_node_ll_evt_action_t *evt_act = cfg_evt_actions; 
+         evt_act->act_type != LL_ACT_TYPE_NONE;
+         evt_act++ ) {
+     918:	35 96       	adiw	r30, 0x05	; 5
+    ha_node_ll_info_t *ll_node = (ha_node_ll_info_t*)calloc(1, sizeof(ha_node_ll_info_t));
+    node_t *node;
+
+    // Check configuration
+    for( const ha_node_ll_evt_action_t *evt_act = cfg_evt_actions; 
+         evt_act->act_type != LL_ACT_TYPE_NONE;
+     91a:	83 81       	ldd	r24, Z+3	; 0x03
+    led_info_t *leds = (led_info_t*)calloc(cfg->leds_num, sizeof(led_info_t));
+    ha_node_ll_info_t *ll_node = (ha_node_ll_info_t*)calloc(1, sizeof(ha_node_ll_info_t));
+    node_t *node;
+
+    // Check configuration
+    for( const ha_node_ll_evt_action_t *evt_act = cfg_evt_actions; 
+     91c:	88 23       	and	r24, r24
+     91e:	41 f0       	breq	.+16     	; 0x930 <ha_node_ledlight_create+0x66>
+         evt_act->act_type != LL_ACT_TYPE_NONE;
+         evt_act++ ) {
+
+        switch (evt_act->act_type) {
+     920:	81 30       	cpi	r24, 0x01	; 1
+     922:	91 f7       	brne	.-28     	; 0x908 <ha_node_ledlight_create+0x3e>
+            case LL_ACT_TYPE_DIMM:
+                if (evt_act->act_param > cfg->dimms_num) return NULL;
+                break;
+            case LL_ACT_TYPE_ON: 
+                if (evt_act->act_param > INTENSITIES_NUM) return NULL;
+     924:	84 81       	ldd	r24, Z+4	; 0x04
+     926:	84 31       	cpi	r24, 0x14	; 20
+     928:	b8 f3       	brcs	.-18     	; 0x918 <ha_node_ledlight_create+0x4e>
+         evt_act->act_type != LL_ACT_TYPE_NONE;
+         evt_act++ ) {
+
+        switch (evt_act->act_type) {
+            case LL_ACT_TYPE_DIMM:
+                if (evt_act->act_param > cfg->dimms_num) return NULL;
+     92a:	80 e0       	ldi	r24, 0x00	; 0
+     92c:	90 e0       	ldi	r25, 0x00	; 0
+     92e:	6c c0       	rjmp	.+216    	; 0xa08 <ha_node_ledlight_create+0x13e>
+            default:
+                break;
+        }
+    }
+
+    ll_node->evt_actions = cfg_evt_actions;
+     930:	e8 82       	st	Y, r14
+     932:	f9 82       	std	Y+1, r15	; 0x01
+    ll_node->cfg = cfg;
+     934:	ca 82       	std	Y+2, r12	; 0x02
+     936:	db 82       	std	Y+3, r13	; 0x03
+    ll_node->leds = leds;
+     938:	0c 87       	std	Y+12, r16	; 0x0c
+     93a:	1d 87       	std	Y+13, r17	; 0x0d
+    ll_node->leds_num = cfg->leds_num;
+     93c:	bb 86       	std	Y+11, r11	; 0x0b
+
+    node = ha_nlink_node_register(cfg->node_addr, NODE_TYPE_LEDLIGHT, ledlight_on_rx, ll_node, NULL, NULL);
+     93e:	e1 2c       	mov	r14, r1
+     940:	f1 2c       	mov	r15, r1
+     942:	00 e0       	ldi	r16, 0x00	; 0
+     944:	10 e0       	ldi	r17, 0x00	; 0
+     946:	9e 01       	movw	r18, r28
+     948:	44 ee       	ldi	r20, 0xE4	; 228
+     94a:	53 e0       	ldi	r21, 0x03	; 3
+     94c:	60 e2       	ldi	r22, 0x20	; 32
+     94e:	f6 01       	movw	r30, r12
+     950:	80 81       	ld	r24, Z
+     952:	b1 db       	rcall	.-2206   	; 0xb6 <ha_nlink_node_register>
+    ll_node->node = node;
+     954:	8e 83       	std	Y+6, r24	; 0x06
+     956:	9f 83       	std	Y+7, r25	; 0x07
+
+    // Switch LEDs off on startup
+    ll_node->led_mode = LED_MODE_OFF_TRANS;
+     958:	25 e0       	ldi	r18, 0x05	; 5
+     95a:	2a 87       	std	Y+10, r18	; 0x0a
+
+    ll_node->disabled_idx = 0;                      // All Enabled
+     95c:	18 86       	std	Y+8, r1	; 0x08
+    ll_node->disabled_mask = cfg->disable_masks[ll_node->disabled_idx];
+     95e:	d6 01       	movw	r26, r12
+     960:	1a 96       	adiw	r26, 0x0a	; 10
+     962:	ed 91       	ld	r30, X+
+     964:	fc 91       	ld	r31, X
+     966:	1b 97       	sbiw	r26, 0x0b	; 11
+     968:	20 81       	ld	r18, Z
+     96a:	29 87       	std	Y+9, r18	; 0x09
+    for (i = 0; i < ll_node->leds_num; i++) {
+     96c:	2b 85       	ldd	r18, Y+11	; 0x0b
+     96e:	22 23       	and	r18, r18
+     970:	41 f1       	breq	.+80     	; 0x9c2 <ha_node_ledlight_create+0xf8>
+     972:	60 e0       	ldi	r22, 0x00	; 0
+     974:	70 e0       	ldi	r23, 0x00	; 0
+     976:	20 e0       	ldi	r18, 0x00	; 0
+     978:	30 e0       	ldi	r19, 0x00	; 0
+        led_info_t *led = &ll_node->leds[i];
+     97a:	ac 85       	ldd	r26, Y+12	; 0x0c
+     97c:	bd 85       	ldd	r27, Y+13	; 0x0d
+     97e:	a6 0f       	add	r26, r22
+     980:	b7 1f       	adc	r27, r23
+        led->uc_on_intensity_idx = cfg->dimms[ll_node->cfg->dimms_num - 1];  // Max intensity by default
+     982:	ea 81       	ldd	r30, Y+2	; 0x02
+     984:	fb 81       	ldd	r31, Y+3	; 0x03
+     986:	46 81       	ldd	r20, Z+6	; 0x06
+     988:	f6 01       	movw	r30, r12
+     98a:	07 81       	ldd	r16, Z+7	; 0x07
+     98c:	10 85       	ldd	r17, Z+8	; 0x08
+     98e:	f8 01       	movw	r30, r16
+     990:	e4 0f       	add	r30, r20
+     992:	f1 1d       	adc	r31, r1
+     994:	31 97       	sbiw	r30, 0x01	; 1
+     996:	40 81       	ld	r20, Z
+     998:	12 96       	adiw	r26, 0x02	; 2
+     99a:	4c 93       	st	X, r20
+     99c:	12 97       	sbiw	r26, 0x02	; 2
+        led->uc_ch_mask = cfg->leds_ch_masks[i];
+     99e:	f6 01       	movw	r30, r12
+     9a0:	44 81       	ldd	r20, Z+4	; 0x04
+     9a2:	55 81       	ldd	r21, Z+5	; 0x05
+     9a4:	fa 01       	movw	r30, r20
+     9a6:	e2 0f       	add	r30, r18
+     9a8:	f3 1f       	adc	r31, r19
+     9aa:	40 81       	ld	r20, Z
+     9ac:	15 96       	adiw	r26, 0x05	; 5
+     9ae:	4c 93       	st	X, r20
+    // Switch LEDs off on startup
+    ll_node->led_mode = LED_MODE_OFF_TRANS;
+
+    ll_node->disabled_idx = 0;                      // All Enabled
+    ll_node->disabled_mask = cfg->disable_masks[ll_node->disabled_idx];
+    for (i = 0; i < ll_node->leds_num; i++) {
+     9b0:	2f 5f       	subi	r18, 0xFF	; 255
+     9b2:	3f 4f       	sbci	r19, 0xFF	; 255
+     9b4:	6a 5f       	subi	r22, 0xFA	; 250
+     9b6:	7f 4f       	sbci	r23, 0xFF	; 255
+     9b8:	4b 85       	ldd	r20, Y+11	; 0x0b
+     9ba:	50 e0       	ldi	r21, 0x00	; 0
+     9bc:	24 17       	cp	r18, r20
+     9be:	35 07       	cpc	r19, r21
+     9c0:	e4 f2       	brlt	.-72     	; 0x97a <ha_node_ledlight_create+0xb0>
+        led_info_t *led = &ll_node->leds[i];
+        led->uc_on_intensity_idx = cfg->dimms[ll_node->cfg->dimms_num - 1];  // Max intensity by default
+        led->uc_ch_mask = cfg->leds_ch_masks[i];
+    }
+
+    node->tx_buf[NLINK_HDR_OFF_TYPE] = NODE_TYPE_LEDLIGHT;
+     9c2:	20 e2       	ldi	r18, 0x20	; 32
+     9c4:	fc 01       	movw	r30, r24
+     9c6:	26 8f       	std	Z+30, r18	; 0x1e
+    node->tx_buf[NLINK_HDR_OFF_LEN] = LL_DATA_OFF_INTENSITY0 + ll_node->leds_num;
+     9c8:	2b 85       	ldd	r18, Y+11	; 0x0b
+     9ca:	2e 5f       	subi	r18, 0xFE	; 254
+     9cc:	27 8f       	std	Z+31, r18	; 0x1f
+    // ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_MODE     ] = LED_MODE_OFF;     // Is set unconditionally on every packet send
+    node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_OFF_DIS_MASK ] = ll_node->disabled_mask;
+     9ce:	29 85       	ldd	r18, Y+9	; 0x09
+     9d0:	21 a3       	std	Z+33, r18	; 0x21
+
+    for (i = 0; i < ll_node->leds_num; i++) {
+     9d2:	2b 85       	ldd	r18, Y+11	; 0x0b
+     9d4:	22 23       	and	r18, r18
+     9d6:	a9 f0       	breq	.+42     	; 0xa02 <ha_node_ledlight_create+0x138>
+     9d8:	dc 01       	movw	r26, r24
+     9da:	92 96       	adiw	r26, 0x22	; 34
+     9dc:	60 e0       	ldi	r22, 0x00	; 0
+     9de:	70 e0       	ldi	r23, 0x00	; 0
+     9e0:	40 e0       	ldi	r20, 0x00	; 0
+     9e2:	50 e0       	ldi	r21, 0x00	; 0
+        led_info_t *led = &ll_node->leds[i];
+        node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_OFF_INTENSITY0 + i] = led->uc_on_intensity_idx;
+     9e4:	ec 85       	ldd	r30, Y+12	; 0x0c
+     9e6:	fd 85       	ldd	r31, Y+13	; 0x0d
+     9e8:	e6 0f       	add	r30, r22
+     9ea:	f7 1f       	adc	r31, r23
+     9ec:	82 81       	ldd	r24, Z+2	; 0x02
+     9ee:	8d 93       	st	X+, r24
+    node->tx_buf[NLINK_HDR_OFF_TYPE] = NODE_TYPE_LEDLIGHT;
+    node->tx_buf[NLINK_HDR_OFF_LEN] = LL_DATA_OFF_INTENSITY0 + ll_node->leds_num;
+    // ll_node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_MODE     ] = LED_MODE_OFF;     // Is set unconditionally on every packet send
+    node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_OFF_DIS_MASK ] = ll_node->disabled_mask;
+
+    for (i = 0; i < ll_node->leds_num; i++) {
+     9f0:	4f 5f       	subi	r20, 0xFF	; 255
+     9f2:	5f 4f       	sbci	r21, 0xFF	; 255
+     9f4:	6a 5f       	subi	r22, 0xFA	; 250
+     9f6:	7f 4f       	sbci	r23, 0xFF	; 255
+     9f8:	2b 85       	ldd	r18, Y+11	; 0x0b
+     9fa:	30 e0       	ldi	r19, 0x00	; 0
+     9fc:	42 17       	cp	r20, r18
+     9fe:	53 07       	cpc	r21, r19
+     a00:	8c f3       	brlt	.-30     	; 0x9e4 <ha_node_ledlight_create+0x11a>
+        led_info_t *led = &ll_node->leds[i];
+        node->tx_buf[NLINK_HDR_OFF_DATA + LL_DATA_OFF_INTENSITY0 + i] = led->uc_on_intensity_idx;
+    }
+
+    ha_node_ledlight_off(ll_node);
+     a02:	ce 01       	movw	r24, r28
+     a04:	a1 dd       	rcall	.-1214   	; 0x548 <ha_node_ledlight_off>
+    return ll_node;
+     a06:	ce 01       	movw	r24, r28
+}
+     a08:	df 91       	pop	r29
+     a0a:	cf 91       	pop	r28
+     a0c:	1f 91       	pop	r17
+     a0e:	0f 91       	pop	r16
+     a10:	ff 90       	pop	r15
+     a12:	ef 90       	pop	r14
+     a14:	df 90       	pop	r13
+     a16:	cf 90       	pop	r12
+     a18:	bf 90       	pop	r11
+     a1a:	08 95       	ret
+
+00000a1c <ha_node_ledlight_on_timer>:
+
+void ha_node_ledlight_on_timer(ha_node_ll_info_t   *ll_node)
+{
+     a1c:	0f 93       	push	r16
+     a1e:	1f 93       	push	r17
+     a20:	cf 93       	push	r28
+     a22:	df 93       	push	r29
+    uint8_t uc_target_intensity, uc_current_intensity;
+    uint8_t uc_leds_steady = 1;
+
+    if (ll_node == NULL) return;
+     a24:	00 97       	sbiw	r24, 0x00	; 0
+     a26:	c1 f1       	breq	.+112    	; 0xa98 <ha_node_ledlight_on_timer+0x7c>
+     a28:	8c 01       	movw	r16, r24
+
+    // Loop over all LEDs
+    for (uint8_t i = 0; i < ll_node->leds_num; i ++) {
+     a2a:	dc 01       	movw	r26, r24
+     a2c:	1b 96       	adiw	r26, 0x0b	; 11
+     a2e:	9c 91       	ld	r25, X
+     a30:	99 23       	and	r25, r25
+     a32:	09 f4       	brne	.+2      	; 0xa36 <ha_node_ledlight_on_timer+0x1a>
+     a34:	50 c0       	rjmp	.+160    	; 0xad6 <ha_node_ledlight_on_timer+0xba>
+     a36:	c0 e0       	ldi	r28, 0x00	; 0
+     a38:	21 e0       	ldi	r18, 0x01	; 1
+                led->uc_fade_timer = LED_FADEIN_STEP_PERIOD;
+            }
+            else if (uc_target_intensity < uc_current_intensity) {
+                // FADE OUT
+                uc_current_intensity --;
+                led->uc_fade_timer = LED_FADEOUT_STEP_PERIOD;
+     a3a:	d2 e0       	ldi	r29, 0x02	; 2
+     a3c:	0d c0       	rjmp	.+26     	; 0xa58 <ha_node_ledlight_on_timer+0x3c>
+        // LEDs' intensity are in transition
+        // check fade timer
+        led->uc_fade_timer --;
+        if ( led->uc_fade_timer == 0) {
+            // Its time to update fade in/out
+            if (uc_target_intensity > uc_current_intensity) {
+     a3e:	68 17       	cp	r22, r24
+     a40:	80 f5       	brcc	.+96     	; 0xaa2 <ha_node_ledlight_on_timer+0x86>
+                // FADE IN
+                uc_current_intensity ++;
+     a42:	6f 5f       	subi	r22, 0xFF	; 255
+                led->uc_fade_timer = LED_FADEIN_STEP_PERIOD;
+     a44:	d4 83       	std	Z+4, r29	; 0x04
+                // FADE OUT
+                uc_current_intensity --;
+                led->uc_fade_timer = LED_FADEOUT_STEP_PERIOD;
+            }
+
+            led->uc_current_intensity_idx = uc_current_intensity;
+     a46:	60 83       	st	Z, r22
+            ha_node_ledlight_set_intensity(led->uc_ch_mask, uc_current_intensity);
+     a48:	85 81       	ldd	r24, Z+5	; 0x05
+     a4a:	ca d2       	rcall	.+1428   	; 0xfe0 <ha_node_ledlight_set_intensity>
+
+        if (uc_target_intensity == uc_current_intensity) {
+            continue;
+        }
+
+        uc_leds_steady = 0;
+     a4c:	20 e0       	ldi	r18, 0x00	; 0
+     a4e:	f8 01       	movw	r30, r16
+     a50:	93 85       	ldd	r25, Z+11	; 0x0b
+    uint8_t uc_leds_steady = 1;
+
+    if (ll_node == NULL) return;
+
+    // Loop over all LEDs
+    for (uint8_t i = 0; i < ll_node->leds_num; i ++) {
+     a52:	cf 5f       	subi	r28, 0xFF	; 255
+     a54:	c9 17       	cp	r28, r25
+     a56:	d0 f4       	brcc	.+52     	; 0xa8c <ha_node_ledlight_on_timer+0x70>
+        led_info_t *led = &ll_node->leds[i];
+     a58:	d8 01       	movw	r26, r16
+     a5a:	1c 96       	adiw	r26, 0x0c	; 12
+     a5c:	ed 91       	ld	r30, X+
+     a5e:	fc 91       	ld	r31, X
+     a60:	1d 97       	sbiw	r26, 0x0d	; 13
+     a62:	b6 e0       	ldi	r27, 0x06	; 6
+     a64:	cb 9f       	mul	r28, r27
+     a66:	e0 0d       	add	r30, r0
+     a68:	f1 1d       	adc	r31, r1
+     a6a:	11 24       	eor	r1, r1
+
+        uc_target_intensity = led->uc_target_intensity_idx;
+     a6c:	81 81       	ldd	r24, Z+1	; 0x01
+        uc_current_intensity = led->uc_current_intensity_idx;
+     a6e:	60 81       	ld	r22, Z
+
+        if (uc_target_intensity == uc_current_intensity) {
+     a70:	86 17       	cp	r24, r22
+     a72:	79 f3       	breq	.-34     	; 0xa52 <ha_node_ledlight_on_timer+0x36>
+
+        uc_leds_steady = 0;
+
+        // LEDs' intensity are in transition
+        // check fade timer
+        led->uc_fade_timer --;
+     a74:	94 81       	ldd	r25, Z+4	; 0x04
+     a76:	91 50       	subi	r25, 0x01	; 1
+     a78:	94 83       	std	Z+4, r25	; 0x04
+        if ( led->uc_fade_timer == 0) {
+     a7a:	99 23       	and	r25, r25
+     a7c:	01 f3       	breq	.-64     	; 0xa3e <ha_node_ledlight_on_timer+0x22>
+
+        if (uc_target_intensity == uc_current_intensity) {
+            continue;
+        }
+
+        uc_leds_steady = 0;
+     a7e:	20 e0       	ldi	r18, 0x00	; 0
+     a80:	d8 01       	movw	r26, r16
+     a82:	1b 96       	adiw	r26, 0x0b	; 11
+     a84:	9c 91       	ld	r25, X
+    uint8_t uc_leds_steady = 1;
+
+    if (ll_node == NULL) return;
+
+    // Loop over all LEDs
+    for (uint8_t i = 0; i < ll_node->leds_num; i ++) {
+     a86:	cf 5f       	subi	r28, 0xFF	; 255
+     a88:	c9 17       	cp	r28, r25
+     a8a:	30 f3       	brcs	.-52     	; 0xa58 <ha_node_ledlight_on_timer+0x3c>
+    } // End all LEDs loop
+
+    // ----------------------------------------------
+    // --- Transient states
+    // ----------------------------------------------
+    if (ll_node->led_mode == LED_MODE_ON_TRANS) {
+     a8c:	f8 01       	movw	r30, r16
+     a8e:	82 85       	ldd	r24, Z+10	; 0x0a
+     a90:	84 30       	cpi	r24, 0x04	; 4
+     a92:	b1 f0       	breq	.+44     	; 0xac0 <ha_node_ledlight_on_timer+0xa4>
+        if (uc_leds_steady) {
+            ll_node->led_mode = LED_MODE_ON;
+        }
+    } // End of TRANSITION to ON
+
+    else if (ll_node->led_mode == LED_MODE_OFF_TRANS) {
+     a94:	85 30       	cpi	r24, 0x05	; 5
+     a96:	51 f0       	breq	.+20     	; 0xaac <ha_node_ledlight_on_timer+0x90>
+        }
+        return;
+    } // End of TRANSITION to OFF
+
+    return;
+}
+     a98:	df 91       	pop	r29
+     a9a:	cf 91       	pop	r28
+     a9c:	1f 91       	pop	r17
+     a9e:	0f 91       	pop	r16
+     aa0:	08 95       	ret
+            if (uc_target_intensity > uc_current_intensity) {
+                // FADE IN
+                uc_current_intensity ++;
+                led->uc_fade_timer = LED_FADEIN_STEP_PERIOD;
+            }
+            else if (uc_target_intensity < uc_current_intensity) {
+     aa2:	86 17       	cp	r24, r22
+     aa4:	80 f6       	brcc	.-96     	; 0xa46 <ha_node_ledlight_on_timer+0x2a>
+                // FADE OUT
+                uc_current_intensity --;
+     aa6:	61 50       	subi	r22, 0x01	; 1
+                led->uc_fade_timer = LED_FADEOUT_STEP_PERIOD;
+     aa8:	d4 83       	std	Z+4, r29	; 0x04
+     aaa:	cd cf       	rjmp	.-102    	; 0xa46 <ha_node_ledlight_on_timer+0x2a>
+            ll_node->led_mode = LED_MODE_ON;
+        }
+    } // End of TRANSITION to ON
+
+    else if (ll_node->led_mode == LED_MODE_OFF_TRANS) {
+        if (uc_leds_steady) {
+     aac:	22 23       	and	r18, r18
+     aae:	a1 f3       	breq	.-24     	; 0xa98 <ha_node_ledlight_on_timer+0x7c>
+            ll_node->led_mode = LED_MODE_OFF;
+     ab0:	83 e0       	ldi	r24, 0x03	; 3
+     ab2:	f8 01       	movw	r30, r16
+     ab4:	82 87       	std	Z+10, r24	; 0x0a
+        }
+        return;
+    } // End of TRANSITION to OFF
+
+    return;
+}
+     ab6:	df 91       	pop	r29
+     ab8:	cf 91       	pop	r28
+     aba:	1f 91       	pop	r17
+     abc:	0f 91       	pop	r16
+     abe:	08 95       	ret
+
+    // ----------------------------------------------
+    // --- Transient states
+    // ----------------------------------------------
+    if (ll_node->led_mode == LED_MODE_ON_TRANS) {
+        if (uc_leds_steady) {
+     ac0:	22 23       	and	r18, r18
+     ac2:	51 f3       	breq	.-44     	; 0xa98 <ha_node_ledlight_on_timer+0x7c>
+            ll_node->led_mode = LED_MODE_ON;
+     ac4:	82 e0       	ldi	r24, 0x02	; 2
+     ac6:	d8 01       	movw	r26, r16
+     ac8:	1a 96       	adiw	r26, 0x0a	; 10
+     aca:	8c 93       	st	X, r24
+        }
+        return;
+    } // End of TRANSITION to OFF
+
+    return;
+}
+     acc:	df 91       	pop	r29
+     ace:	cf 91       	pop	r28
+     ad0:	1f 91       	pop	r17
+     ad2:	0f 91       	pop	r16
+     ad4:	08 95       	ret
+    } // End all LEDs loop
+
+    // ----------------------------------------------
+    // --- Transient states
+    // ----------------------------------------------
+    if (ll_node->led_mode == LED_MODE_ON_TRANS) {
+     ad6:	d8 01       	movw	r26, r16
+     ad8:	1a 96       	adiw	r26, 0x0a	; 10
+     ada:	8c 91       	ld	r24, X
+     adc:	84 30       	cpi	r24, 0x04	; 4
+     ade:	91 f3       	breq	.-28     	; 0xac4 <ha_node_ledlight_on_timer+0xa8>
+        if (uc_leds_steady) {
+            ll_node->led_mode = LED_MODE_ON;
+        }
+    } // End of TRANSITION to ON
+
+    else if (ll_node->led_mode == LED_MODE_OFF_TRANS) {
+     ae0:	85 30       	cpi	r24, 0x05	; 5
+     ae2:	d1 f6       	brne	.-76     	; 0xa98 <ha_node_ledlight_on_timer+0x7c>
+     ae4:	e5 cf       	rjmp	.-54     	; 0xab0 <ha_node_ledlight_on_timer+0x94>
+
+00000ae6 <switch_on_rx>:
+#define SW_PIN_RELEASED 1
+
+#define SW_TYPE_BUTT   2
+
+void switch_on_rx(void *ctx, const uint8_t *buf_in)
+{
+     ae6:	08 95       	ret
+
+00000ae8 <ha_node_switch_create>:
+    // Nothing to do here. Switch is neither
+    // controllable nor configurable
+}
+
+ha_node_sw_info_t *ha_node_switch_create (const ha_node_sw_cfg_t *cfg)
+{
+     ae8:	af 92       	push	r10
+     aea:	bf 92       	push	r11
+     aec:	cf 92       	push	r12
+     aee:	df 92       	push	r13
+     af0:	ef 92       	push	r14
+     af2:	ff 92       	push	r15
+     af4:	0f 93       	push	r16
+     af6:	1f 93       	push	r17
+     af8:	cf 93       	push	r28
+     afa:	df 93       	push	r29
+     afc:	6c 01       	movw	r12, r24
+    switch_info_t *sw = (switch_info_t*)calloc(cfg->switches_num, sizeof(switch_info_t));
+     afe:	fc 01       	movw	r30, r24
+     b00:	81 81       	ldd	r24, Z+1	; 0x01
+     b02:	67 e0       	ldi	r22, 0x07	; 7
+     b04:	70 e0       	ldi	r23, 0x00	; 0
+     b06:	90 e0       	ldi	r25, 0x00	; 0
+     b08:	1e d3       	rcall	.+1596   	; 0x1146 <calloc>
+     b0a:	5c 01       	movw	r10, r24
+    ha_node_sw_info_t *node_sw = (ha_node_sw_info_t*)calloc(1, sizeof(ha_node_sw_info_t));
+     b0c:	67 e0       	ldi	r22, 0x07	; 7
+     b0e:	70 e0       	ldi	r23, 0x00	; 0
+     b10:	81 e0       	ldi	r24, 0x01	; 1
+     b12:	90 e0       	ldi	r25, 0x00	; 0
+     b14:	18 d3       	rcall	.+1584   	; 0x1146 <calloc>
+     b16:	ec 01       	movw	r28, r24
+    node_t *node;
+    
+    node = ha_nlink_node_register(SWITCH_ADDR, NODE_TYPE_SWITCH, switch_on_rx, NULL, (node_tx_cb_t)NULL, NULL);
+     b18:	e1 2c       	mov	r14, r1
+     b1a:	f1 2c       	mov	r15, r1
+     b1c:	00 e0       	ldi	r16, 0x00	; 0
+     b1e:	10 e0       	ldi	r17, 0x00	; 0
+     b20:	20 e0       	ldi	r18, 0x00	; 0
+     b22:	30 e0       	ldi	r19, 0x00	; 0
+     b24:	43 e7       	ldi	r20, 0x73	; 115
+     b26:	55 e0       	ldi	r21, 0x05	; 5
+     b28:	60 e3       	ldi	r22, 0x30	; 48
+     b2a:	80 e8       	ldi	r24, 0x80	; 128
+     b2c:	c4 da       	rcall	.-2680   	; 0xb6 <ha_nlink_node_register>
+     b2e:	dc 01       	movw	r26, r24
+
+    node_sw->cfg = cfg;
+     b30:	c8 82       	st	Y, r12
+     b32:	d9 82       	std	Y+1, r13	; 0x01
+    node_sw->switches_num = cfg->switches_num;
+     b34:	f6 01       	movw	r30, r12
+     b36:	51 81       	ldd	r21, Z+1	; 0x01
+     b38:	5c 83       	std	Y+4, r21	; 0x04
+    node_sw->sw = sw;
+     b3a:	ad 82       	std	Y+5, r10	; 0x05
+     b3c:	be 82       	std	Y+6, r11	; 0x06
+    node_sw->node = node;
+     b3e:	8a 83       	std	Y+2, r24	; 0x02
+     b40:	9b 83       	std	Y+3, r25	; 0x03
+    
+    // --- SWITCHES initialize ---
+    for (uint8_t uc_i = 0; uc_i < node_sw->switches_num; uc_i ++) {
+     b42:	55 23       	and	r21, r21
+     b44:	b9 f0       	breq	.+46     	; 0xb74 <ha_node_switch_create+0x8c>
+     b46:	f5 01       	movw	r30, r10
+     b48:	20 e0       	ldi	r18, 0x00	; 0
+     b4a:	30 e0       	ldi	r19, 0x00	; 0
+        sw[uc_i].uc_prev_pin = SW_PIN_RELEASED;
+     b4c:	91 e0       	ldi	r25, 0x01	; 1
+        sw[uc_i].uc_prev_sw = SW_PIN_RELEASED;
+        sw[uc_i].uc_hold_timer = 0;
+        sw[uc_i].uc_debounce_timer = 0;
+        sw[uc_i].uc_pin_mask = _BV(uc_i);
+     b4e:	71 e0       	ldi	r23, 0x01	; 1
+        sw[uc_i].uc_switch_type = SW_TYPE_BUTT;       // mark all switches as a button
+     b50:	62 e0       	ldi	r22, 0x02	; 2
+    node_sw->sw = sw;
+    node_sw->node = node;
+    
+    // --- SWITCHES initialize ---
+    for (uint8_t uc_i = 0; uc_i < node_sw->switches_num; uc_i ++) {
+        sw[uc_i].uc_prev_pin = SW_PIN_RELEASED;
+     b52:	91 83       	std	Z+1, r25	; 0x01
+        sw[uc_i].uc_prev_sw = SW_PIN_RELEASED;
+     b54:	92 83       	std	Z+2, r25	; 0x02
+        sw[uc_i].uc_hold_timer = 0;
+     b56:	13 82       	std	Z+3, r1	; 0x03
+        sw[uc_i].uc_debounce_timer = 0;
+     b58:	14 82       	std	Z+4, r1	; 0x04
+        sw[uc_i].uc_pin_mask = _BV(uc_i);
+     b5a:	47 2f       	mov	r20, r23
+     b5c:	02 2e       	mov	r0, r18
+     b5e:	01 c0       	rjmp	.+2      	; 0xb62 <ha_node_switch_create+0x7a>
+     b60:	44 0f       	add	r20, r20
+     b62:	0a 94       	dec	r0
+     b64:	ea f7       	brpl	.-6      	; 0xb60 <ha_node_switch_create+0x78>
+     b66:	45 83       	std	Z+5, r20	; 0x05
+        sw[uc_i].uc_switch_type = SW_TYPE_BUTT;       // mark all switches as a button
+     b68:	66 83       	std	Z+6, r22	; 0x06
+     b6a:	2f 5f       	subi	r18, 0xFF	; 255
+     b6c:	3f 4f       	sbci	r19, 0xFF	; 255
+     b6e:	37 96       	adiw	r30, 0x07	; 7
+    node_sw->switches_num = cfg->switches_num;
+    node_sw->sw = sw;
+    node_sw->node = node;
+    
+    // --- SWITCHES initialize ---
+    for (uint8_t uc_i = 0; uc_i < node_sw->switches_num; uc_i ++) {
+     b70:	25 17       	cp	r18, r21
+     b72:	78 f3       	brcs	.-34     	; 0xb52 <ha_node_switch_create+0x6a>
+    }
+
+// SWITCH DATA
+//      TYPE(SWITCH) EVENT(%)
+//
+    node->tx_buf[NLINK_HDR_OFF_LEN] = 0;
+     b74:	5f 96       	adiw	r26, 0x1f	; 31
+     b76:	1c 92       	st	X, r1
+     b78:	5f 97       	sbiw	r26, 0x1f	; 31
+    node->tx_buf[NLINK_HDR_OFF_TYPE] = NODE_TYPE_SWITCH;
+     b7a:	80 e3       	ldi	r24, 0x30	; 48
+     b7c:	5e 96       	adiw	r26, 0x1e	; 30
+     b7e:	8c 93       	st	X, r24
+    
+    return node_sw;
+}
+     b80:	ce 01       	movw	r24, r28
+     b82:	df 91       	pop	r29
+     b84:	cf 91       	pop	r28
+     b86:	1f 91       	pop	r17
+     b88:	0f 91       	pop	r16
+     b8a:	ff 90       	pop	r15
+     b8c:	ef 90       	pop	r14
+     b8e:	df 90       	pop	r13
+     b90:	cf 90       	pop	r12
+     b92:	bf 90       	pop	r11
+     b94:	af 90       	pop	r10
+     b96:	08 95       	ret
+
+00000b98 <ha_node_switch_on_timer>:
+
+
+void ha_node_switch_on_timer(ha_node_sw_info_t *node_sw)
+{
+     b98:	0f 93       	push	r16
+     b9a:	1f 93       	push	r17
+     b9c:	cf 93       	push	r28
+     b9e:	df 93       	push	r29
+     ba0:	ec 01       	movw	r28, r24
+    uint8_t  uc_i;
+    uint8_t  uc_sw_state;
+    uint8_t  uc_sw_pins;
+    uint8_t  uc_curr_pin;
+
+    uc_sw_pins = ha_node_switch_get_pins();
+     ba2:	1d d2       	rcall	.+1082   	; 0xfde <ha_node_switch_get_pins>
+
+    for (uc_i = 0; uc_i < node_sw->switches_num; uc_i++) { 
+     ba4:	9c 81       	ldd	r25, Y+4	; 0x04
+     ba6:	99 23       	and	r25, r25
+     ba8:	09 f4       	brne	.+2      	; 0xbac <ha_node_switch_on_timer+0x14>
+     baa:	57 c0       	rjmp	.+174    	; 0xc5a <ha_node_switch_on_timer+0xc2>
+     bac:	20 e0       	ldi	r18, 0x00	; 0
+            // pressed->released transition
+            if (sw->uc_hold_timer < SW_HOLD_TIMER){
+                sw->uc_event = SW_EVENT_ON_OFF;                                // ---         ON -> OFF        ---
+            }
+            else {
+                sw->uc_event = SW_EVENT_HOLD_OFF;                              // ---         HOLD -> OFF      ---
+     bae:	64 e0       	ldi	r22, 0x04	; 4
+                    sw->uc_event = SW_EVENT_ON_HOLD;                           // ---         ON -> HOLD      ---
+                }
+
+                if (sw->uc_hold_timer == SW_HOLD_TIMER_NEXT) {
+                    // report "switch hold" if timer saturated
+                    sw->uc_event = SW_EVENT_ON_HOLD;                           // ---         ON -> HOLD NEXT ---
+     bb0:	73 e0       	ldi	r23, 0x03	; 3
+                    sw->uc_hold_timer = SW_HOLD_TIMER;
+     bb2:	a4 e6       	ldi	r26, 0x64	; 100
+
+        if (uc_sw_state == SW_PIN_PRESSED && sw->uc_prev_sw == SW_PIN_RELEASED) {
+            // released->pressed transition
+            // clear hold timer
+            sw->uc_hold_timer = 0;
+            sw->uc_event = SW_EVENT_OFF_ON;                                    // ---         OFF -> ON       ---
+     bb4:	52 e0       	ldi	r21, 0x02	; 2
+    uint8_t  uc_curr_pin;
+
+    uc_sw_pins = ha_node_switch_get_pins();
+
+    for (uc_i = 0; uc_i < node_sw->switches_num; uc_i++) { 
+        switch_info_t *sw = &node_sw->sw[uc_i];
+     bb6:	ed 81       	ldd	r30, Y+5	; 0x05
+     bb8:	fe 81       	ldd	r31, Y+6	; 0x06
+     bba:	97 e0       	ldi	r25, 0x07	; 7
+     bbc:	29 9f       	mul	r18, r25
+     bbe:	e0 0d       	add	r30, r0
+     bc0:	f1 1d       	adc	r31, r1
+     bc2:	11 24       	eor	r1, r1
+
+        uc_sw_state = sw->uc_prev_sw;
+     bc4:	42 81       	ldd	r20, Z+2	; 0x02
+        uc_curr_pin = !!(uc_sw_pins & sw->uc_pin_mask);
+     bc6:	35 81       	ldd	r19, Z+5	; 0x05
+     bc8:	38 23       	and	r19, r24
+     bca:	91 e0       	ldi	r25, 0x01	; 1
+     bcc:	09 f4       	brne	.+2      	; 0xbd0 <ha_node_switch_on_timer+0x38>
+     bce:	90 e0       	ldi	r25, 0x00	; 0
+
+        // ------------------------------------
+        // --- debouncing
+        // -----------------------------------
+        if (uc_curr_pin != sw->uc_prev_pin) {
+     bd0:	31 81       	ldd	r19, Z+1	; 0x01
+     bd2:	93 17       	cp	r25, r19
+     bd4:	09 f4       	brne	.+2      	; 0xbd8 <ha_node_switch_on_timer+0x40>
+     bd6:	55 c0       	rjmp	.+170    	; 0xc82 <ha_node_switch_on_timer+0xea>
+            // current pin state differs from previous
+            // increment debounce timer
+            sw->uc_debounce_timer ++;
+     bd8:	34 81       	ldd	r19, Z+4	; 0x04
+     bda:	3f 5f       	subi	r19, 0xFF	; 255
+     bdc:	34 83       	std	Z+4, r19	; 0x04
+
+            if (sw->uc_debounce_timer == SW_DEBOUNCE_TIMER) {
+     bde:	35 30       	cpi	r19, 0x05	; 5
+     be0:	09 f4       	brne	.+2      	; 0xbe4 <ha_node_switch_on_timer+0x4c>
+     be2:	52 c0       	rjmp	.+164    	; 0xc88 <ha_node_switch_on_timer+0xf0>
+    uc_sw_pins = ha_node_switch_get_pins();
+
+    for (uc_i = 0; uc_i < node_sw->switches_num; uc_i++) { 
+        switch_info_t *sw = &node_sw->sw[uc_i];
+
+        uc_sw_state = sw->uc_prev_sw;
+     be4:	94 2f       	mov	r25, r20
+        }
+
+        // ------------------------------------
+        // --- transition proceed
+        // -----------------------------------
+        sw->uc_event = 0;
+     be6:	10 82       	st	Z, r1
+
+        if (uc_sw_state == SW_PIN_PRESSED && sw->uc_prev_sw == SW_PIN_RELEASED) {
+     be8:	91 11       	cpse	r25, r1
+     bea:	3c c0       	rjmp	.+120    	; 0xc64 <ha_node_switch_on_timer+0xcc>
+     bec:	41 30       	cpi	r20, 0x01	; 1
+     bee:	09 f4       	brne	.+2      	; 0xbf2 <ha_node_switch_on_timer+0x5a>
+     bf0:	4e c0       	rjmp	.+156    	; 0xc8e <ha_node_switch_on_timer+0xf6>
+            }
+            else {
+                sw->uc_event = SW_EVENT_HOLD_OFF;                              // ---         HOLD -> OFF      ---
+            }
+        }
+        else if (uc_sw_state == SW_PIN_PRESSED && sw->uc_prev_sw == SW_PIN_PRESSED) {
+     bf2:	41 11       	cpse	r20, r1
+     bf4:	0b c0       	rjmp	.+22     	; 0xc0c <ha_node_switch_on_timer+0x74>
+            if (sw->uc_hold_timer < SW_HOLD_TIMER_NEXT) {
+     bf6:	33 81       	ldd	r19, Z+3	; 0x03
+     bf8:	36 39       	cpi	r19, 0x96	; 150
+     bfa:	40 f4       	brcc	.+16     	; 0xc0c <ha_node_switch_on_timer+0x74>
+                // hold timer not saturated yet
+                // increase hold timer & check saturation
+                sw->uc_hold_timer ++;
+     bfc:	3f 5f       	subi	r19, 0xFF	; 255
+     bfe:	33 83       	std	Z+3, r19	; 0x03
+
+                if (sw->uc_hold_timer == SW_HOLD_TIMER) {
+     c00:	34 36       	cpi	r19, 0x64	; 100
+     c02:	09 f4       	brne	.+2      	; 0xc06 <ha_node_switch_on_timer+0x6e>
+     c04:	68 c0       	rjmp	.+208    	; 0xcd6 <ha_node_switch_on_timer+0x13e>
+                    // report "switch hold" if timer saturated
+                    sw->uc_event = SW_EVENT_ON_HOLD;                           // ---         ON -> HOLD      ---
+                }
+
+                if (sw->uc_hold_timer == SW_HOLD_TIMER_NEXT) {
+     c06:	36 39       	cpi	r19, 0x96	; 150
+     c08:	09 f4       	brne	.+2      	; 0xc0c <ha_node_switch_on_timer+0x74>
+     c0a:	52 c0       	rjmp	.+164    	; 0xcb0 <ha_node_switch_on_timer+0x118>
+                    sw->uc_hold_timer = SW_HOLD_TIMER;
+                }
+            }
+        } // End of switch held
+
+        sw->uc_prev_sw = uc_sw_state;
+     c0c:	92 83       	std	Z+2, r25	; 0x02
+    uint8_t  uc_sw_pins;
+    uint8_t  uc_curr_pin;
+
+    uc_sw_pins = ha_node_switch_get_pins();
+
+    for (uc_i = 0; uc_i < node_sw->switches_num; uc_i++) { 
+     c0e:	2f 5f       	subi	r18, 0xFF	; 255
+     c10:	3c 81       	ldd	r19, Y+4	; 0x04
+     c12:	23 17       	cp	r18, r19
+     c14:	80 f2       	brcs	.-96     	; 0xbb6 <ha_node_switch_on_timer+0x1e>
+        sw->uc_prev_sw = uc_sw_state;
+
+    } // End of switch loop
+
+    // Check events - if any occur then send event
+    node_t *node = node_sw->node;
+     c16:	0a 81       	ldd	r16, Y+2	; 0x02
+     c18:	1b 81       	ldd	r17, Y+3	; 0x03
+    uint8_t len = 0;
+    for (uc_i = 0; uc_i < node_sw->switches_num; uc_i++) {
+     c1a:	33 23       	and	r19, r19
+     c1c:	f1 f0       	breq	.+60     	; 0xc5a <ha_node_switch_on_timer+0xc2>
+     c1e:	60 e0       	ldi	r22, 0x00	; 0
+     c20:	90 e0       	ldi	r25, 0x00	; 0
+        switch_info_t *sw = &node_sw->sw[uc_i];
+     c22:	ed 81       	ldd	r30, Y+5	; 0x05
+     c24:	fe 81       	ldd	r31, Y+6	; 0x06
+     c26:	87 e0       	ldi	r24, 0x07	; 7
+     c28:	98 9f       	mul	r25, r24
+     c2a:	e0 0d       	add	r30, r0
+     c2c:	f1 1d       	adc	r31, r1
+     c2e:	11 24       	eor	r1, r1
+        if (sw->uc_event) {
+     c30:	20 81       	ld	r18, Z
+     c32:	22 23       	and	r18, r18
+     c34:	69 f0       	breq	.+26     	; 0xc50 <ha_node_switch_on_timer+0xb8>
+            node->tx_buf[NLINK_HDR_OFF_DATA + len] = (uc_i << 4) | sw->uc_event;
+     c36:	d8 01       	movw	r26, r16
+     c38:	a6 0f       	add	r26, r22
+     c3a:	b1 1d       	adc	r27, r1
+     c3c:	80 e1       	ldi	r24, 0x10	; 16
+     c3e:	98 9f       	mul	r25, r24
+     c40:	a0 01       	movw	r20, r0
+     c42:	11 24       	eor	r1, r1
+     c44:	24 2b       	or	r18, r20
+     c46:	90 96       	adiw	r26, 0x20	; 32
+     c48:	2c 93       	st	X, r18
+            sw->uc_event = 0;
+     c4a:	10 82       	st	Z, r1
+            len ++;
+     c4c:	6f 5f       	subi	r22, 0xFF	; 255
+     c4e:	3c 81       	ldd	r19, Y+4	; 0x04
+    } // End of switch loop
+
+    // Check events - if any occur then send event
+    node_t *node = node_sw->node;
+    uint8_t len = 0;
+    for (uc_i = 0; uc_i < node_sw->switches_num; uc_i++) {
+     c50:	9f 5f       	subi	r25, 0xFF	; 255
+     c52:	93 17       	cp	r25, r19
+     c54:	30 f3       	brcs	.-52     	; 0xc22 <ha_node_switch_on_timer+0x8a>
+            sw->uc_event = 0;
+            len ++;
+        }
+    }
+
+    if (len) {
+     c56:	61 11       	cpse	r22, r1
+     c58:	34 c0       	rjmp	.+104    	; 0xcc2 <ha_node_switch_on_timer+0x12a>
+        node->tx_buf[NLINK_HDR_OFF_LEN] = len;
+        ha_nlink_node_send(node, NODE_ADDR_BC, NLINK_CMD_INFO);
+        // TODO: configure the destination address ^^^ as a param
+    }
+}
+     c5a:	df 91       	pop	r29
+     c5c:	cf 91       	pop	r28
+     c5e:	1f 91       	pop	r17
+     c60:	0f 91       	pop	r16
+     c62:	08 95       	ret
+            // released->pressed transition
+            // clear hold timer
+            sw->uc_hold_timer = 0;
+            sw->uc_event = SW_EVENT_OFF_ON;                                    // ---         OFF -> ON       ---
+        }
+        else if (uc_sw_state == SW_PIN_RELEASED && sw->uc_prev_sw == SW_PIN_PRESSED) {
+     c64:	91 30       	cpi	r25, 0x01	; 1
+     c66:	91 f6       	brne	.-92     	; 0xc0c <ha_node_switch_on_timer+0x74>
+     c68:	41 11       	cpse	r20, r1
+     c6a:	d0 cf       	rjmp	.-96     	; 0xc0c <ha_node_switch_on_timer+0x74>
+            // pressed->released transition
+            if (sw->uc_hold_timer < SW_HOLD_TIMER){
+     c6c:	33 81       	ldd	r19, Z+3	; 0x03
+     c6e:	34 36       	cpi	r19, 0x64	; 100
+     c70:	b8 f4       	brcc	.+46     	; 0xca0 <ha_node_switch_on_timer+0x108>
+                sw->uc_event = SW_EVENT_ON_OFF;                                // ---         ON -> OFF        ---
+     c72:	90 83       	st	Z, r25
+                    sw->uc_hold_timer = SW_HOLD_TIMER;
+                }
+            }
+        } // End of switch held
+
+        sw->uc_prev_sw = uc_sw_state;
+     c74:	92 83       	std	Z+2, r25	; 0x02
+    uint8_t  uc_sw_pins;
+    uint8_t  uc_curr_pin;
+
+    uc_sw_pins = ha_node_switch_get_pins();
+
+    for (uc_i = 0; uc_i < node_sw->switches_num; uc_i++) { 
+     c76:	2f 5f       	subi	r18, 0xFF	; 255
+     c78:	3c 81       	ldd	r19, Y+4	; 0x04
+     c7a:	23 17       	cp	r18, r19
+     c7c:	08 f4       	brcc	.+2      	; 0xc80 <ha_node_switch_on_timer+0xe8>
+     c7e:	9b cf       	rjmp	.-202    	; 0xbb6 <ha_node_switch_on_timer+0x1e>
+     c80:	ca cf       	rjmp	.-108    	; 0xc16 <ha_node_switch_on_timer+0x7e>
+                uc_sw_state = uc_curr_pin;
+                sw->uc_debounce_timer = 0;
+            }
+        }
+        else {
+            sw->uc_debounce_timer = 0;
+     c82:	14 82       	std	Z+4, r1	; 0x04
+    uc_sw_pins = ha_node_switch_get_pins();
+
+    for (uc_i = 0; uc_i < node_sw->switches_num; uc_i++) { 
+        switch_info_t *sw = &node_sw->sw[uc_i];
+
+        uc_sw_state = sw->uc_prev_sw;
+     c84:	94 2f       	mov	r25, r20
+     c86:	af cf       	rjmp	.-162    	; 0xbe6 <ha_node_switch_on_timer+0x4e>
+            // increment debounce timer
+            sw->uc_debounce_timer ++;
+
+            if (sw->uc_debounce_timer == SW_DEBOUNCE_TIMER) {
+                // debounce timer expired
+                sw->uc_prev_pin = uc_curr_pin;
+     c88:	91 83       	std	Z+1, r25	; 0x01
+
+                // modify current switch state (pressed/released)
+                uc_sw_state = uc_curr_pin;
+                sw->uc_debounce_timer = 0;
+     c8a:	14 82       	std	Z+4, r1	; 0x04
+     c8c:	ac cf       	rjmp	.-168    	; 0xbe6 <ha_node_switch_on_timer+0x4e>
+        sw->uc_event = 0;
+
+        if (uc_sw_state == SW_PIN_PRESSED && sw->uc_prev_sw == SW_PIN_RELEASED) {
+            // released->pressed transition
+            // clear hold timer
+            sw->uc_hold_timer = 0;
+     c8e:	13 82       	std	Z+3, r1	; 0x03
+            sw->uc_event = SW_EVENT_OFF_ON;                                    // ---         OFF -> ON       ---
+     c90:	50 83       	st	Z, r21
+                    sw->uc_hold_timer = SW_HOLD_TIMER;
+                }
+            }
+        } // End of switch held
+
+        sw->uc_prev_sw = uc_sw_state;
+     c92:	92 83       	std	Z+2, r25	; 0x02
+    uint8_t  uc_sw_pins;
+    uint8_t  uc_curr_pin;
+
+    uc_sw_pins = ha_node_switch_get_pins();
+
+    for (uc_i = 0; uc_i < node_sw->switches_num; uc_i++) { 
+     c94:	2f 5f       	subi	r18, 0xFF	; 255
+     c96:	3c 81       	ldd	r19, Y+4	; 0x04
+     c98:	23 17       	cp	r18, r19
+     c9a:	08 f4       	brcc	.+2      	; 0xc9e <ha_node_switch_on_timer+0x106>
+     c9c:	8c cf       	rjmp	.-232    	; 0xbb6 <ha_node_switch_on_timer+0x1e>
+     c9e:	bb cf       	rjmp	.-138    	; 0xc16 <ha_node_switch_on_timer+0x7e>
+            // pressed->released transition
+            if (sw->uc_hold_timer < SW_HOLD_TIMER){
+                sw->uc_event = SW_EVENT_ON_OFF;                                // ---         ON -> OFF        ---
+            }
+            else {
+                sw->uc_event = SW_EVENT_HOLD_OFF;                              // ---         HOLD -> OFF      ---
+     ca0:	60 83       	st	Z, r22
+                    sw->uc_hold_timer = SW_HOLD_TIMER;
+                }
+            }
+        } // End of switch held
+
+        sw->uc_prev_sw = uc_sw_state;
+     ca2:	92 83       	std	Z+2, r25	; 0x02
+    uint8_t  uc_sw_pins;
+    uint8_t  uc_curr_pin;
+
+    uc_sw_pins = ha_node_switch_get_pins();
+
+    for (uc_i = 0; uc_i < node_sw->switches_num; uc_i++) { 
+     ca4:	2f 5f       	subi	r18, 0xFF	; 255
+     ca6:	3c 81       	ldd	r19, Y+4	; 0x04
+     ca8:	23 17       	cp	r18, r19
+     caa:	08 f4       	brcc	.+2      	; 0xcae <ha_node_switch_on_timer+0x116>
+     cac:	84 cf       	rjmp	.-248    	; 0xbb6 <ha_node_switch_on_timer+0x1e>
+     cae:	b3 cf       	rjmp	.-154    	; 0xc16 <ha_node_switch_on_timer+0x7e>
+                    sw->uc_event = SW_EVENT_ON_HOLD;                           // ---         ON -> HOLD      ---
+                }
+
+                if (sw->uc_hold_timer == SW_HOLD_TIMER_NEXT) {
+                    // report "switch hold" if timer saturated
+                    sw->uc_event = SW_EVENT_ON_HOLD;                           // ---         ON -> HOLD NEXT ---
+     cb0:	70 83       	st	Z, r23
+                    sw->uc_hold_timer = SW_HOLD_TIMER;
+     cb2:	a3 83       	std	Z+3, r26	; 0x03
+                }
+            }
+        } // End of switch held
+
+        sw->uc_prev_sw = uc_sw_state;
+     cb4:	92 83       	std	Z+2, r25	; 0x02
+    uint8_t  uc_sw_pins;
+    uint8_t  uc_curr_pin;
+
+    uc_sw_pins = ha_node_switch_get_pins();
+
+    for (uc_i = 0; uc_i < node_sw->switches_num; uc_i++) { 
+     cb6:	2f 5f       	subi	r18, 0xFF	; 255
+     cb8:	3c 81       	ldd	r19, Y+4	; 0x04
+     cba:	23 17       	cp	r18, r19
+     cbc:	08 f4       	brcc	.+2      	; 0xcc0 <ha_node_switch_on_timer+0x128>
+     cbe:	7b cf       	rjmp	.-266    	; 0xbb6 <ha_node_switch_on_timer+0x1e>
+     cc0:	aa cf       	rjmp	.-172    	; 0xc16 <ha_node_switch_on_timer+0x7e>
+            len ++;
+        }
+    }
+
+    if (len) {
+        node->tx_buf[NLINK_HDR_OFF_LEN] = len;
+     cc2:	f8 01       	movw	r30, r16
+     cc4:	67 8f       	std	Z+31, r22	; 0x1f
+        ha_nlink_node_send(node, NODE_ADDR_BC, NLINK_CMD_INFO);
+     cc6:	43 e0       	ldi	r20, 0x03	; 3
+     cc8:	6f ef       	ldi	r22, 0xFF	; 255
+     cca:	c8 01       	movw	r24, r16
+        // TODO: configure the destination address ^^^ as a param
+    }
+}
+     ccc:	df 91       	pop	r29
+     cce:	cf 91       	pop	r28
+     cd0:	1f 91       	pop	r17
+     cd2:	0f 91       	pop	r16
+        }
+    }
+
+    if (len) {
+        node->tx_buf[NLINK_HDR_OFF_LEN] = len;
+        ha_nlink_node_send(node, NODE_ADDR_BC, NLINK_CMD_INFO);
+     cd4:	64 ca       	rjmp	.-2872   	; 0x19e <ha_nlink_node_send>
+                // increase hold timer & check saturation
+                sw->uc_hold_timer ++;
+
+                if (sw->uc_hold_timer == SW_HOLD_TIMER) {
+                    // report "switch hold" if timer saturated
+                    sw->uc_event = SW_EVENT_ON_HOLD;                           // ---         ON -> HOLD      ---
+     cd6:	70 83       	st	Z, r23
+                    sw->uc_hold_timer = SW_HOLD_TIMER;
+                }
+            }
+        } // End of switch held
+
+        sw->uc_prev_sw = uc_sw_state;
+     cd8:	92 83       	std	Z+2, r25	; 0x02
+    uint8_t  uc_sw_pins;
+    uint8_t  uc_curr_pin;
+
+    uc_sw_pins = ha_node_switch_get_pins();
+
+    for (uc_i = 0; uc_i < node_sw->switches_num; uc_i++) { 
+     cda:	2f 5f       	subi	r18, 0xFF	; 255
+     cdc:	3c 81       	ldd	r19, Y+4	; 0x04
+     cde:	23 17       	cp	r18, r19
+     ce0:	08 f4       	brcc	.+2      	; 0xce4 <ha_node_switch_on_timer+0x14c>
+     ce2:	69 cf       	rjmp	.-302    	; 0xbb6 <ha_node_switch_on_timer+0x1e>
+     ce4:	98 cf       	rjmp	.-208    	; 0xc16 <ha_node_switch_on_timer+0x7e>
+
+00000ce6 <ha_dev_base_get_in_pins>:
+     ce6:	82 b1       	in	r24, 0x02	; 2
+     ce8:	86 fb       	bst	r24, 6
+     cea:	88 27       	eor	r24, r24
+     cec:	80 f9       	bld	r24, 0
+     cee:	17 99       	sbic	0x02, 7	; 2
+     cf0:	0b c0       	rjmp	.+22     	; 0xd08 <ha_dev_base_get_in_pins+0x22>
+     cf2:	35 99       	sbic	0x06, 5	; 6
+     cf4:	84 60       	ori	r24, 0x04	; 4
+     cf6:	34 99       	sbic	0x06, 4	; 6
+     cf8:	88 60       	ori	r24, 0x08	; 8
+     cfa:	33 99       	sbic	0x06, 3	; 6
+     cfc:	80 61       	ori	r24, 0x10	; 16
+     cfe:	50 99       	sbic	0x0a, 0	; 10
+     d00:	80 62       	ori	r24, 0x20	; 32
+     d02:	52 99       	sbic	0x0a, 2	; 10
+     d04:	80 64       	ori	r24, 0x40	; 64
+     d06:	08 95       	ret
+     d08:	82 60       	ori	r24, 0x02	; 2
+     d0a:	f3 cf       	rjmp	.-26     	; 0xcf2 <ha_dev_base_get_in_pins+0xc>
+
+00000d0c <fast_pwm_init>:
+     d0c:	e0 e0       	ldi	r30, 0x00	; 0
+     d0e:	fa e0       	ldi	r31, 0x0A	; 10
+     d10:	80 81       	ld	r24, Z
+     d12:	8e 7f       	andi	r24, 0xFE	; 254
+     d14:	80 83       	st	Z, r24
+     d16:	8c e0       	ldi	r24, 0x0C	; 12
+     d18:	85 83       	std	Z+5, r24	; 0x05
+     d1a:	87 e7       	ldi	r24, 0x77	; 119
+     d1c:	81 83       	std	Z+1, r24	; 0x01
+     d1e:	81 e0       	ldi	r24, 0x01	; 1
+     d20:	83 83       	std	Z+3, r24	; 0x03
+     d22:	8f ef       	ldi	r24, 0xFF	; 255
+     d24:	86 a3       	std	Z+38, r24	; 0x26
+     d26:	87 a3       	std	Z+39, r24	; 0x27
+     d28:	80 81       	ld	r24, Z
+     d2a:	81 60       	ori	r24, 0x01	; 1
+     d2c:	80 83       	st	Z, r24
+     d2e:	10 a6       	std	Z+40, r1	; 0x28
+     d30:	12 a6       	std	Z+42, r1	; 0x2a
+     d32:	14 a6       	std	Z+44, r1	; 0x2c
+     d34:	11 a6       	std	Z+41, r1	; 0x29
+     d36:	13 a6       	std	Z+43, r1	; 0x2b
+     d38:	15 a6       	std	Z+45, r1	; 0x2d
+     d3a:	08 95       	ret
+
+00000d3c <ha_nlink_gpio_init>:
+     d3c:	4d 9a       	sbi	0x09, 5	; 9
+     d3e:	45 98       	cbi	0x08, 5	; 8
+     d40:	e0 e4       	ldi	r30, 0x40	; 64
+     d42:	f4 e0       	ldi	r31, 0x04	; 4
+     d44:	8b e0       	ldi	r24, 0x0B	; 11
+     d46:	85 8b       	std	Z+21, r24	; 0x15
+     d48:	4c 98       	cbi	0x09, 4	; 9
+     d4a:	44 9a       	sbi	0x08, 4	; 8
+     d4c:	84 e0       	ldi	r24, 0x04	; 4
+     d4e:	84 8b       	std	Z+20, r24	; 0x14
+     d50:	89 b1       	in	r24, 0x09	; 9
+     d52:	83 7f       	andi	r24, 0xF3	; 243
+     d54:	89 b9       	out	0x09, r24	; 9
+     d56:	88 b1       	in	r24, 0x08	; 8
+     d58:	8c 60       	ori	r24, 0x0C	; 12
+     d5a:	88 b9       	out	0x08, r24	; 8
+     d5c:	08 95       	ret
+
+00000d5e <ha_dev_base_init>:
+     d5e:	cf 93       	push	r28
+     d60:	df 93       	push	r29
+     d62:	88 ed       	ldi	r24, 0xD8	; 216
+     d64:	84 bf       	out	0x34, r24	; 52
+     d66:	10 92 61 00 	sts	0x0061, r1	; 0x800061 <__TEXT_REGION_LENGTH__+0x700061>
+     d6a:	e0 e4       	ldi	r30, 0x40	; 64
+     d6c:	fa e0       	ldi	r31, 0x0A	; 10
+     d6e:	80 e8       	ldi	r24, 0x80	; 128
+     d70:	90 e0       	ldi	r25, 0x00	; 0
+     d72:	84 87       	std	Z+12, r24	; 0x0c
+     d74:	95 87       	std	Z+13, r25	; 0x0d
+     d76:	91 e0       	ldi	r25, 0x01	; 1
+     d78:	96 83       	std	Z+6, r25	; 0x06
+     d7a:	95 83       	std	Z+5, r25	; 0x05
+     d7c:	87 e0       	ldi	r24, 0x07	; 7
+     d7e:	81 83       	std	Z+1, r24	; 0x01
+     d80:	83 e0       	ldi	r24, 0x03	; 3
+     d82:	80 83       	st	Z, r24
+     d84:	88 e0       	ldi	r24, 0x08	; 8
+     d86:	80 93 16 04 	sts	0x0416, r24	; 0x800416 <__TEXT_REGION_LENGTH__+0x700416>
+     d8a:	80 93 17 04 	sts	0x0417, r24	; 0x800417 <__TEXT_REGION_LENGTH__+0x700417>
+     d8e:	80 93 35 04 	sts	0x0435, r24	; 0x800435 <__TEXT_REGION_LENGTH__+0x700435>
+     d92:	80 93 34 04 	sts	0x0434, r24	; 0x800434 <__TEXT_REGION_LENGTH__+0x700434>
+     d96:	80 93 33 04 	sts	0x0433, r24	; 0x800433 <__TEXT_REGION_LENGTH__+0x700433>
+     d9a:	80 93 50 04 	sts	0x0450, r24	; 0x800450 <__TEXT_REGION_LENGTH__+0x700450>
+     d9e:	80 93 52 04 	sts	0x0452, r24	; 0x800452 <__TEXT_REGION_LENGTH__+0x700452>
+     da2:	a0 e0       	ldi	r26, 0x00	; 0
+     da4:	b4 e0       	ldi	r27, 0x04	; 4
+     da6:	20 e4       	ldi	r18, 0x40	; 64
+     da8:	12 96       	adiw	r26, 0x02	; 2
+     daa:	2c 93       	st	X, r18
+     dac:	12 97       	sbiw	r26, 0x02	; 2
+     dae:	20 e8       	ldi	r18, 0x80	; 128
+     db0:	12 96       	adiw	r26, 0x02	; 2
+     db2:	2c 93       	st	X, r18
+     db4:	12 97       	sbiw	r26, 0x02	; 2
+     db6:	e0 e2       	ldi	r30, 0x20	; 32
+     db8:	f4 e0       	ldi	r31, 0x04	; 4
+     dba:	50 e2       	ldi	r21, 0x20	; 32
+     dbc:	52 83       	std	Z+2, r21	; 0x02
+     dbe:	40 e1       	ldi	r20, 0x10	; 16
+     dc0:	42 83       	std	Z+2, r20	; 0x02
+     dc2:	82 83       	std	Z+2, r24	; 0x02
+     dc4:	c0 e4       	ldi	r28, 0x40	; 64
+     dc6:	d4 e0       	ldi	r29, 0x04	; 4
+     dc8:	9a 83       	std	Y+2, r25	; 0x02
+     dca:	34 e0       	ldi	r19, 0x04	; 4
+     dcc:	3a 83       	std	Y+2, r19	; 0x02
+     dce:	16 96       	adiw	r26, 0x06	; 6
+     dd0:	5c 93       	st	X, r21
+     dd2:	16 97       	sbiw	r26, 0x06	; 6
+     dd4:	16 96       	adiw	r26, 0x06	; 6
+     dd6:	4c 93       	st	X, r20
+     dd8:	16 97       	sbiw	r26, 0x06	; 6
+     dda:	16 96       	adiw	r26, 0x06	; 6
+     ddc:	8c 93       	st	X, r24
+     dde:	16 97       	sbiw	r26, 0x06	; 6
+     de0:	36 83       	std	Z+6, r19	; 0x06
+     de2:	22 e0       	ldi	r18, 0x02	; 2
+     de4:	26 83       	std	Z+6, r18	; 0x06
+     de6:	96 83       	std	Z+6, r25	; 0x06
+     de8:	2e 83       	std	Y+6, r18	; 0x06
+     dea:	11 96       	adiw	r26, 0x01	; 1
+     dec:	5c 93       	st	X, r21
+     dee:	11 97       	sbiw	r26, 0x01	; 1
+     df0:	11 96       	adiw	r26, 0x01	; 1
+     df2:	4c 93       	st	X, r20
+     df4:	11 97       	sbiw	r26, 0x01	; 1
+     df6:	11 96       	adiw	r26, 0x01	; 1
+     df8:	8c 93       	st	X, r24
+     dfa:	31 83       	std	Z+1, r19	; 0x01
+     dfc:	21 83       	std	Z+1, r18	; 0x01
+     dfe:	91 83       	std	Z+1, r25	; 0x01
+     e00:	29 83       	std	Y+1, r18	; 0x01
+     e02:	df 91       	pop	r29
+     e04:	cf 91       	pop	r28
+     e06:	82 cf       	rjmp	.-252    	; 0xd0c <fast_pwm_init>
+
+00000e08 <ha_dev_base_set_steady>:
+     e08:	84 30       	cpi	r24, 0x04	; 4
+     e0a:	71 f1       	breq	.+92     	; 0xe68 <ha_dev_base_set_steady+0x60>
+     e0c:	38 f0       	brcs	.+14     	; 0xe1c <ha_dev_base_set_steady+0x14>
+     e0e:	80 31       	cpi	r24, 0x10	; 16
+     e10:	a1 f0       	breq	.+40     	; 0xe3a <ha_dev_base_set_steady+0x32>
+     e12:	80 32       	cpi	r24, 0x20	; 32
+     e14:	e9 f1       	breq	.+122    	; 0xe90 <ha_dev_base_set_steady+0x88>
+     e16:	88 30       	cpi	r24, 0x08	; 8
+     e18:	d9 f0       	breq	.+54     	; 0xe50 <ha_dev_base_set_steady+0x48>
+     e1a:	08 95       	ret
+     e1c:	81 30       	cpi	r24, 0x01	; 1
+     e1e:	79 f1       	breq	.+94     	; 0xe7e <ha_dev_base_set_steady+0x76>
+     e20:	82 30       	cpi	r24, 0x02	; 2
+     e22:	09 f5       	brne	.+66     	; 0xe66 <ha_dev_base_set_steady+0x5e>
+     e24:	80 91 01 0a 	lds	r24, 0x0A01	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     e28:	8f 7d       	andi	r24, 0xDF	; 223
+     e2a:	80 93 01 0a 	sts	0x0A01, r24	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     e2e:	80 e1       	ldi	r24, 0x10	; 16
+     e30:	66 23       	and	r22, r22
+     e32:	11 f1       	breq	.+68     	; 0xe78 <ha_dev_base_set_steady+0x70>
+     e34:	80 93 05 04 	sts	0x0405, r24	; 0x800405 <__TEXT_REGION_LENGTH__+0x700405>
+     e38:	08 95       	ret
+     e3a:	80 91 01 0a 	lds	r24, 0x0A01	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     e3e:	8d 7f       	andi	r24, 0xFD	; 253
+     e40:	80 93 01 0a 	sts	0x0A01, r24	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     e44:	82 e0       	ldi	r24, 0x02	; 2
+     e46:	66 23       	and	r22, r22
+     e48:	59 f0       	breq	.+22     	; 0xe60 <ha_dev_base_set_steady+0x58>
+     e4a:	80 93 25 04 	sts	0x0425, r24	; 0x800425 <__TEXT_REGION_LENGTH__+0x700425>
+     e4e:	08 95       	ret
+     e50:	80 91 01 0a 	lds	r24, 0x0A01	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     e54:	8b 7f       	andi	r24, 0xFB	; 251
+     e56:	80 93 01 0a 	sts	0x0A01, r24	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     e5a:	84 e0       	ldi	r24, 0x04	; 4
+     e5c:	61 11       	cpse	r22, r1
+     e5e:	f5 cf       	rjmp	.-22     	; 0xe4a <ha_dev_base_set_steady+0x42>
+     e60:	80 93 26 04 	sts	0x0426, r24	; 0x800426 <__TEXT_REGION_LENGTH__+0x700426>
+     e64:	08 95       	ret
+     e66:	08 95       	ret
+     e68:	80 91 01 0a 	lds	r24, 0x0A01	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     e6c:	8f 7e       	andi	r24, 0xEF	; 239
+     e6e:	80 93 01 0a 	sts	0x0A01, r24	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     e72:	88 e0       	ldi	r24, 0x08	; 8
+     e74:	61 11       	cpse	r22, r1
+     e76:	de cf       	rjmp	.-68     	; 0xe34 <ha_dev_base_set_steady+0x2c>
+     e78:	80 93 06 04 	sts	0x0406, r24	; 0x800406 <__TEXT_REGION_LENGTH__+0x700406>
+     e7c:	08 95       	ret
+     e7e:	80 91 01 0a 	lds	r24, 0x0A01	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     e82:	8f 7b       	andi	r24, 0xBF	; 191
+     e84:	80 93 01 0a 	sts	0x0A01, r24	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     e88:	80 e2       	ldi	r24, 0x20	; 32
+     e8a:	66 23       	and	r22, r22
+     e8c:	a9 f3       	breq	.-22     	; 0xe78 <ha_dev_base_set_steady+0x70>
+     e8e:	d2 cf       	rjmp	.-92     	; 0xe34 <ha_dev_base_set_steady+0x2c>
+     e90:	80 91 01 0a 	lds	r24, 0x0A01	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     e94:	8e 7f       	andi	r24, 0xFE	; 254
+     e96:	80 93 01 0a 	sts	0x0A01, r24	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     e9a:	81 e0       	ldi	r24, 0x01	; 1
+     e9c:	66 23       	and	r22, r22
+     e9e:	01 f3       	breq	.-64     	; 0xe60 <ha_dev_base_set_steady+0x58>
+     ea0:	d4 cf       	rjmp	.-88     	; 0xe4a <ha_dev_base_set_steady+0x42>
+
+00000ea2 <ha_dev_base_set_fast_pwm>:
+     ea2:	e6 2f       	mov	r30, r22
+     ea4:	f0 e0       	ldi	r31, 0x00	; 0
+     ea6:	e6 58       	subi	r30, 0x86	; 134
+     ea8:	fb 46       	sbci	r31, 0x6B	; 107
+     eaa:	90 81       	ld	r25, Z
+     eac:	84 30       	cpi	r24, 0x04	; 4
+     eae:	29 f1       	breq	.+74     	; 0xefa <ha_dev_base_set_fast_pwm+0x58>
+     eb0:	38 f0       	brcs	.+14     	; 0xec0 <ha_dev_base_set_fast_pwm+0x1e>
+     eb2:	80 31       	cpi	r24, 0x10	; 16
+     eb4:	89 f0       	breq	.+34     	; 0xed8 <ha_dev_base_set_fast_pwm+0x36>
+     eb6:	80 32       	cpi	r24, 0x20	; 32
+     eb8:	81 f1       	breq	.+96     	; 0xf1a <ha_dev_base_set_fast_pwm+0x78>
+     eba:	88 30       	cpi	r24, 0x08	; 8
+     ebc:	a9 f0       	breq	.+42     	; 0xee8 <ha_dev_base_set_fast_pwm+0x46>
+     ebe:	08 95       	ret
+     ec0:	81 30       	cpi	r24, 0x01	; 1
+     ec2:	19 f1       	breq	.+70     	; 0xf0a <ha_dev_base_set_fast_pwm+0x68>
+     ec4:	82 30       	cpi	r24, 0x02	; 2
+     ec6:	c1 f4       	brne	.+48     	; 0xef8 <ha_dev_base_set_fast_pwm+0x56>
+     ec8:	90 93 2b 0a 	sts	0x0A2B, r25	; 0x800a2b <__TEXT_REGION_LENGTH__+0x700a2b>
+     ecc:	80 91 01 0a 	lds	r24, 0x0A01	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     ed0:	80 62       	ori	r24, 0x20	; 32
+     ed2:	80 93 01 0a 	sts	0x0A01, r24	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     ed6:	08 95       	ret
+     ed8:	90 93 2a 0a 	sts	0x0A2A, r25	; 0x800a2a <__TEXT_REGION_LENGTH__+0x700a2a>
+     edc:	80 91 01 0a 	lds	r24, 0x0A01	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     ee0:	82 60       	ori	r24, 0x02	; 2
+     ee2:	80 93 01 0a 	sts	0x0A01, r24	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     ee6:	08 95       	ret
+     ee8:	90 93 2c 0a 	sts	0x0A2C, r25	; 0x800a2c <__TEXT_REGION_LENGTH__+0x700a2c>
+     eec:	80 91 01 0a 	lds	r24, 0x0A01	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     ef0:	84 60       	ori	r24, 0x04	; 4
+     ef2:	80 93 01 0a 	sts	0x0A01, r24	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     ef6:	08 95       	ret
+     ef8:	08 95       	ret
+     efa:	90 93 29 0a 	sts	0x0A29, r25	; 0x800a29 <__TEXT_REGION_LENGTH__+0x700a29>
+     efe:	80 91 01 0a 	lds	r24, 0x0A01	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     f02:	80 61       	ori	r24, 0x10	; 16
+     f04:	80 93 01 0a 	sts	0x0A01, r24	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     f08:	08 95       	ret
+     f0a:	90 93 2d 0a 	sts	0x0A2D, r25	; 0x800a2d <__TEXT_REGION_LENGTH__+0x700a2d>
+     f0e:	80 91 01 0a 	lds	r24, 0x0A01	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     f12:	80 64       	ori	r24, 0x40	; 64
+     f14:	80 93 01 0a 	sts	0x0A01, r24	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     f18:	08 95       	ret
+     f1a:	90 93 28 0a 	sts	0x0A28, r25	; 0x800a28 <__TEXT_REGION_LENGTH__+0x700a28>
+     f1e:	80 91 01 0a 	lds	r24, 0x0A01	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     f22:	81 60       	ori	r24, 0x01	; 1
+     f24:	80 93 01 0a 	sts	0x0A01, r24	; 0x800a01 <__TEXT_REGION_LENGTH__+0x700a01>
+     f28:	08 95       	ret
+
+00000f2a <__vector_5>:
+     f2a:	1f 92       	push	r1
+     f2c:	0f 92       	push	r0
+     f2e:	0f b6       	in	r0, 0x3f	; 63
+     f30:	0f 92       	push	r0
+     f32:	11 24       	eor	r1, r1
+     f34:	2f 93       	push	r18
+     f36:	3f 93       	push	r19
+     f38:	4f 93       	push	r20
+     f3a:	5f 93       	push	r21
+     f3c:	6f 93       	push	r22
+     f3e:	7f 93       	push	r23
+     f40:	8f 93       	push	r24
+     f42:	9f 93       	push	r25
+     f44:	af 93       	push	r26
+     f46:	bf 93       	push	r27
+     f48:	ef 93       	push	r30
+     f4a:	ff 93       	push	r31
+     f4c:	5d 9b       	sbis	0x0b, 5	; 11
+     f4e:	03 c0       	rjmp	.+6      	; 0xf56 <__vector_5+0x2c>
+     f50:	80 e2       	ldi	r24, 0x20	; 32
+     f52:	8b b9       	out	0x0b, r24	; 11
+     f54:	a2 da       	rcall	.-2748   	; 0x49a <isr_nlink_io_on_start_edge>
+     f56:	ff 91       	pop	r31
+     f58:	ef 91       	pop	r30
+     f5a:	bf 91       	pop	r27
+     f5c:	af 91       	pop	r26
+     f5e:	9f 91       	pop	r25
+     f60:	8f 91       	pop	r24
+     f62:	7f 91       	pop	r23
+     f64:	6f 91       	pop	r22
+     f66:	5f 91       	pop	r21
+     f68:	4f 91       	pop	r20
+     f6a:	3f 91       	pop	r19
+     f6c:	2f 91       	pop	r18
+     f6e:	0f 90       	pop	r0
+     f70:	0f be       	out	0x3f, r0	; 63
+     f72:	0f 90       	pop	r0
+     f74:	1f 90       	pop	r1
+     f76:	18 95       	reti
+
+00000f78 <__vector_13>:
+     f78:	1f 92       	push	r1
+     f7a:	0f 92       	push	r0
+     f7c:	0f b6       	in	r0, 0x3f	; 63
+     f7e:	0f 92       	push	r0
+     f80:	11 24       	eor	r1, r1
+     f82:	2f 93       	push	r18
+     f84:	3f 93       	push	r19
+     f86:	4f 93       	push	r20
+     f88:	5f 93       	push	r21
+     f8a:	6f 93       	push	r22
+     f8c:	7f 93       	push	r23
+     f8e:	8f 93       	push	r24
+     f90:	9f 93       	push	r25
+     f92:	af 93       	push	r26
+     f94:	bf 93       	push	r27
+     f96:	ef 93       	push	r30
+     f98:	ff 93       	push	r31
+     f9a:	81 e0       	ldi	r24, 0x01	; 1
+     f9c:	80 93 46 0a 	sts	0x0A46, r24	; 0x800a46 <__TEXT_REGION_LENGTH__+0x700a46>
+     fa0:	80 91 00 3e 	lds	r24, 0x3E00	; 0x803e00 <__data_start>
+     fa4:	87 fd       	sbrc	r24, 7
+     fa6:	05 c0       	rjmp	.+10     	; 0xfb2 <__vector_13+0x3a>
+     fa8:	8f 5f       	subi	r24, 0xFF	; 255
+     faa:	84 31       	cpi	r24, 0x14	; 20
+     fac:	a1 f0       	breq	.+40     	; 0xfd6 <__vector_13+0x5e>
+     fae:	80 93 00 3e 	sts	0x3E00, r24	; 0x803e00 <__data_start>
+     fb2:	9e d0       	rcall	.+316    	; 0x10f0 <isr_ha_app_on_timer>
+     fb4:	ff 91       	pop	r31
+     fb6:	ef 91       	pop	r30
+     fb8:	bf 91       	pop	r27
+     fba:	af 91       	pop	r26
+     fbc:	9f 91       	pop	r25
+     fbe:	8f 91       	pop	r24
+     fc0:	7f 91       	pop	r23
+     fc2:	6f 91       	pop	r22
+     fc4:	5f 91       	pop	r21
+     fc6:	4f 91       	pop	r20
+     fc8:	3f 91       	pop	r19
+     fca:	2f 91       	pop	r18
+     fcc:	0f 90       	pop	r0
+     fce:	0f be       	out	0x3f, r0	; 63
+     fd0:	0f 90       	pop	r0
+     fd2:	1f 90       	pop	r1
+     fd4:	18 95       	reti
+     fd6:	10 92 00 3e 	sts	0x3E00, r1	; 0x803e00 <__data_start>
+     fda:	8e d9       	rcall	.-3300   	; 0x2f8 <isr_nlink_io_on_timer>
+     fdc:	ea cf       	rjmp	.-44     	; 0xfb2 <__vector_13+0x3a>
+
+00000fde <ha_node_switch_get_pins>:
+
+ha_node_sw_info_t *sw_ceil = NULL;
+
+uint8_t ha_node_switch_get_pins() 
+{
+    return ha_dev_base_get_in_pins();
+     fde:	83 ce       	rjmp	.-762    	; 0xce6 <ha_dev_base_get_in_pins>
+
+00000fe0 <ha_node_ledlight_set_intensity>:
+}
+
+void ha_node_ledlight_set_intensity (uint8_t led_mask, uint8_t intensity_idx)
+{
+    if (intensity_idx >= INTENSITIES_NUM) intensity_idx = INTENSITIES_NUM - 1;
+     fe0:	63 31       	cpi	r22, 0x13	; 19
+     fe2:	10 f0       	brcs	.+4      	; 0xfe8 <ha_node_ledlight_set_intensity+0x8>
+
+    if (intensity_idx == 0) {
+        ha_dev_base_set_steady(led_mask, 0);
+    } else if (intensity_idx == INTENSITIES_NUM - 1) {
+        ha_dev_base_set_steady(led_mask, 1);
+     fe4:	61 e0       	ldi	r22, 0x01	; 1
+     fe6:	10 cf       	rjmp	.-480    	; 0xe08 <ha_dev_base_set_steady>
+
+void ha_node_ledlight_set_intensity (uint8_t led_mask, uint8_t intensity_idx)
+{
+    if (intensity_idx >= INTENSITIES_NUM) intensity_idx = INTENSITIES_NUM - 1;
+
+    if (intensity_idx == 0) {
+     fe8:	66 23       	and	r22, r22
+     fea:	e9 f3       	breq	.-6      	; 0xfe6 <ha_node_ledlight_set_intensity+0x6>
+        ha_dev_base_set_steady(led_mask, 0);
+    } else if (intensity_idx == INTENSITIES_NUM - 1) {
+     fec:	62 31       	cpi	r22, 0x12	; 18
+     fee:	d1 f3       	breq	.-12     	; 0xfe4 <ha_node_ledlight_set_intensity+0x4>
+        ha_dev_base_set_steady(led_mask, 1);
+    } else {
+        ha_dev_base_set_fast_pwm(led_mask, intensity_idx);
+     ff0:	58 cf       	rjmp	.-336    	; 0xea2 <ha_dev_base_set_fast_pwm>
+
+00000ff2 <main>:
+    }
+}
+
+extern void ha_dev_base_init();
+int main(void)
+{
+     ff2:	8f ef       	ldi	r24, 0xFF	; 255
+	...
+    // Wait a little just in case
+    for(uint8_t uc_i = 0; uc_i < 255U; uc_i++){
+
+        __asm__ __volatile__ ("    nop\n    nop\n    nop\n    nop\n"\
+    1014:	81 50       	subi	r24, 0x01	; 1
+
+extern void ha_dev_base_init();
+int main(void)
+{
+    // Wait a little just in case
+    for(uint8_t uc_i = 0; uc_i < 255U; uc_i++){
+    1016:	71 f7       	brne	.-36     	; 0xff4 <main+0x2>
+                              "    nop\n    nop\n    nop\n    nop\n"\
+                              "    nop\n    nop\n    nop\n    nop\n"
+                                ::);
+    }
+
+    ha_dev_base_init();
+    1018:	a2 de       	rcall	.-700    	; 0xd5e <ha_dev_base_init>
+
+    ha_nlink_init();
+    101a:	2d d8       	rcall	.-4006   	; 0x76 <ha_nlink_init>
+
+    ll_room_amb     = ha_node_ledlight_create(&room_amb_ll_cfg,     &room_amb_ll_action[0]);
+    101c:	6b e2       	ldi	r22, 0x2B	; 43
+    101e:	74 e9       	ldi	r23, 0x94	; 148
+    1020:	88 e6       	ldi	r24, 0x68	; 104
+    1022:	94 e9       	ldi	r25, 0x94	; 148
+    1024:	52 dc       	rcall	.-1884   	; 0x8ca <ha_node_ledlight_create>
+    1026:	80 93 0e 3e 	sts	0x3E0E, r24	; 0x803e0e <ll_room_amb>
+    102a:	90 93 0f 3e 	sts	0x3E0F, r25	; 0x803e0f <ll_room_amb+0x1>
+    ll_hall_spt     = ha_node_ledlight_create(&hall_spt_ll_cfg,     &hall_spt_ll_action[0]);
+    102e:	62 e1       	ldi	r22, 0x12	; 18
+    1030:	74 e9       	ldi	r23, 0x94	; 148
+    1032:	8c e5       	ldi	r24, 0x5C	; 92
+    1034:	94 e9       	ldi	r25, 0x94	; 148
+    1036:	49 dc       	rcall	.-1902   	; 0x8ca <ha_node_ledlight_create>
+    1038:	80 93 10 3e 	sts	0x3E10, r24	; 0x803e10 <ll_hall_spt>
+    103c:	90 93 11 3e 	sts	0x3E11, r25	; 0x803e11 <ll_hall_spt+0x1>
+    ll_room_spt_mid = ha_node_ledlight_create(&room_spt_mid_ll_cfg, &room_spt_mid_ll_action[0]);
+    1040:	69 ef       	ldi	r22, 0xF9	; 249
+    1042:	73 e9       	ldi	r23, 0x93	; 147
+    1044:	80 e5       	ldi	r24, 0x50	; 80
+    1046:	94 e9       	ldi	r25, 0x94	; 148
+    1048:	40 dc       	rcall	.-1920   	; 0x8ca <ha_node_ledlight_create>
+    104a:	80 93 0c 3e 	sts	0x3E0C, r24	; 0x803e0c <ll_room_spt_mid>
+    104e:	90 93 0d 3e 	sts	0x3E0D, r25	; 0x803e0d <ll_room_spt_mid+0x1>
+    ll_room_spt_bed = ha_node_ledlight_create(&room_spt_bed_ll_cfg, &room_spt_bed_ll_action[0]);
+    1052:	60 ee       	ldi	r22, 0xE0	; 224
+    1054:	73 e9       	ldi	r23, 0x93	; 147
+    1056:	84 e4       	ldi	r24, 0x44	; 68
+    1058:	94 e9       	ldi	r25, 0x94	; 148
+    105a:	37 dc       	rcall	.-1938   	; 0x8ca <ha_node_ledlight_create>
+    105c:	80 93 0a 3e 	sts	0x3E0A, r24	; 0x803e0a <ll_room_spt_bed>
+    1060:	90 93 0b 3e 	sts	0x3E0B, r25	; 0x803e0b <ll_room_spt_bed+0x1>
+    
+    sw_ceil         = ha_node_switch_create (&ceil_sw_cfg);
+    1064:	88 e7       	ldi	r24, 0x78	; 120
+    1066:	94 e9       	ldi	r25, 0x94	; 148
+    1068:	3f dd       	rcall	.-1410   	; 0xae8 <ha_node_switch_create>
+    106a:	80 93 08 3e 	sts	0x3E08, r24	; 0x803e08 <__data_end>
+    106e:	90 93 09 3e 	sts	0x3E09, r25	; 0x803e09 <__data_end+0x1>
+   
+
+    sei();
+    1072:	78 94       	sei
+    1074:	04 c0       	rjmp	.+8      	; 0x107e <main+0x8c>
+            ha_node_ledlight_on_timer(ll_hall_spt);
+            ha_node_ledlight_on_timer(ll_room_amb);
+            ha_node_ledlight_on_timer(ll_room_spt_mid);
+            ha_node_ledlight_on_timer(ll_room_spt_bed);
+        }
+        if (guc_switches_timer) {
+    1076:	80 91 12 3e 	lds	r24, 0x3E12	; 0x803e12 <guc_switches_timer>
+    107a:	81 11       	cpse	r24, r1
+    107c:	31 c0       	rjmp	.+98     	; 0x10e0 <main+0xee>
+	...
+        __asm__ __volatile__ ("    nop\n    nop\n    nop\n    nop\n"\
+                              "    nop\n    nop\n    nop\n    nop\n"\
+                              "    nop\n    nop\n    nop\n    nop\n"\
+                              "    nop\n    nop\n    nop\n    nop\n"
+                                ::);
+        ha_nlink_check_rx();
+    109e:	87 d8       	rcall	.-3826   	; 0x1ae <ha_nlink_check_rx>
+        ha_nlink_check_tx();
+    10a0:	c5 d8       	rcall	.-3702   	; 0x22c <ha_nlink_check_tx>
+        if (guc_led_intenisity_timer) {
+    10a2:	80 91 15 3e 	lds	r24, 0x3E15	; 0x803e15 <guc_led_intenisity_timer>
+    10a6:	88 23       	and	r24, r24
+    10a8:	31 f3       	breq	.-52     	; 0x1076 <main+0x84>
+            guc_led_intenisity_timer = 0;
+    10aa:	10 92 15 3e 	sts	0x3E15, r1	; 0x803e15 <guc_led_intenisity_timer>
+            ha_node_ledlight_on_timer(ll_hall_spt);
+    10ae:	80 91 10 3e 	lds	r24, 0x3E10	; 0x803e10 <ll_hall_spt>
+    10b2:	90 91 11 3e 	lds	r25, 0x3E11	; 0x803e11 <ll_hall_spt+0x1>
+    10b6:	b2 dc       	rcall	.-1692   	; 0xa1c <ha_node_ledlight_on_timer>
+            ha_node_ledlight_on_timer(ll_room_amb);
+    10b8:	80 91 0e 3e 	lds	r24, 0x3E0E	; 0x803e0e <ll_room_amb>
+    10bc:	90 91 0f 3e 	lds	r25, 0x3E0F	; 0x803e0f <ll_room_amb+0x1>
+    10c0:	ad dc       	rcall	.-1702   	; 0xa1c <ha_node_ledlight_on_timer>
+            ha_node_ledlight_on_timer(ll_room_spt_mid);
+    10c2:	80 91 0c 3e 	lds	r24, 0x3E0C	; 0x803e0c <ll_room_spt_mid>
+    10c6:	90 91 0d 3e 	lds	r25, 0x3E0D	; 0x803e0d <ll_room_spt_mid+0x1>
+    10ca:	a8 dc       	rcall	.-1712   	; 0xa1c <ha_node_ledlight_on_timer>
+            ha_node_ledlight_on_timer(ll_room_spt_bed);
+    10cc:	80 91 0a 3e 	lds	r24, 0x3E0A	; 0x803e0a <ll_room_spt_bed>
+    10d0:	90 91 0b 3e 	lds	r25, 0x3E0B	; 0x803e0b <ll_room_spt_bed+0x1>
+    10d4:	a3 dc       	rcall	.-1722   	; 0xa1c <ha_node_ledlight_on_timer>
+        }
+        if (guc_switches_timer) {
+    10d6:	80 91 12 3e 	lds	r24, 0x3E12	; 0x803e12 <guc_switches_timer>
+    10da:	88 23       	and	r24, r24
+    10dc:	09 f4       	brne	.+2      	; 0x10e0 <main+0xee>
+    10de:	cf cf       	rjmp	.-98     	; 0x107e <main+0x8c>
+            guc_switches_timer = 0;
+    10e0:	10 92 12 3e 	sts	0x3E12, r1	; 0x803e12 <guc_switches_timer>
+            ha_node_switch_on_timer(sw_ceil);
+    10e4:	80 91 08 3e 	lds	r24, 0x3E08	; 0x803e08 <__data_end>
+    10e8:	90 91 09 3e 	lds	r25, 0x3E09	; 0x803e09 <__data_end+0x1>
+    10ec:	55 dd       	rcall	.-1366   	; 0xb98 <ha_node_switch_on_timer>
+    10ee:	c7 cf       	rjmp	.-114    	; 0x107e <main+0x8c>
+
+000010f0 <isr_ha_app_on_timer>:
+void isr_ha_app_on_timer()
+{
+    // Called every 12.8usec
+    
+    // Set intensity timer every ~10ms ~= 781 * 12.8 = 9996.8us = 9.99ms
+    g_led_intensity_cnt++;
+    10f0:	80 91 16 3e 	lds	r24, 0x3E16	; 0x803e16 <g_led_intensity_cnt>
+    10f4:	90 91 17 3e 	lds	r25, 0x3E17	; 0x803e17 <g_led_intensity_cnt+0x1>
+    10f8:	01 96       	adiw	r24, 0x01	; 1
+    if (g_led_intensity_cnt == 781) {
+    10fa:	8d 30       	cpi	r24, 0x0D	; 13
+    10fc:	23 e0       	ldi	r18, 0x03	; 3
+    10fe:	92 07       	cpc	r25, r18
+    1100:	d1 f0       	breq	.+52     	; 0x1136 <isr_ha_app_on_timer+0x46>
+void isr_ha_app_on_timer()
+{
+    // Called every 12.8usec
+    
+    // Set intensity timer every ~10ms ~= 781 * 12.8 = 9996.8us = 9.99ms
+    g_led_intensity_cnt++;
+    1102:	80 93 16 3e 	sts	0x3E16, r24	; 0x803e16 <g_led_intensity_cnt>
+    1106:	90 93 17 3e 	sts	0x3E17, r25	; 0x803e17 <g_led_intensity_cnt+0x1>
+        g_led_intensity_cnt = 0;
+        guc_led_intenisity_timer = 1;
+    }
+
+    // Set switch timer every ~10ms ~= 781 * 12.8 = 9996.8us = 9.99ms
+    g_switches_cnt++;
+    110a:	80 91 13 3e 	lds	r24, 0x3E13	; 0x803e13 <g_switches_cnt>
+    110e:	90 91 14 3e 	lds	r25, 0x3E14	; 0x803e14 <g_switches_cnt+0x1>
+    1112:	01 96       	adiw	r24, 0x01	; 1
+    if (g_switches_cnt == 781) {
+    1114:	8d 30       	cpi	r24, 0x0D	; 13
+    1116:	23 e0       	ldi	r18, 0x03	; 3
+    1118:	92 07       	cpc	r25, r18
+    111a:	29 f0       	breq	.+10     	; 0x1126 <isr_ha_app_on_timer+0x36>
+        g_led_intensity_cnt = 0;
+        guc_led_intenisity_timer = 1;
+    }
+
+    // Set switch timer every ~10ms ~= 781 * 12.8 = 9996.8us = 9.99ms
+    g_switches_cnt++;
+    111c:	80 93 13 3e 	sts	0x3E13, r24	; 0x803e13 <g_switches_cnt>
+    1120:	90 93 14 3e 	sts	0x3E14, r25	; 0x803e14 <g_switches_cnt+0x1>
+    1124:	08 95       	ret
+    if (g_switches_cnt == 781) {
+//        OUT_2_PORT.OUTTGL = OUT_2_MASK;
+        g_switches_cnt = 0;
+    1126:	10 92 13 3e 	sts	0x3E13, r1	; 0x803e13 <g_switches_cnt>
+    112a:	10 92 14 3e 	sts	0x3E14, r1	; 0x803e14 <g_switches_cnt+0x1>
+        guc_switches_timer = 1;
+    112e:	81 e0       	ldi	r24, 0x01	; 1
+    1130:	80 93 12 3e 	sts	0x3E12, r24	; 0x803e12 <guc_switches_timer>
+    1134:	08 95       	ret
+    // Called every 12.8usec
+    
+    // Set intensity timer every ~10ms ~= 781 * 12.8 = 9996.8us = 9.99ms
+    g_led_intensity_cnt++;
+    if (g_led_intensity_cnt == 781) {
+        g_led_intensity_cnt = 0;
+    1136:	10 92 16 3e 	sts	0x3E16, r1	; 0x803e16 <g_led_intensity_cnt>
+    113a:	10 92 17 3e 	sts	0x3E17, r1	; 0x803e17 <g_led_intensity_cnt+0x1>
+        guc_led_intenisity_timer = 1;
+    113e:	81 e0       	ldi	r24, 0x01	; 1
+    1140:	80 93 15 3e 	sts	0x3E15, r24	; 0x803e15 <guc_led_intenisity_timer>
+    1144:	e2 cf       	rjmp	.-60     	; 0x110a <isr_ha_app_on_timer+0x1a>
+
+00001146 <calloc>:
+    1146:	0f 93       	push	r16
+    1148:	1f 93       	push	r17
+    114a:	cf 93       	push	r28
+    114c:	df 93       	push	r29
+    114e:	86 9f       	mul	r24, r22
+    1150:	80 01       	movw	r16, r0
+    1152:	87 9f       	mul	r24, r23
+    1154:	10 0d       	add	r17, r0
+    1156:	96 9f       	mul	r25, r22
+    1158:	10 0d       	add	r17, r0
+    115a:	11 24       	eor	r1, r1
+    115c:	c8 01       	movw	r24, r16
+    115e:	0d d0       	rcall	.+26     	; 0x117a <malloc>
+    1160:	ec 01       	movw	r28, r24
+    1162:	00 97       	sbiw	r24, 0x00	; 0
+    1164:	21 f0       	breq	.+8      	; 0x116e <calloc+0x28>
+    1166:	a8 01       	movw	r20, r16
+    1168:	60 e0       	ldi	r22, 0x00	; 0
+    116a:	70 e0       	ldi	r23, 0x00	; 0
+    116c:	30 d1       	rcall	.+608    	; 0x13ce <memset>
+    116e:	ce 01       	movw	r24, r28
+    1170:	df 91       	pop	r29
+    1172:	cf 91       	pop	r28
+    1174:	1f 91       	pop	r17
+    1176:	0f 91       	pop	r16
+    1178:	08 95       	ret
+
+0000117a <malloc>:
+    117a:	0f 93       	push	r16
+    117c:	1f 93       	push	r17
+    117e:	cf 93       	push	r28
+    1180:	df 93       	push	r29
+    1182:	82 30       	cpi	r24, 0x02	; 2
+    1184:	91 05       	cpc	r25, r1
+    1186:	10 f4       	brcc	.+4      	; 0x118c <malloc+0x12>
+    1188:	82 e0       	ldi	r24, 0x02	; 2
+    118a:	90 e0       	ldi	r25, 0x00	; 0
+    118c:	e0 91 f7 3e 	lds	r30, 0x3EF7	; 0x803ef7 <__flp>
+    1190:	f0 91 f8 3e 	lds	r31, 0x3EF8	; 0x803ef8 <__flp+0x1>
+    1194:	20 e0       	ldi	r18, 0x00	; 0
+    1196:	30 e0       	ldi	r19, 0x00	; 0
+    1198:	a0 e0       	ldi	r26, 0x00	; 0
+    119a:	b0 e0       	ldi	r27, 0x00	; 0
+    119c:	30 97       	sbiw	r30, 0x00	; 0
+    119e:	19 f1       	breq	.+70     	; 0x11e6 <malloc+0x6c>
+    11a0:	40 81       	ld	r20, Z
+    11a2:	51 81       	ldd	r21, Z+1	; 0x01
+    11a4:	02 81       	ldd	r16, Z+2	; 0x02
+    11a6:	13 81       	ldd	r17, Z+3	; 0x03
+    11a8:	48 17       	cp	r20, r24
+    11aa:	59 07       	cpc	r21, r25
+    11ac:	c8 f0       	brcs	.+50     	; 0x11e0 <malloc+0x66>
+    11ae:	84 17       	cp	r24, r20
+    11b0:	95 07       	cpc	r25, r21
+    11b2:	69 f4       	brne	.+26     	; 0x11ce <malloc+0x54>
+    11b4:	10 97       	sbiw	r26, 0x00	; 0
+    11b6:	31 f0       	breq	.+12     	; 0x11c4 <malloc+0x4a>
+    11b8:	12 96       	adiw	r26, 0x02	; 2
+    11ba:	0c 93       	st	X, r16
+    11bc:	12 97       	sbiw	r26, 0x02	; 2
+    11be:	13 96       	adiw	r26, 0x03	; 3
+    11c0:	1c 93       	st	X, r17
+    11c2:	27 c0       	rjmp	.+78     	; 0x1212 <malloc+0x98>
+    11c4:	00 93 f7 3e 	sts	0x3EF7, r16	; 0x803ef7 <__flp>
+    11c8:	10 93 f8 3e 	sts	0x3EF8, r17	; 0x803ef8 <__flp+0x1>
+    11cc:	22 c0       	rjmp	.+68     	; 0x1212 <malloc+0x98>
+    11ce:	21 15       	cp	r18, r1
+    11d0:	31 05       	cpc	r19, r1
+    11d2:	19 f0       	breq	.+6      	; 0x11da <malloc+0x60>
+    11d4:	42 17       	cp	r20, r18
+    11d6:	53 07       	cpc	r21, r19
+    11d8:	18 f4       	brcc	.+6      	; 0x11e0 <malloc+0x66>
+    11da:	9a 01       	movw	r18, r20
+    11dc:	bd 01       	movw	r22, r26
+    11de:	ef 01       	movw	r28, r30
+    11e0:	df 01       	movw	r26, r30
+    11e2:	f8 01       	movw	r30, r16
+    11e4:	db cf       	rjmp	.-74     	; 0x119c <malloc+0x22>
+    11e6:	21 15       	cp	r18, r1
+    11e8:	31 05       	cpc	r19, r1
+    11ea:	f9 f0       	breq	.+62     	; 0x122a <malloc+0xb0>
+    11ec:	28 1b       	sub	r18, r24
+    11ee:	39 0b       	sbc	r19, r25
+    11f0:	24 30       	cpi	r18, 0x04	; 4
+    11f2:	31 05       	cpc	r19, r1
+    11f4:	80 f4       	brcc	.+32     	; 0x1216 <malloc+0x9c>
+    11f6:	8a 81       	ldd	r24, Y+2	; 0x02
+    11f8:	9b 81       	ldd	r25, Y+3	; 0x03
+    11fa:	61 15       	cp	r22, r1
+    11fc:	71 05       	cpc	r23, r1
+    11fe:	21 f0       	breq	.+8      	; 0x1208 <malloc+0x8e>
+    1200:	fb 01       	movw	r30, r22
+    1202:	82 83       	std	Z+2, r24	; 0x02
+    1204:	93 83       	std	Z+3, r25	; 0x03
+    1206:	04 c0       	rjmp	.+8      	; 0x1210 <malloc+0x96>
+    1208:	80 93 f7 3e 	sts	0x3EF7, r24	; 0x803ef7 <__flp>
+    120c:	90 93 f8 3e 	sts	0x3EF8, r25	; 0x803ef8 <__flp+0x1>
+    1210:	fe 01       	movw	r30, r28
+    1212:	32 96       	adiw	r30, 0x02	; 2
+    1214:	44 c0       	rjmp	.+136    	; 0x129e <malloc+0x124>
+    1216:	fe 01       	movw	r30, r28
+    1218:	e2 0f       	add	r30, r18
+    121a:	f3 1f       	adc	r31, r19
+    121c:	81 93       	st	Z+, r24
+    121e:	91 93       	st	Z+, r25
+    1220:	22 50       	subi	r18, 0x02	; 2
+    1222:	31 09       	sbc	r19, r1
+    1224:	28 83       	st	Y, r18
+    1226:	39 83       	std	Y+1, r19	; 0x01
+    1228:	3a c0       	rjmp	.+116    	; 0x129e <malloc+0x124>
+    122a:	20 91 f5 3e 	lds	r18, 0x3EF5	; 0x803ef5 <__brkval>
+    122e:	30 91 f6 3e 	lds	r19, 0x3EF6	; 0x803ef6 <__brkval+0x1>
+    1232:	23 2b       	or	r18, r19
+    1234:	41 f4       	brne	.+16     	; 0x1246 <malloc+0xcc>
+    1236:	20 91 03 3e 	lds	r18, 0x3E03	; 0x803e03 <__malloc_heap_start>
+    123a:	30 91 04 3e 	lds	r19, 0x3E04	; 0x803e04 <__malloc_heap_start+0x1>
+    123e:	20 93 f5 3e 	sts	0x3EF5, r18	; 0x803ef5 <__brkval>
+    1242:	30 93 f6 3e 	sts	0x3EF6, r19	; 0x803ef6 <__brkval+0x1>
+    1246:	20 91 01 3e 	lds	r18, 0x3E01	; 0x803e01 <__malloc_heap_end>
+    124a:	30 91 02 3e 	lds	r19, 0x3E02	; 0x803e02 <__malloc_heap_end+0x1>
+    124e:	21 15       	cp	r18, r1
+    1250:	31 05       	cpc	r19, r1
+    1252:	41 f4       	brne	.+16     	; 0x1264 <malloc+0xea>
+    1254:	2d b7       	in	r18, 0x3d	; 61
+    1256:	3e b7       	in	r19, 0x3e	; 62
+    1258:	40 91 05 3e 	lds	r20, 0x3E05	; 0x803e05 <__malloc_margin>
+    125c:	50 91 06 3e 	lds	r21, 0x3E06	; 0x803e06 <__malloc_margin+0x1>
+    1260:	24 1b       	sub	r18, r20
+    1262:	35 0b       	sbc	r19, r21
+    1264:	e0 91 f5 3e 	lds	r30, 0x3EF5	; 0x803ef5 <__brkval>
+    1268:	f0 91 f6 3e 	lds	r31, 0x3EF6	; 0x803ef6 <__brkval+0x1>
+    126c:	e2 17       	cp	r30, r18
+    126e:	f3 07       	cpc	r31, r19
+    1270:	a0 f4       	brcc	.+40     	; 0x129a <malloc+0x120>
+    1272:	2e 1b       	sub	r18, r30
+    1274:	3f 0b       	sbc	r19, r31
+    1276:	28 17       	cp	r18, r24
+    1278:	39 07       	cpc	r19, r25
+    127a:	78 f0       	brcs	.+30     	; 0x129a <malloc+0x120>
+    127c:	ac 01       	movw	r20, r24
+    127e:	4e 5f       	subi	r20, 0xFE	; 254
+    1280:	5f 4f       	sbci	r21, 0xFF	; 255
+    1282:	24 17       	cp	r18, r20
+    1284:	35 07       	cpc	r19, r21
+    1286:	48 f0       	brcs	.+18     	; 0x129a <malloc+0x120>
+    1288:	4e 0f       	add	r20, r30
+    128a:	5f 1f       	adc	r21, r31
+    128c:	40 93 f5 3e 	sts	0x3EF5, r20	; 0x803ef5 <__brkval>
+    1290:	50 93 f6 3e 	sts	0x3EF6, r21	; 0x803ef6 <__brkval+0x1>
+    1294:	81 93       	st	Z+, r24
+    1296:	91 93       	st	Z+, r25
+    1298:	02 c0       	rjmp	.+4      	; 0x129e <malloc+0x124>
+    129a:	e0 e0       	ldi	r30, 0x00	; 0
+    129c:	f0 e0       	ldi	r31, 0x00	; 0
+    129e:	cf 01       	movw	r24, r30
+    12a0:	df 91       	pop	r29
+    12a2:	cf 91       	pop	r28
+    12a4:	1f 91       	pop	r17
+    12a6:	0f 91       	pop	r16
+    12a8:	08 95       	ret
+
+000012aa <free>:
+    12aa:	cf 93       	push	r28
+    12ac:	df 93       	push	r29
+    12ae:	00 97       	sbiw	r24, 0x00	; 0
+    12b0:	09 f4       	brne	.+2      	; 0x12b4 <free+0xa>
+    12b2:	81 c0       	rjmp	.+258    	; 0x13b6 <free+0x10c>
+    12b4:	fc 01       	movw	r30, r24
+    12b6:	32 97       	sbiw	r30, 0x02	; 2
+    12b8:	12 82       	std	Z+2, r1	; 0x02
+    12ba:	13 82       	std	Z+3, r1	; 0x03
+    12bc:	a0 91 f7 3e 	lds	r26, 0x3EF7	; 0x803ef7 <__flp>
+    12c0:	b0 91 f8 3e 	lds	r27, 0x3EF8	; 0x803ef8 <__flp+0x1>
+    12c4:	10 97       	sbiw	r26, 0x00	; 0
+    12c6:	81 f4       	brne	.+32     	; 0x12e8 <free+0x3e>
+    12c8:	20 81       	ld	r18, Z
+    12ca:	31 81       	ldd	r19, Z+1	; 0x01
+    12cc:	82 0f       	add	r24, r18
+    12ce:	93 1f       	adc	r25, r19
+    12d0:	20 91 f5 3e 	lds	r18, 0x3EF5	; 0x803ef5 <__brkval>
+    12d4:	30 91 f6 3e 	lds	r19, 0x3EF6	; 0x803ef6 <__brkval+0x1>
+    12d8:	28 17       	cp	r18, r24
+    12da:	39 07       	cpc	r19, r25
+    12dc:	51 f5       	brne	.+84     	; 0x1332 <free+0x88>
+    12de:	e0 93 f5 3e 	sts	0x3EF5, r30	; 0x803ef5 <__brkval>
+    12e2:	f0 93 f6 3e 	sts	0x3EF6, r31	; 0x803ef6 <__brkval+0x1>
+    12e6:	67 c0       	rjmp	.+206    	; 0x13b6 <free+0x10c>
+    12e8:	ed 01       	movw	r28, r26
+    12ea:	20 e0       	ldi	r18, 0x00	; 0
+    12ec:	30 e0       	ldi	r19, 0x00	; 0
+    12ee:	ce 17       	cp	r28, r30
+    12f0:	df 07       	cpc	r29, r31
+    12f2:	40 f4       	brcc	.+16     	; 0x1304 <free+0x5a>
+    12f4:	4a 81       	ldd	r20, Y+2	; 0x02
+    12f6:	5b 81       	ldd	r21, Y+3	; 0x03
+    12f8:	9e 01       	movw	r18, r28
+    12fa:	41 15       	cp	r20, r1
+    12fc:	51 05       	cpc	r21, r1
+    12fe:	f1 f0       	breq	.+60     	; 0x133c <free+0x92>
+    1300:	ea 01       	movw	r28, r20
+    1302:	f5 cf       	rjmp	.-22     	; 0x12ee <free+0x44>
+    1304:	c2 83       	std	Z+2, r28	; 0x02
+    1306:	d3 83       	std	Z+3, r29	; 0x03
+    1308:	40 81       	ld	r20, Z
+    130a:	51 81       	ldd	r21, Z+1	; 0x01
+    130c:	84 0f       	add	r24, r20
+    130e:	95 1f       	adc	r25, r21
+    1310:	c8 17       	cp	r28, r24
+    1312:	d9 07       	cpc	r29, r25
+    1314:	59 f4       	brne	.+22     	; 0x132c <free+0x82>
+    1316:	88 81       	ld	r24, Y
+    1318:	99 81       	ldd	r25, Y+1	; 0x01
+    131a:	84 0f       	add	r24, r20
+    131c:	95 1f       	adc	r25, r21
+    131e:	02 96       	adiw	r24, 0x02	; 2
+    1320:	80 83       	st	Z, r24
+    1322:	91 83       	std	Z+1, r25	; 0x01
+    1324:	8a 81       	ldd	r24, Y+2	; 0x02
+    1326:	9b 81       	ldd	r25, Y+3	; 0x03
+    1328:	82 83       	std	Z+2, r24	; 0x02
+    132a:	93 83       	std	Z+3, r25	; 0x03
+    132c:	21 15       	cp	r18, r1
+    132e:	31 05       	cpc	r19, r1
+    1330:	29 f4       	brne	.+10     	; 0x133c <free+0x92>
+    1332:	e0 93 f7 3e 	sts	0x3EF7, r30	; 0x803ef7 <__flp>
+    1336:	f0 93 f8 3e 	sts	0x3EF8, r31	; 0x803ef8 <__flp+0x1>
+    133a:	3d c0       	rjmp	.+122    	; 0x13b6 <free+0x10c>
+    133c:	e9 01       	movw	r28, r18
+    133e:	ea 83       	std	Y+2, r30	; 0x02
+    1340:	fb 83       	std	Y+3, r31	; 0x03
+    1342:	49 91       	ld	r20, Y+
+    1344:	59 91       	ld	r21, Y+
+    1346:	c4 0f       	add	r28, r20
+    1348:	d5 1f       	adc	r29, r21
+    134a:	ec 17       	cp	r30, r28
+    134c:	fd 07       	cpc	r31, r29
+    134e:	61 f4       	brne	.+24     	; 0x1368 <free+0xbe>
+    1350:	80 81       	ld	r24, Z
+    1352:	91 81       	ldd	r25, Z+1	; 0x01
+    1354:	84 0f       	add	r24, r20
+    1356:	95 1f       	adc	r25, r21
+    1358:	02 96       	adiw	r24, 0x02	; 2
+    135a:	e9 01       	movw	r28, r18
+    135c:	88 83       	st	Y, r24
+    135e:	99 83       	std	Y+1, r25	; 0x01
+    1360:	82 81       	ldd	r24, Z+2	; 0x02
+    1362:	93 81       	ldd	r25, Z+3	; 0x03
+    1364:	8a 83       	std	Y+2, r24	; 0x02
+    1366:	9b 83       	std	Y+3, r25	; 0x03
+    1368:	e0 e0       	ldi	r30, 0x00	; 0
+    136a:	f0 e0       	ldi	r31, 0x00	; 0
+    136c:	12 96       	adiw	r26, 0x02	; 2
+    136e:	8d 91       	ld	r24, X+
+    1370:	9c 91       	ld	r25, X
+    1372:	13 97       	sbiw	r26, 0x03	; 3
+    1374:	00 97       	sbiw	r24, 0x00	; 0
+    1376:	19 f0       	breq	.+6      	; 0x137e <free+0xd4>
+    1378:	fd 01       	movw	r30, r26
+    137a:	dc 01       	movw	r26, r24
+    137c:	f7 cf       	rjmp	.-18     	; 0x136c <free+0xc2>
+    137e:	8d 91       	ld	r24, X+
+    1380:	9c 91       	ld	r25, X
+    1382:	11 97       	sbiw	r26, 0x01	; 1
+    1384:	9d 01       	movw	r18, r26
+    1386:	2e 5f       	subi	r18, 0xFE	; 254
+    1388:	3f 4f       	sbci	r19, 0xFF	; 255
+    138a:	82 0f       	add	r24, r18
+    138c:	93 1f       	adc	r25, r19
+    138e:	20 91 f5 3e 	lds	r18, 0x3EF5	; 0x803ef5 <__brkval>
+    1392:	30 91 f6 3e 	lds	r19, 0x3EF6	; 0x803ef6 <__brkval+0x1>
+    1396:	28 17       	cp	r18, r24
+    1398:	39 07       	cpc	r19, r25
+    139a:	69 f4       	brne	.+26     	; 0x13b6 <free+0x10c>
+    139c:	30 97       	sbiw	r30, 0x00	; 0
+    139e:	29 f4       	brne	.+10     	; 0x13aa <free+0x100>
+    13a0:	10 92 f7 3e 	sts	0x3EF7, r1	; 0x803ef7 <__flp>
+    13a4:	10 92 f8 3e 	sts	0x3EF8, r1	; 0x803ef8 <__flp+0x1>
+    13a8:	02 c0       	rjmp	.+4      	; 0x13ae <free+0x104>
+    13aa:	12 82       	std	Z+2, r1	; 0x02
+    13ac:	13 82       	std	Z+3, r1	; 0x03
+    13ae:	a0 93 f5 3e 	sts	0x3EF5, r26	; 0x803ef5 <__brkval>
+    13b2:	b0 93 f6 3e 	sts	0x3EF6, r27	; 0x803ef6 <__brkval+0x1>
+    13b6:	df 91       	pop	r29
+    13b8:	cf 91       	pop	r28
+    13ba:	08 95       	ret
+
+000013bc <memcpy>:
+    13bc:	fb 01       	movw	r30, r22
+    13be:	dc 01       	movw	r26, r24
+    13c0:	02 c0       	rjmp	.+4      	; 0x13c6 <memcpy+0xa>
+    13c2:	01 90       	ld	r0, Z+
+    13c4:	0d 92       	st	X+, r0
+    13c6:	41 50       	subi	r20, 0x01	; 1
+    13c8:	50 40       	sbci	r21, 0x00	; 0
+    13ca:	d8 f7       	brcc	.-10     	; 0x13c2 <memcpy+0x6>
+    13cc:	08 95       	ret
+
+000013ce <memset>:
+    13ce:	dc 01       	movw	r26, r24
+    13d0:	01 c0       	rjmp	.+2      	; 0x13d4 <memset+0x6>
+    13d2:	6d 93       	st	X+, r22
+    13d4:	41 50       	subi	r20, 0x01	; 1
+    13d6:	50 40       	sbci	r21, 0x00	; 0
+    13d8:	e0 f7       	brcc	.-8      	; 0x13d2 <memset+0x4>
+    13da:	08 95       	ret
+
+000013dc <_exit>:
+    13dc:	f8 94       	cli
+
+000013de <__stop_program>:
+    13de:	ff cf       	rjmp	.-2      	; 0x13de <__stop_program>

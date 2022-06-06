@@ -1,0 +1,797 @@
+Archive member included to satisfy reference by file (symbol)
+
+c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+                              C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o (exit)
+c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+                              ha-dev/ha-dev-base.o (__do_copy_data)
+c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+                              ha-common/ha-common.o (__do_clear_bss)
+c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(calloc.o)
+                              ha-common/ha-node-ledlight.o (calloc)
+c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(malloc.o)
+                              c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(calloc.o) (malloc)
+c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memcpy.o)
+                              ha-common/ha-nlink.o (memcpy)
+c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memset.o)
+                              c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(calloc.o) (memset)
+C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_block.o)
+                              ha-blcn.o (eeprom_read_block)
+C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_byte.o)
+                              ha-common/ha-node-ledlight.o (eeprom_read_byte)
+
+Allocating common symbols
+Common symbol       size              file
+
+__brkval            0x2               c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(malloc.o)
+gus_trap_line       0x2               ha-common/ha-common.o
+g_rx_buf            0xc               ha-common/ha-nlink.o
+__flp               0x2               c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(malloc.o)
+nlink               0x5b              ha-common/ha-nlink.o
+
+Discarded input sections
+
+ .data          0x00000000        0x0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ .bss           0x00000000        0x0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ .text          0x00000000        0x0 ha-blcn-config.o
+ .data          0x00000000        0x0 ha-blcn-config.o
+ .bss           0x00000000        0x0 ha-blcn-config.o
+ .text          0x00000000        0x0 ha-common/ha-common.o
+ .data          0x00000000        0x0 ha-common/ha-common.o
+ .bss           0x00000000        0x0 ha-common/ha-common.o
+ .text          0x00000000        0x0 ha-common/ha-nlink.o
+ .data          0x00000000        0x0 ha-common/ha-nlink.o
+ .bss           0x00000000        0x0 ha-common/ha-nlink.o
+ .text.ha_nlink_on_tx_default
+                0x00000000       0x2e ha-common/ha-nlink.o
+ .text          0x00000000        0x0 ha-common/ha-node-ledlight.o
+ .data          0x00000000        0x0 ha-common/ha-node-ledlight.o
+ .bss           0x00000000        0x0 ha-common/ha-node-ledlight.o
+ .text          0x00000000        0x0 ha-common/ha-node-roll.o
+ .data          0x00000000        0x0 ha-common/ha-node-roll.o
+ .bss           0x00000000        0x0 ha-common/ha-node-roll.o
+ .text          0x00000000        0x0 ha-common/ha-node-switch.o
+ .data          0x00000000        0x0 ha-common/ha-node-switch.o
+ .bss           0x00000000        0x0 ha-common/ha-node-switch.o
+ .text          0x00000000        0x0 ha-dev/ha-dev-base.o
+ .bss           0x00000000        0x0 ha-dev/ha-dev-base.o
+ .text.in_gpio_init
+                0x00000000       0x46 ha-dev/ha-dev-base.o
+ .text.out_gpio_init
+                0x00000000       0x54 ha-dev/ha-dev-base.o
+ .text.slow_pwm_init
+                0x00000000       0x5c ha-dev/ha-dev-base.o
+ .text.timer_init
+                0x00000000       0x1c ha-dev/ha-dev-base.o
+ .text.ha_dev_base_set_slow_pwm
+                0x00000000       0x4a ha-dev/ha-dev-base.o
+ .text          0x00000000        0x0 ha-blcn.o
+ .data          0x00000000        0x0 ha-blcn.o
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.mul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.div
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc   0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.mul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.div
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc   0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text.libgcc.mul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text.libgcc.div
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text.libgcc   0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(calloc.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(calloc.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(calloc.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(malloc.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(malloc.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memcpy.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memcpy.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memcpy.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memset.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memset.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memset.o)
+ .text          0x00000000        0x0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_block.o)
+ .data          0x00000000        0x0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_block.o)
+ .bss           0x00000000        0x0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_block.o)
+ .text          0x00000000        0x0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_byte.o)
+ .data          0x00000000        0x0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_byte.o)
+ .bss           0x00000000        0x0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_byte.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x00000000         0x00004000         xr
+data             0x00803800         0x00000800         rw !x
+eeprom           0x00810000         0x00000100         rw !x
+fuse             0x00820000         0x0000000a         rw !x
+lock             0x00830000         0x00000400         rw !x
+signature        0x00840000         0x00000400         rw !x
+user_signatures  0x00850000         0x00000400         rw !x
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+Address of section .data set to 0x803800
+                0x00008000                __RODATA_PM_OFFSET__ = 0x8000
+LOAD C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+LOAD ha-blcn-config.o
+LOAD ha-common/ha-common.o
+LOAD ha-common/ha-nlink.o
+LOAD ha-common/ha-node-ledlight.o
+LOAD ha-common/ha-node-roll.o
+LOAD ha-common/ha-node-switch.o
+LOAD ha-dev/ha-dev-base.o
+LOAD ha-blcn.o
+START GROUP
+LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libm.a
+END GROUP
+Address of section .config_param set to 0x810010
+START GROUP
+LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a
+LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libm.a
+LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a
+LOAD C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a
+END GROUP
+                [0x00000000]                __TEXT_REGION_ORIGIN__ = DEFINED (__TEXT_REGION_ORIGIN__)?__TEXT_REGION_ORIGIN__:0x0
+                [0x00803800]                __DATA_REGION_ORIGIN__ = DEFINED (__DATA_REGION_ORIGIN__)?__DATA_REGION_ORIGIN__:0x802000
+                [0x00004000]                __TEXT_REGION_LENGTH__ = DEFINED (__TEXT_REGION_LENGTH__)?__TEXT_REGION_LENGTH__:0x100000
+                [0x00000800]                __DATA_REGION_LENGTH__ = DEFINED (__DATA_REGION_LENGTH__)?__DATA_REGION_LENGTH__:0xffa0
+                [0x00000100]                __EEPROM_REGION_LENGTH__ = DEFINED (__EEPROM_REGION_LENGTH__)?__EEPROM_REGION_LENGTH__:0x10000
+                [0x0000000a]                __FUSE_REGION_LENGTH__ = DEFINED (__FUSE_REGION_LENGTH__)?__FUSE_REGION_LENGTH__:0x400
+                0x00000400                __LOCK_REGION_LENGTH__ = DEFINED (__LOCK_REGION_LENGTH__)?__LOCK_REGION_LENGTH__:0x400
+                0x00000400                __SIGNATURE_REGION_LENGTH__ = DEFINED (__SIGNATURE_REGION_LENGTH__)?__SIGNATURE_REGION_LENGTH__:0x400
+                0x00000400                __USER_SIGNATURE_REGION_LENGTH__ = DEFINED (__USER_SIGNATURE_REGION_LENGTH__)?__USER_SIGNATURE_REGION_LENGTH__:0x400
+                0x00008000                __RODATA_PM_OFFSET__ = DEFINED (__RODATA_PM_OFFSET__)?__RODATA_PM_OFFSET__:0x8000
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x00000000     0x1694
+ *(.vectors)
+ .vectors       0x00000000       0x7c C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+                0x00000000                __vector_default
+                0x00000000                __vectors
+ *(.vectors)
+ *(.progmem.gcc*)
+                0x0000007c                . = ALIGN (0x2)
+                0x0000007c                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x0000007c        0x0 linker stubs
+ *(.trampolines*)
+                0x0000007c                __trampolines_end = .
+ *libprintf_flt.a:*(.progmem.data)
+ *libc.a:*(.progmem.data)
+ *(.progmem*)
+                0x0000007c                . = ALIGN (0x2)
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x0000007c                __ctors_start = .
+ *(.ctors)
+                0x0000007c                __ctors_end = .
+                0x0000007c                __dtors_start = .
+ *(.dtors)
+                0x0000007c                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ .init0         0x0000007c        0x0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+                0x0000007c                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x0000007c        0xc C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x00000088       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+                0x00000088                __do_copy_data
+ .init4         0x0000009e       0x10 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+                0x0000009e                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x000000ae        0x8 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ *(.init9)
+ *(.text)
+ .text          0x000000b6        0x4 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+                0x000000b6                __vector_22
+                0x000000b6                __vector_28
+                0x000000b6                __vector_1
+                0x000000b6                __vector_24
+                0x000000b6                __vector_12
+                0x000000b6                __bad_interrupt
+                0x000000b6                __vector_6
+                0x000000b6                __vector_3
+                0x000000b6                __vector_23
+                0x000000b6                __vector_30
+                0x000000b6                __vector_25
+                0x000000b6                __vector_11
+                0x000000b6                __vector_17
+                0x000000b6                __vector_19
+                0x000000b6                __vector_7
+                0x000000b6                __vector_27
+                0x000000b6                __vector_4
+                0x000000b6                __vector_9
+                0x000000b6                __vector_2
+                0x000000b6                __vector_21
+                0x000000b6                __vector_15
+                0x000000b6                __vector_29
+                0x000000b6                __vector_8
+                0x000000b6                __vector_26
+                0x000000b6                __vector_14
+                0x000000b6                __vector_10
+                0x000000b6                __vector_16
+                0x000000b6                __vector_18
+                0x000000b6                __vector_20
+                0x000000ba                . = ALIGN (0x2)
+ *(.text.*)
+ .text.FATAL_TRAP
+                0x000000ba        0xa ha-common/ha-common.o
+                0x000000ba                FATAL_TRAP
+ .text.ha_nlink_init
+                0x000000c4       0x38 ha-common/ha-nlink.o
+                0x000000c4                ha_nlink_init
+ .text.ha_nlink_node_register
+                0x000000fc       0x4e ha-common/ha-nlink.o
+                0x000000fc                ha_nlink_node_register
+ .text.nlink_node_on_rx
+                0x0000014a       0x80 ha-common/ha-nlink.o
+                0x0000014a                nlink_node_on_rx
+ .text.ha_nlink_node_send
+                0x000001ca       0x10 ha-common/ha-nlink.o
+                0x000001ca                ha_nlink_node_send
+ .text.ha_nlink_check_rx
+                0x000001da       0x68 ha-common/ha-nlink.o
+                0x000001da                ha_nlink_check_rx
+ .text.ha_nlink_check_tx
+                0x00000242       0xb6 ha-common/ha-nlink.o
+                0x00000242                ha_nlink_check_tx
+ .text.isr_nlink_io_on_timer
+                0x000002f8      0x1a6 ha-common/ha-nlink.o
+                0x000002f8                isr_nlink_io_on_timer
+ .text.isr_nlink_io_on_start_edge
+                0x0000049e       0x2e ha-common/ha-nlink.o
+                0x0000049e                isr_nlink_io_on_start_edge
+ .text.ha_node_ledlight_on_param
+                0x000004cc       0x78 ha-common/ha-node-ledlight.o
+                0x000004cc                ha_node_ledlight_on_param
+ .text.ha_node_ledlight_off
+                0x00000544       0x58 ha-common/ha-node-ledlight.o
+                0x00000544                ha_node_ledlight_off
+ .text.ledlight_on_rx
+                0x0000059c      0x122 ha-common/ha-node-ledlight.o
+                0x0000059c                ledlight_on_rx
+ .text.ha_node_ledlight_dimm
+                0x000006be       0xf6 ha-common/ha-node-ledlight.o
+                0x000006be                ha_node_ledlight_dimm
+ .text.ha_node_ledlight_roll
+                0x000007b4       0x64 ha-common/ha-node-ledlight.o
+                0x000007b4                ha_node_ledlight_roll
+ .text.ha_node_ledlight_on_idle
+                0x00000818       0x9e ha-common/ha-node-ledlight.o
+                0x00000818                ha_node_ledlight_on_idle
+ .text.ha_node_ledlight_create
+                0x000008b6      0x17a ha-common/ha-node-ledlight.o
+                0x000008b6                ha_node_ledlight_create
+ .text.ha_node_ledlight_on_timer
+                0x00000a30       0xcc ha-common/ha-node-ledlight.o
+                0x00000a30                ha_node_ledlight_on_timer
+ .text.roll_on_rx
+                0x00000afc       0xca ha-common/ha-node-roll.o
+                0x00000afc                roll_on_rx
+ .text.ha_node_roll_create
+                0x00000bc6       0x92 ha-common/ha-node-roll.o
+                0x00000bc6                ha_node_roll_create
+ .text.ha_node_roll_on_timer
+                0x00000c58       0x8e ha-common/ha-node-roll.o
+                0x00000c58                ha_node_roll_on_timer
+ .text.switch_on_rx
+                0x00000ce6        0x2 ha-common/ha-node-switch.o
+                0x00000ce6                switch_on_rx
+ .text.ha_node_switch_create
+                0x00000ce8       0xb4 ha-common/ha-node-switch.o
+                0x00000ce8                ha_node_switch_create
+ .text.ha_node_switch_on_timer
+                0x00000d9c      0x152 ha-common/ha-node-switch.o
+                0x00000d9c                ha_node_switch_on_timer
+ .text.ha_dev_base_get_in_pins
+                0x00000eee       0x26 ha-dev/ha-dev-base.o
+                0x00000eee                ha_dev_base_get_in_pins
+ .text.fast_pwm_init
+                0x00000f14       0x30 ha-dev/ha-dev-base.o
+                0x00000f14                fast_pwm_init
+ .text.ha_nlink_gpio_init
+                0x00000f44       0x22 ha-dev/ha-dev-base.o
+                0x00000f44                ha_nlink_gpio_init
+ .text.ha_dev_base_init
+                0x00000f66       0xac ha-dev/ha-dev-base.o
+                0x00000f66                ha_dev_base_init
+ .text.ha_dev_base_set_steady
+                0x00001012       0x9a ha-dev/ha-dev-base.o
+                0x00001012                ha_dev_base_set_steady
+ .text.ha_dev_base_set_fast_pwm
+                0x000010ac       0x88 ha-dev/ha-dev-base.o
+                0x000010ac                ha_dev_base_set_fast_pwm
+ .text.__vector_5
+                0x00001134       0x50 ha-dev/ha-dev-base.o
+                0x00001134                __vector_5
+ .text.__vector_13
+                0x00001184       0x6a ha-dev/ha-dev-base.o
+                0x00001184                __vector_13
+ .text.ha_node_switch_get_pins
+                0x000011ee        0x4 ha-blcn.o
+                0x000011ee                ha_node_switch_get_pins
+ .text.ha_node_roll_set_mode
+                0x000011f2       0x7a ha-blcn.o
+                0x000011f2                ha_node_roll_set_mode
+ .text.ha_node_ledlight_set_intensity
+                0x0000126c       0x16 ha-blcn.o
+                0x0000126c                ha_node_ledlight_set_intensity
+ .text.startup.main
+                0x00001282      0x106 ha-blcn.o
+                0x00001282                main
+ .text.isr_ha_app_on_timer
+                0x00001388       0x56 ha-blcn.o
+                0x00001388                isr_ha_app_on_timer
+ .text.avr-libc
+                0x000013de       0x38 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(calloc.o)
+                0x000013de                calloc
+ .text.avr-libc
+                0x00001416      0x242 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(malloc.o)
+                0x00001416                malloc
+                0x00001546                free
+ .text.avr-libc
+                0x00001658       0x12 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memcpy.o)
+                0x00001658                memcpy
+ .text.avr-libc
+                0x0000166a        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memset.o)
+                0x0000166a                memset
+ .text.avr-libc
+                0x00001678        0x8 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_block.o)
+                0x00001678                eeprom_read_block
+ .text.avr-libc
+                0x00001680       0x10 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_byte.o)
+                0x00001680                eeprom_read_byte
+                0x00001688                eeprom_mapen
+                0x00001690                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x00001690        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+                0x00001690                _exit
+                0x00001690                exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x00001690        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ *(.fini0)
+                0x00001694                _etext = .
+
+.rodata         0x00009694       0x68 load address 0x00001694
+ *(.rodata)
+ .rodata        0x00009694       0x68 ha-blcn-config.o
+                0x00009694                blcn_roll_w_action
+                0x000096b7                blcn_roll_w_cfg
+                0x000096bd                blcn_roll_d_action
+                0x000096e0                blcn_roll_d_cfg
+                0x000096e6                blcn_ll_action
+                0x000096f0                blcn_ll_cfg
+ *(.rodata*)
+ *(.gnu.linkonce.r*)
+
+.data           0x00803800        0x8 load address 0x000016fc
+                0x00803800                PROVIDE (__data_start, .)
+ *(.data)
+ .data          0x00803800        0x1 ha-dev/ha-dev-base.o
+                0x00803800                g_ha_nlink_timer_cnt
+ .data          0x00803801        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(malloc.o)
+                0x00803801                __malloc_heap_end
+                0x00803803                __malloc_heap_start
+                0x00803805                __malloc_margin
+ *(.data*)
+ *(.gnu.linkonce.d*)
+                0x00803808                . = ALIGN (0x2)
+ *fill*         0x00803807        0x1 
+                0x00803808                _edata = .
+                0x00803808                PROVIDE (__data_end, .)
+
+.bss            0x00803808       0x7b
+                0x00803808                PROVIDE (__bss_start, .)
+ *(.bss)
+ .bss           0x00803808        0xe ha-blcn.o
+                0x00803808                roll_w_blcn
+                0x0080380a                roll_d_blcn
+                0x0080380c                sw_blcn
+                0x0080380e                ll_blcn
+                0x00803810                guc_switches_timer
+                0x00803811                g_switches_cnt
+                0x00803813                guc_led_intenisity_timer
+                0x00803814                g_led_intensity_cnt
+ *(.bss*)
+ *(COMMON)
+ COMMON         0x00803816        0x2 ha-common/ha-common.o
+                0x00803816                gus_trap_line
+ COMMON         0x00803818       0x67 ha-common/ha-nlink.o
+                0x00803818                g_rx_buf
+                0x00803824                nlink
+ COMMON         0x0080387f        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(malloc.o)
+                0x0080387f                __brkval
+                0x00803881                __flp
+                0x00803883                PROVIDE (__bss_end, .)
+                0x000016fc                __data_load_start = LOADADDR (.data)
+                0x00001704                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x00803883        0x0
+                [!provide]                PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                [!provide]                PROVIDE (__noinit_end, .)
+                0x00803883                _end = .
+                0x00803883                PROVIDE (__heap_start, .)
+
+.eeprom         0x00810000       0x2a
+ *(.eeprom*)
+ .eeprom        0x00810000       0x17 ha-blcn-config.o
+                0x00810000                blcn_roll_w_ch_mask
+                0x00810002                blcn_roll_d_ch_mask
+                0x00810004                blcn_leds_ch_mask
+                0x00810005                blcn_sw_cfg
+                0x00810007                guca_disable_roll_table
+                0x0081000c                guca_dimm_on_intensity_table
+ .eeprom        0x00810017       0x13 ha-dev/ha-dev-base.o
+                0x00810017                guca_pwm_intensity_table
+                0x0081002a                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.user_signatures
+ *(.user_signatures*)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x00000000       0x30
+ *(.comment)
+ .comment       0x00000000       0x30 ha-blcn-config.o
+                                 0x31 (size before relaxing)
+ .comment       0x00000030       0x31 ha-common/ha-common.o
+ .comment       0x00000030       0x31 ha-common/ha-nlink.o
+ .comment       0x00000030       0x31 ha-common/ha-node-ledlight.o
+ .comment       0x00000030       0x31 ha-common/ha-node-roll.o
+ .comment       0x00000030       0x31 ha-common/ha-node-switch.o
+ .comment       0x00000030       0x31 ha-dev/ha-dev-base.o
+ .comment       0x00000030       0x31 ha-blcn.o
+ .comment       0x00000030       0x31 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(calloc.o)
+ .comment       0x00000030       0x31 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(malloc.o)
+
+.note.gnu.avr.deviceinfo
+                0x00000000       0x40
+ .note.gnu.avr.deviceinfo
+                0x00000000       0x40 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+
+.note.gnu.build-id
+ *(.note.gnu.build-id)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x00000000      0x250
+ *(.debug_aranges)
+ .debug_aranges
+                0x00000000       0x18 ha-blcn-config.o
+ .debug_aranges
+                0x00000018       0x20 ha-common/ha-common.o
+ .debug_aranges
+                0x00000038       0x60 ha-common/ha-nlink.o
+ .debug_aranges
+                0x00000098       0x58 ha-common/ha-node-ledlight.o
+ .debug_aranges
+                0x000000f0       0x30 ha-common/ha-node-roll.o
+ .debug_aranges
+                0x00000120       0x30 ha-common/ha-node-switch.o
+ .debug_aranges
+                0x00000150       0x80 ha-dev/ha-dev-base.o
+ .debug_aranges
+                0x000001d0       0x40 ha-blcn.o
+ .debug_aranges
+                0x00000210       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_block.o)
+ .debug_aranges
+                0x00000230       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_byte.o)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x00000000     0x5e01
+ *(.debug_info .gnu.linkonce.wi.*)
+ .debug_info    0x00000000     0x19ed C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ .debug_info    0x000019ed      0x4a9 ha-blcn-config.o
+ .debug_info    0x00001e96       0xad ha-common/ha-common.o
+ .debug_info    0x00001f43      0x9af ha-common/ha-nlink.o
+ .debug_info    0x000028f2      0xb8c ha-common/ha-node-ledlight.o
+ .debug_info    0x0000347e      0x62d ha-common/ha-node-roll.o
+ .debug_info    0x00003aab      0x4eb ha-common/ha-node-switch.o
+ .debug_info    0x00003f96     0x128d ha-dev/ha-dev-base.o
+ .debug_info    0x00005223      0xa9f ha-blcn.o
+ .debug_info    0x00005cc2       0xa0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_block.o)
+ .debug_info    0x00005d62       0x9f C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_byte.o)
+
+.debug_abbrev   0x00000000     0x2936
+ *(.debug_abbrev)
+ .debug_abbrev  0x00000000     0x1888 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ .debug_abbrev  0x00001888       0xad ha-blcn-config.o
+ .debug_abbrev  0x00001935       0x76 ha-common/ha-common.o
+ .debug_abbrev  0x000019ab      0x3df ha-common/ha-nlink.o
+ .debug_abbrev  0x00001d8a      0x2c6 ha-common/ha-node-ledlight.o
+ .debug_abbrev  0x00002050      0x25b ha-common/ha-node-roll.o
+ .debug_abbrev  0x000022ab      0x1e5 ha-common/ha-node-switch.o
+ .debug_abbrev  0x00002490      0x279 ha-dev/ha-dev-base.o
+ .debug_abbrev  0x00002709      0x205 ha-blcn.o
+ .debug_abbrev  0x0000290e       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_block.o)
+ .debug_abbrev  0x00002922       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_byte.o)
+
+.debug_line     0x00000000     0x1f9d
+ *(.debug_line .debug_line.* .debug_line_end)
+ .debug_line    0x00000000      0x151 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ .debug_line    0x00000151       0xde ha-blcn-config.o
+ .debug_line    0x0000022f       0xac ha-common/ha-common.o
+ .debug_line    0x000002db      0x553 ha-common/ha-nlink.o
+ .debug_line    0x0000082e      0x709 ha-common/ha-node-ledlight.o
+ .debug_line    0x00000f37      0x289 ha-common/ha-node-roll.o
+ .debug_line    0x000011c0      0x3a0 ha-common/ha-node-switch.o
+ .debug_line    0x00001560      0x666 ha-dev/ha-dev-base.o
+ .debug_line    0x00001bc6      0x301 ha-blcn.o
+ .debug_line    0x00001ec7       0x5d C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_block.o)
+ .debug_line    0x00001f24       0x79 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3\libattiny1617.a(eerd_byte.o)
+
+.debug_frame    0x00000000      0x5cc
+ *(.debug_frame)
+ .debug_frame   0x00000000       0x24 ha-common/ha-common.o
+ .debug_frame   0x00000024      0x100 ha-common/ha-nlink.o
+ .debug_frame   0x00000124      0x17c ha-common/ha-node-ledlight.o
+ .debug_frame   0x000002a0       0xa4 ha-common/ha-node-roll.o
+ .debug_frame   0x00000344       0x80 ha-common/ha-node-switch.o
+ .debug_frame   0x000003c4      0x18c ha-dev/ha-dev-base.o
+ .debug_frame   0x00000550       0x7c ha-blcn.o
+
+.debug_str      0x00000000     0x217a
+ *(.debug_str)
+ .debug_str     0x00000000      0xacf C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ .debug_str     0x00000acf      0x526 ha-blcn-config.o
+                                0x56b (size before relaxing)
+ .debug_str     0x00000ff5       0x3e ha-common/ha-common.o
+                                0x181 (size before relaxing)
+ .debug_str     0x00001033      0x431 ha-common/ha-nlink.o
+                                0x5bd (size before relaxing)
+ .debug_str     0x00001464      0x2d7 ha-common/ha-node-ledlight.o
+                                0x689 (size before relaxing)
+ .debug_str     0x0000173b      0x11c ha-common/ha-node-roll.o
+                                0x482 (size before relaxing)
+ .debug_str     0x00001857      0x135 ha-common/ha-node-switch.o
+                                0x3ad (size before relaxing)
+ .debug_str     0x0000198c      0x747 ha-dev/ha-dev-base.o
+                                0xa81 (size before relaxing)
+ .debug_str     0x000020d3       0xa7 ha-blcn.o
+                                0x91d (size before relaxing)
+
+.debug_loc      0x00000000     0x220e
+ *(.debug_loc)
+ .debug_loc     0x00000000      0x42e ha-common/ha-nlink.o
+ .debug_loc     0x0000042e      0xf2a ha-common/ha-node-ledlight.o
+ .debug_loc     0x00001358      0x56c ha-common/ha-node-roll.o
+ .debug_loc     0x000018c4      0x40d ha-common/ha-node-switch.o
+ .debug_loc     0x00001cd1      0x3b0 ha-dev/ha-dev-base.o
+ .debug_loc     0x00002081      0x18d ha-blcn.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.debug_pubtypes
+ *(.debug_pubtypes)
+
+.debug_ranges   0x00000000      0x3b0
+ *(.debug_ranges)
+ .debug_ranges  0x00000000       0x10 ha-common/ha-common.o
+ .debug_ranges  0x00000010      0x148 ha-common/ha-nlink.o
+ .debug_ranges  0x00000158       0xe8 ha-common/ha-node-ledlight.o
+ .debug_ranges  0x00000240       0x78 ha-common/ha-node-roll.o
+ .debug_ranges  0x000002b8       0x58 ha-common/ha-node-switch.o
+ .debug_ranges  0x00000310       0x70 ha-dev/ha-dev-base.o
+ .debug_ranges  0x00000380       0x30 ha-blcn.o
+
+.debug_macro
+ *(.debug_macro)
+OUTPUT(ha-blcn.elf elf32-avr)
+LOAD linker stubs
+
+.config_param   0x00810010        0x0
