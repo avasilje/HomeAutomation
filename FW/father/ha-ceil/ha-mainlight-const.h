@@ -9,7 +9,7 @@
 
 extern const uint8_t guca_pwm_intensity_table[INTENSITIES_NUM] EEMEM;
 
-#define DIMM_ON_INTENSITIES_NUM 11
+#define DIMM_ON_INTENSITIES_NUM 5
 extern const uint8_t guca_dimm_on_intensity_table[DIMM_ON_INTENSITIES_NUM] EEMEM;
 
 #define DISABLE_ROLL_ON_MASK_NUM 5

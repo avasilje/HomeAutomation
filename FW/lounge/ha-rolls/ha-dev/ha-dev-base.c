@@ -16,7 +16,6 @@
 int8_t g_ha_nlink_timer_cnt = -1;
 #define SLOW_PWM_PERIOD 0xFF
 
-// TODO: move to pgm?
 // Note: Values are non linear so need to be calibrated for precise control
 #define PWM_PULSE(duty_cycle)  ((duty_cycle * 256 / 100) - 1)
 const uint8_t guca_pwm_intensity_table[INTENSITIES_NUM] EEMEM =
@@ -294,7 +293,7 @@ void ha_dev_base_set_steady(uint8_t mask, uint8_t val)
 
 void ha_dev_base_set_slow_pwm (uint8_t ch_num, uint8_t pwm_val_idx)
 {
-    uint8_t pwm_val = guca_pwm_intensity_table[pwm_val_idx];
+    uint8_t pwm_val = eeprom_read_byte(guca_pwm_intensity_table + pwm_val_idx);
     
     // Select PWM register
     switch(ch_num) {
@@ -311,7 +310,7 @@ void ha_dev_base_set_slow_pwm (uint8_t ch_num, uint8_t pwm_val_idx)
 
 void ha_dev_base_set_fast_pwm (uint8_t mask, uint8_t pwm_val_idx)
 {
-    uint8_t pwm_val = guca_pwm_intensity_table[pwm_val_idx];
+    uint8_t pwm_val = eeprom_read_byte(guca_pwm_intensity_table + pwm_val_idx);
 
     // Select PWM register
     // L0..2 => WO0..WO2 => C11, C9, C7 => PB0, PB1, PB2

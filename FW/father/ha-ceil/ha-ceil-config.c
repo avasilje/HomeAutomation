@@ -24,12 +24,12 @@ const ha_node_sw_cfg_t ceil_sw_cfg EEMEM = {
 };
 
 // --- in use ---
-// LED0 (0x01 - C1) - Room ambient     (AMB-1, AMB-2)
+// LED0 (0x01  - C1) - Room ambient     (AMB-1, AMB-2)
 // LED1 (0x02 - C3) - Hall spot        (SPT-K)
 // LED2 (0x04 - C5) - Room spot mid    (SPT-3, SPT-4)
-// LED3 (0x08 - C7) - Room spot bed    (SPT-1, SPT-2)
+// LED3 (0x10 - C9) - Room spot bed    (SPT-1, SPT-2)
 // --- unused ---
-// LED4 (0x10 - C9) - Room spot unused (SPT-5, SPT-6)
+// LED4 (0x08 - C7) - Room spot unused (SPT-5, SPT-6) (doesn't work :[ )
 
 #define ROOM_AMB_LEDS_CHANNELS_NUM 1
 const uint8_t room_amb_leds_ch_mask[ROOM_AMB_LEDS_CHANNELS_NUM] EEMEM = {0x01};
@@ -41,7 +41,7 @@ const uint8_t hall_spt_leds_ch_mask[HALL_SPT_LEDS_CHANNELS_NUM] EEMEM = {0x02};
 const uint8_t room_spt_mid_leds_ch_mask[ROOM_SPT_MID_LEDS_CHANNELS_NUM] EEMEM = {0x04};
 
 #define ROOM_SPT_BED_LEDS_CHANNELS_NUM 1
-const uint8_t room_spt_bed_leds_ch_mask[ROOM_SPT_BED_LEDS_CHANNELS_NUM] EEMEM = {0x08};
+const uint8_t room_spt_bed_leds_ch_mask[ROOM_SPT_BED_LEDS_CHANNELS_NUM] EEMEM = {0x10};
 
 const ha_node_ll_cfg_t room_amb_ll_cfg = {
     .node_addr = LEDLIGHT_ADDR + 0,
@@ -52,13 +52,11 @@ const ha_node_ll_cfg_t room_amb_ll_cfg = {
     .leds_num = ROOM_AMB_LEDS_CHANNELS_NUM,
     .leds_ch_masks = room_amb_leds_ch_mask,
 
-//    .pwm_intensities_num = INTENSITIES_NUM,
-
     .dimms_num = DIMM_ON_INTENSITIES_NUM,
     .dimms = guca_dimm_on_intensity_table,
 
-    .disable_masks_num = DISABLE_ROLL_ON_MASK_NUM,
-    .disable_masks = guca_disable_roll_table
+	.disable_masks_num = 0,
+	.disable_masks = NULL
 };
 
 const ha_node_ll_cfg_t hall_spt_ll_cfg = {
@@ -70,13 +68,11 @@ const ha_node_ll_cfg_t hall_spt_ll_cfg = {
     .leds_num = HALL_SPT_LEDS_CHANNELS_NUM,
     .leds_ch_masks = hall_spt_leds_ch_mask,
 
-//    .pwm_intensities_num = INTENSITIES_NUM,
-
     .dimms_num = DIMM_ON_INTENSITIES_NUM,
     .dimms = guca_dimm_on_intensity_table,
 
-    .disable_masks_num = DISABLE_ROLL_ON_MASK_NUM,
-    .disable_masks = guca_disable_roll_table
+	.disable_masks_num = 0,
+	.disable_masks = NULL
 };
 
 const ha_node_ll_cfg_t room_spt_mid_ll_cfg = {
@@ -88,13 +84,11 @@ const ha_node_ll_cfg_t room_spt_mid_ll_cfg = {
 	.leds_num = ROOM_SPT_MID_LEDS_CHANNELS_NUM,
 	.leds_ch_masks = room_spt_mid_leds_ch_mask,
 
-	//    .pwm_intensities_num = INTENSITIES_NUM,
-
 	.dimms_num = DIMM_ON_INTENSITIES_NUM,
 	.dimms = guca_dimm_on_intensity_table,
 
-	.disable_masks_num = DISABLE_ROLL_ON_MASK_NUM,
-	.disable_masks = guca_disable_roll_table
+	.disable_masks_num = 0,
+	.disable_masks = NULL
 };
 
 const ha_node_ll_cfg_t room_spt_bed_ll_cfg = {
@@ -106,13 +100,11 @@ const ha_node_ll_cfg_t room_spt_bed_ll_cfg = {
     .leds_num = ROOM_SPT_BED_LEDS_CHANNELS_NUM,
     .leds_ch_masks = room_spt_bed_leds_ch_mask,
 
-//    .pwm_intensities_num = INTENSITIES_NUM,
-
     .dimms_num = DIMM_ON_INTENSITIES_NUM,
     .dimms = guca_dimm_on_intensity_table,
 
-    .disable_masks_num = DISABLE_ROLL_ON_MASK_NUM,
-    .disable_masks = guca_disable_roll_table
+	.disable_masks_num = 0,
+	.disable_masks = NULL
 };
 
     // The led light use the table to react on external events.
@@ -164,7 +156,7 @@ const ha_node_ll_evt_action_t hall_spt_ll_action[] = {
     // |   Type          |     Addr          | Param (SW idx, EVT type)                 |    Type            |  Param  |
     // |-----------------|-------------------|------------------------------------------|--------------------|---------|
     {   NODE_TYPE_SWITCH,   SWITCH_ADDR_CEIL,  (CEIL_SW_HALL_H << 4) | SW_EVENT_ON_OFF,  LL_ACT_TYPE_TOGGLE,   0      },  // SCH_SW1 C4,  SW6 (HALL_H) release -> Hall Spots toggle
-    {   NODE_TYPE_SWITCH,   SWITCH_ADDR_CEIL,  (CEIL_SW_HALL_H << 4) | SW_EVENT_ON_HOLD, LL_ACT_TYPE_ROLLDIMM, 0      },  // SCH_SW1 C4,  SW6 (HALL_H) release -> Hall Spots dimming
+    {   NODE_TYPE_SWITCH,   SWITCH_ADDR_CEIL,  (CEIL_SW_HALL_H << 4) | SW_EVENT_ON_HOLD, LL_ACT_TYPE_DIMM,     0      },  // SCH_SW1 C4,  SW6 (HALL_H) release -> Hall Spots dimming
     {   NODE_TYPE_SWITCH,   SWITCH_ADDR_CEIL,  (CEIL_SW_WALL_L << 4) | SW_EVENT_ON_HOLD, LL_ACT_TYPE_OFF,      0      },  // SCH_SW2 C6,  SW5 (WALL_L) hold    -> ALL OFF
     {   NODE_TYPE_SWITCH,   SWITCH_ADDR_CEIL,  (CEIL_SW_HALL_L << 4) | SW_EVENT_ON_HOLD, LL_ACT_TYPE_OFF,      0      },  // SCH_SW4 C10, SW7 (HALL_L) hold    -> ALL OFF
 	{   NODE_TYPE_SWITCH,   SWITCH_ADDR_CEIL,  (CEIL_SW_BED_L  << 4) | SW_EVENT_ON_HOLD, LL_ACT_TYPE_OFF,      0      },  // SCH_SW3 C8,  SW1 (BED_L)  hold    -> ALL OFF
@@ -178,7 +170,7 @@ const ha_node_ll_evt_action_t room_spt_mid_ll_action[] = {
     // |   Type          |     Addr           | Param (SW num, EVT type)                |    Type            |  Param  |
     // |-----------------|--------------------|-----------------------------------------|--------------------|---------|
     {   NODE_TYPE_SWITCH,   SWITCH_ADDR_CEIL,  (CEIL_SW_WALL_H << 4) | SW_EVENT_ON_OFF,  LL_ACT_TYPE_TOGGLE,   0      },  // SCH_SW0 C2,  SW4 (WALL_H) release -> Room Spots Mid toggle
-    {   NODE_TYPE_SWITCH,   SWITCH_ADDR_CEIL,  (CEIL_SW_WALL_H << 4) | SW_EVENT_ON_HOLD, LL_ACT_TYPE_ROLLDIMM, 0      },  // SCH_SW0 C2,  SW4 (WALL_H) hold    -> Room Spots Mid dimming
+    {   NODE_TYPE_SWITCH,   SWITCH_ADDR_CEIL,  (CEIL_SW_WALL_H << 4) | SW_EVENT_ON_HOLD, LL_ACT_TYPE_DIMM,     0      },  // SCH_SW0 C2,  SW4 (WALL_H) hold    -> Room Spots Mid dimming
     {   NODE_TYPE_SWITCH,   SWITCH_ADDR_CEIL,  (CEIL_SW_WALL_L << 4) | SW_EVENT_ON_HOLD, LL_ACT_TYPE_OFF,      0      },  // SCH_SW2 C6,  SW5 (WALL_L) hold    -> ALL OFF
 	{   NODE_TYPE_SWITCH,   SWITCH_ADDR_CEIL,  (CEIL_SW_HALL_L << 4) | SW_EVENT_ON_HOLD, LL_ACT_TYPE_OFF,      0      },  // SCH_SW4 C10, SW7 (HALL_L) hold    -> ALL OFF
 	{   NODE_TYPE_SWITCH,   SWITCH_ADDR_CEIL,  (CEIL_SW_BED_L  << 4) | SW_EVENT_ON_HOLD, LL_ACT_TYPE_OFF,      0      },  // SCH_SW3 C8,  SW1 (BED_L)  hold    -> ALL OFF

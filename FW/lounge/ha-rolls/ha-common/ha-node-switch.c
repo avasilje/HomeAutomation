@@ -29,7 +29,7 @@ void switch_on_rx(void *ctx, const uint8_t *buf_in)
     // controllable nor configurable
 }
 
-ha_node_sw_info_t *ha_node_switch_create (const ha_node_sw_cfg_t *cfg)
+ha_node_sw_info_t *ha_node_switch_create (const ha_node_sw_cfg_t *cfg HA_EEMEM)
 {
     switch_info_t *sw;
     ha_node_sw_info_t *node_sw;

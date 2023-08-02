@@ -7,12 +7,13 @@
 
 #pragma once
 
+#define HA_EEMEM // Dummy hint. All memory marked as EEMEM must be accessed via eeprom_read_xxx
 #if defined(HA_DEV_LOUNGE_BLCN) || defined(HA_DEV_ELBOX) || defined(HA_DEV_ENTRANCE)
 #include "ha-common-lounge.h"
 #endif 
 
 #if defined(HA_DEV_FATHER_CEIL) || defined(HA_DEV_FATHER_BLCN) || defined (HA_DEV_FATHER_AMBILED)
-//#include "ha-common-father.h"
+#include "ha-common-father.h"
 #endif
 
 extern uint16_t gus_trap_line;

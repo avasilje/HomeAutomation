@@ -13,13 +13,13 @@ typedef struct ha_node_ll_cfg_s {
     uint8_t fadeout_period;        // In parent defined ticks
 
     uint8_t leds_num;
-    const uint8_t *leds_ch_masks;
+    HA_EEMEM const uint8_t *leds_ch_masks;
 
     uint8_t dimms_num;             // Number of entries in the array
-    const uint8_t *dimms;          // Array of intensities (0..max) to roll over while light dimming
+    HA_EEMEM const uint8_t *dimms; // Array of intensities (0..max) to roll over while light dimming
 
     uint8_t disable_masks_num;     // Number of entries in the array
-    const uint8_t *disable_masks;  // Array of leds ch on/off mask to roll over while disable roll
+    HA_EEMEM const uint8_t *disable_masks;  // Array of leds ch on/off mask to roll over while disable roll
 } ha_node_ll_cfg_t;
 
  // Message Data offsets
@@ -39,6 +39,16 @@ enum LED_MODE {
     LED_MODE_OFF_TRANS = 5
 };
 
+typedef enum ha_node_ll_act_type_e {
+    LL_ACT_TYPE_NONE,       // is used as End of Action Table mark
+    LL_ACT_TYPE_ON,
+    LL_ACT_TYPE_OFF,
+    LL_ACT_TYPE_TOGGLE,
+    LL_ACT_TYPE_ROLL,
+    LL_ACT_TYPE_DIMM,
+    LL_ACT_TYPE_ROLLDIMM,
+} ha_node_ll_act_type_t;
+
 #define LED_FADEIN_STEP_PERIOD     2     // in timer ticks
 #define LED_FADEOUT_STEP_PERIOD    2     // in timer ticks
 
@@ -56,25 +66,16 @@ typedef struct ha_node_ll_evt_action_s {
     uint8_t evt_type;
     uint8_t evt_addr;
     uint8_t evt_param;
-    uint8_t act_type;
+    ha_node_ll_act_type_t act_type;
     uint8_t act_param;
 } ha_node_ll_evt_action_t;
 
-typedef enum ha_node_ll_act_type_e {
-    LL_ACT_TYPE_NONE,       // is used as End of Action Table mark
-    LL_ACT_TYPE_ON,
-    LL_ACT_TYPE_OFF,
-    LL_ACT_TYPE_TOGGLE,
-    LL_ACT_TYPE_ROLL,
-    LL_ACT_TYPE_DIMM,
-    LL_ACT_TYPE_ROLLDIMM,
-} ha_node_ll_act_type_t;
 
 #define HA_NODE_LL_EVT_ACTION_EOT    { 0, 0,  0,  LL_ACT_TYPE_NONE,  0 }
 
 typedef struct ha_node_ll_info_s {
     const ha_node_ll_evt_action_t *evt_actions;
-    const ha_node_ll_cfg_t *cfg;
+    HA_EEMEM const ha_node_ll_cfg_t *cfg;
     node_t *node;
     uint8_t  disabled_idx;
     uint8_t  disabled_mask;

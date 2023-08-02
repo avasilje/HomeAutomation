@@ -31,14 +31,14 @@ typedef struct ha_node_sw_cfg_s {
 } ha_node_sw_cfg_t;
 
 typedef struct ha_node_sw_info_s {
-    const ha_node_sw_cfg_t *cfg;    /* Att: EEMEM */
+    const ha_node_sw_cfg_t *cfg HA_EEMEM;
     node_t *node;
     uint8_t switches_num;
     switch_info_t *sw;
 } ha_node_sw_info_t;
 
 
-extern ha_node_sw_info_t *ha_node_switch_create (const ha_node_sw_cfg_t *cfg);
+extern ha_node_sw_info_t *ha_node_switch_create (const ha_node_sw_cfg_t *cfg HA_EEMEM);
 extern void ha_node_switch_on_timer(ha_node_sw_info_t *node_sw);
 
 /************************************************************************/

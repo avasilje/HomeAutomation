@@ -45,14 +45,17 @@ uint8_t  guc_curr_led_mode;     //
 uint8_t  guc_eeprom_save_flags;
 
 #ifndef DBG_EN
-#define DBG_EN 0
+#define DBG_EN 1
 #endif
 
 #if DBG_EN
 #define DBG_VAR_NUM 24
 uint16_t dbg_p[DBG_VAR_NUM];
 uint8_t dbg_idx = 0;
+#define DBG_TRACE(x) \
+    do {dbg_p[dbg_idx++] = x; if (dbg_idx == DBG_VAR_NUM) dbg_idx = 0; } while(0)
 #endif
+
 
 uint16_t gus_trap_line;
 
@@ -73,10 +76,13 @@ void ha_node_ledlight_set_intensity (uint8_t led_mask, uint8_t intensity_idx)
     if (intensity_idx >= INTENSITIES_NUM) intensity_idx = INTENSITIES_NUM - 1;
 
     if (intensity_idx == 0) {
+        DBG_TRACE(0x11);
         ha_dev_base_set_steady(led_mask, 0);
     } else if (intensity_idx == INTENSITIES_NUM - 1) {
         ha_dev_base_set_steady(led_mask, 1);
+        DBG_TRACE(0x77);
     } else {
+        DBG_TRACE(intensity_idx);
         ha_dev_base_set_fast_pwm(led_mask, intensity_idx);
     }
 }
@@ -102,7 +108,7 @@ int main(void)
     ll_room_spt_mid = ha_node_ledlight_create(&room_spt_mid_ll_cfg, &room_spt_mid_ll_action[0]);
     ll_room_spt_bed = ha_node_ledlight_create(&room_spt_bed_ll_cfg, &room_spt_bed_ll_action[0]);
     
-    sw_ceil         = ha_node_switch_create (&ceil_sw_cfg);
+    sw_ceil         = ha_node_switch_create(&ceil_sw_cfg);
    
 
     sei();
